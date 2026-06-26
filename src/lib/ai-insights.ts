@@ -5,6 +5,7 @@ import {
   calculateConsultantReadiness,
   compactAnalyticsForPrompt,
 } from "@/lib/analytics";
+import { DAY_MS, numeric } from "@/lib/utils";
 import type {
   Activity,
   ConsultantReadinessLog,
@@ -51,18 +52,12 @@ export type OperatingRecommendation = {
   weeklyFocus: string;
 };
 
-const DAY_MS = 24 * 60 * 60 * 1000;
-
 function formatTrend(trend: string) {
   if (trend === "up" || trend === "down" || trend === "flat") {
     return trend;
   }
 
   return "unclear";
-}
-
-function numeric(value: number | null | undefined) {
-  return typeof value === "number" && Number.isFinite(value) ? value : 0;
 }
 
 function dateMs(date: string) {
@@ -279,7 +274,7 @@ export function buildOperatingRecommendation(input: InsightInput): OperatingReco
     intellectualAction,
     recoveryAction,
     strategicSummary:
-      "The goal is not to max every metric today; it is to remove the current constraint.",
+      "The goal is not to max every metric today; it is to identify the current constraint, then make the next useful move.",
     todayMove,
     trainingAction,
     weeklyComparisons: comparisons,
@@ -291,14 +286,23 @@ export function buildOperatingRecommendation(input: InsightInput): OperatingReco
 
 export function buildLocalDailyBriefing(input: InsightInput) {
   const operating = buildOperatingRecommendation(input);
+  const analytics = calculateAnalytics(input);
   const latestDaily = input.dailyLogs.at(-1);
   const latestFitness = input.fitnessMetrics.at(-1);
   const sleepScore = latestFitness?.sleep_score ?? null;
   const hrv = latestFitness?.hrv ?? null;
   const mood = latestDaily?.mood_score ?? null;
+  const sleepAverage = analytics.averages.find(
+    (metric) => metric.label === "Sleep score",
+  );
+  const hrvAverage = analytics.averages.find((metric) => metric.label === "HRV");
+  const deepWorkAverage = analytics.averages.find(
+    (metric) => metric.label === "Deep work",
+  );
 
   return [
     `Current state: mood ${mood ?? "unknown"}, sleep score ${sleepScore ?? "unknown"}, HRV ${hrv ?? "unknown"}.`,
+    `Evidence: 7-day averages are sleep score ${sleepAverage?.sevenDay?.toFixed(1) ?? "unknown"}, HRV ${hrvAverage?.sevenDay?.toFixed(1) ?? "unknown"}, and deep work ${deepWorkAverage?.sevenDay?.toFixed(1) ?? "unknown"}h.`,
     `Today's move: ${operating.todayMove}`,
     `Main bottleneck: ${operating.bottleneck}.`,
     `Training recommendation: ${operating.trainingAction}`,
@@ -344,26 +348,22 @@ export function buildLocalWeeklyReport(input: InsightInput) {
 
 function systemPrompt(kind: InsightKind) {
   const shared =
-    "You are Zach OS, a private personal dashboard analyst. Use only the JSON dashboard data supplied by the app. Do not make medical claims, diagnose, or imply clinical certainty. Be cautious, practical, specific, concise, and UK-English. If data is missing, say so plainly. Avoid saying you know anything outside the stored dashboard data.";
+    "You are Zach OS, a private personal operating coach and dashboard analyst. Use only the JSON dashboard data supplied by the app. Do not make medical claims, diagnose, or imply clinical certainty. Be cautious, practical, specific, evidence-led, and UK-English. Sound like a serious coach: direct, analytical, calm, and useful rather than fluffy. If data is missing, say so plainly. Avoid saying you know anything outside the stored dashboard data.";
 
   if (kind === "daily") {
-    return `${shared} Return the daily summary with these exact headings: Current state, Today's move, Main bottleneck, Training recommendation, Recovery recommendation, Intellectual habit recommendation, Consultant readiness recommendation, Strategic summary.`;
+    return `${shared} Return the daily summary with these exact headings: Current state, Today's move, Main bottleneck, Training recommendation, Recovery recommendation, Intellectual habit recommendation, Consultant readiness recommendation, Strategic summary. Under each heading, include 1-3 practical sentences and cite the stored metric signals that justify the recommendation.`;
   }
 
-  return `${shared} Return the weekly report with these exact headings: Fitness trend, Recovery trend, Intellectual habits trend, Finance trend, Strongest week-over-week improvement, Weakest area, Suggested focus for next week. Compare the latest 7-day period against the previous 7-day period when data allows.`;
+  return `${shared} Return the weekly report with these exact headings: Fitness trend, Recovery trend, Intellectual habits trend, Finance trend, Strongest week-over-week improvement, Weakest area, Suggested focus for next week. Compare the latest 7-day period against the previous 7-day period when data allows, explain what changed, and finish with one focused weekly operating plan.`;
 }
 
-async function callOpenAI(kind: InsightKind, input: InsightInput) {
+async function callOpenAI(kind: InsightKind, promptData: object) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
     return null;
   }
 
-  const model = process.env.OPENAI_MODEL || "gpt-5.5";
-  const promptData = {
-    ...compactAnalyticsForPrompt(input),
-    operatingRecommendation: buildOperatingRecommendation(input),
-  };
+  const model = process.env.OPENAI_MODEL || "gpt-4o";
   const response = await fetch("https://api.openai.com/v1/responses", {
     body: JSON.stringify({
       input: [
@@ -373,7 +373,7 @@ async function callOpenAI(kind: InsightKind, input: InsightInput) {
           role: "user",
         },
       ],
-      max_output_tokens: kind === "daily" ? 700 : 900,
+      max_output_tokens: kind === "daily" ? 1000 : 1300,
       model,
     }),
     headers: {
@@ -435,15 +435,19 @@ export async function generateAiInsight(
   input: InsightInput,
 ): Promise<AiInsightResult> {
   const generatedAt = new Date().toISOString();
-  const fallback =
+  const promptData = {
+    ...compactAnalyticsForPrompt(input),
+    operatingRecommendation: buildOperatingRecommendation(input),
+  };
+  const getFallback = () =>
     kind === "daily" ? buildLocalDailyBriefing(input) : buildLocalWeeklyReport(input);
 
   try {
-    const aiContent = await callOpenAI(kind, input);
+    const aiContent = await callOpenAI(kind, promptData);
 
     if (!aiContent) {
       return {
-        content: fallback,
+        content: getFallback(),
         generatedAt,
         kind,
         source: "fallback",
@@ -458,7 +462,7 @@ export async function generateAiInsight(
     };
   } catch (error) {
     return {
-      content: fallback,
+      content: getFallback(),
       error: error instanceof Error ? error.message : "OpenAI request failed.",
       generatedAt,
       kind,

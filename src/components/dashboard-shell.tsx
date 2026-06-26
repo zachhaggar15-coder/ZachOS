@@ -645,11 +645,16 @@ function QuestForm() {
         <Field
           label="Target metric"
           name="target_metric"
-          placeholder="running_km"
+          placeholder="running km, invested, French"
           type="text"
         />
         <Field label="Target value" min={0} name="target_value" step="0.1" />
-        <Field label="Current value" min={0} name="current_value" step="0.1" />
+        <Field
+          label="Manual current override"
+          min={0}
+          name="current_value"
+          step="0.1"
+        />
         <Field label="Deadline" name="deadline" type="date" />
         <label className="grid gap-1.5 text-sm text-zinc-300">
           Status
@@ -667,8 +672,9 @@ function QuestForm() {
         </button>
       </div>
       <p className="mt-3 text-xs text-zinc-500">
-        Examples: Run Wales, Become Consultant Ready, Reach GBP 100k Invested,
-        Become Conversational in French.
+        Current value is auto-derived when the target mentions running, deep
+        work, French, reading, consultant readiness, invested value, net worth,
+        sleep or HRV. Use the manual value only as a fallback.
       </p>
     </form>
   );
@@ -794,6 +800,11 @@ function ActiveQuests({ quests }: { quests: ReturnType<typeof calculateQuestProg
                     {quest.category || "General"} · {quest.target_metric || "target"}
                     {quest.deadline ? ` · due ${quest.deadline}` : ""}
                   </p>
+                  <p className="mt-1 text-xs text-zinc-500">
+                    {quest.progress_source === "auto" ? "Auto" : "Manual"} current:{" "}
+                    {quest.computed_current_value.toFixed(1)} /{" "}
+                    {numeric(quest.target_value).toFixed(1)}
+                  </p>
                 </div>
                 <p className="font-mono text-sm text-cyan-100">
                   {quest.progress}%
@@ -888,7 +899,13 @@ export function DashboardShell({
     dailyLogs,
     financeSnapshots,
   });
-  const questProgress = calculateQuestProgress(quests);
+  const questProgress = calculateQuestProgress(quests, {
+    activities,
+    consultantLogs,
+    dailyLogs,
+    financeSnapshots,
+    fitnessMetrics,
+  });
   const runTotal = runningDistanceTotal(activities);
   const localBriefing = buildLocalDailyBriefing({
     activities,

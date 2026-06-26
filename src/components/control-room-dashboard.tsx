@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { isRunningActivity, numeric, toDate } from "@/lib/utils";
 import {
   saveQuickDailyEntry,
   signOut,
@@ -90,10 +91,6 @@ function latest<T>(rows: T[]) {
   return rows.length ? rows[rows.length - 1] : null;
 }
 
-function numeric(value: number | null | undefined) {
-  return typeof value === "number" && Number.isFinite(value) ? value : 0;
-}
-
 function finiteNumber(value: number | null | undefined) {
   return typeof value === "number" && Number.isFinite(value) ? value : null;
 }
@@ -137,10 +134,6 @@ function formatHeaderDate(date: string) {
   }).format(new Date(`${date}T12:00:00Z`));
 }
 
-function toDate(date: string) {
-  return new Date(`${date}T12:00:00Z`);
-}
-
 function offsetDate(date: string, offset: number) {
   const value = toDate(date);
   value.setUTCDate(value.getUTCDate() + offset);
@@ -167,16 +160,6 @@ function weekStart(date: string) {
   const day = value.getUTCDay() || 7;
   value.setUTCDate(value.getUTCDate() - day + 1);
   return value.toISOString().slice(0, 10);
-}
-
-function isRunningActivity(activity: Activity) {
-  const type = activity.activity_type?.toLowerCase() ?? "";
-  return (
-    !type ||
-    type.includes("run") ||
-    type.includes("jog") ||
-    type.includes("treadmill")
-  );
 }
 
 function runningDistanceBetween(activities: Activity[], start: string, end: string) {
@@ -315,6 +298,7 @@ function SparkPanel({
   const drawable = series
     .map((item) => ({ ...item, path: makeSparkPath(item.values, item.min, item.max) }))
     .filter((item) => item.path);
+  const gradientId = `spark-area-${label.replace(/[^a-z0-9]/gi, "").toLowerCase()}`;
 
   return (
     <Link
@@ -333,7 +317,7 @@ function SparkPanel({
             viewBox="0 0 100 30"
           >
             <defs>
-              <linearGradient id="netWorthEditorialGradient" x1="0" x2="0" y1="0" y2="1">
+              <linearGradient id={gradientId} x1="0" x2="0" y1="0" y2="1">
                 <stop offset="0" stopColor={accent} stopOpacity="0.16" />
                 <stop offset="1" stopColor={accent} stopOpacity="0" />
               </linearGradient>
@@ -342,7 +326,7 @@ function SparkPanel({
               item.area ? (
                 <path
                   d={item.path?.area}
-                  fill="url(#netWorthEditorialGradient)"
+                  fill={`url(#${gradientId})`}
                   key={`${item.color}-${index}-area`}
                 />
               ) : null,
@@ -506,7 +490,7 @@ function buildRitualRows(
   activities: Activity[],
   dailyLogs: DailyLog[],
   dailyRoutineLogs: DailyRoutineLog[],
-): { adherence: number; rows: RitualRow[] } {
+): { adherence: number; completions: Map<string, boolean>; rows: RitualRow[] } {
   const dates = Array.from({ length: 21 }, (_, index) =>
     offsetDate(today, index - 20),
   );
@@ -567,6 +551,7 @@ function buildRitualRows(
 
   return {
     adherence: Math.round((totalDone / (dates.length * defs.length)) * 100),
+    completions,
     rows,
   };
 }
@@ -577,8 +562,7 @@ function shortAchievementLabel(label: string) {
     .replace(" Reading Pages", " Pages")
     .replace(" Hours ", "h ")
     .replace(" Minutes", "")
-    .replace("Net Worth", "NW")
-    .replace("Â£", "£");
+    .replace("Net Worth", "NW");
 }
 
 export function ControlRoomDashboard({
@@ -613,7 +597,14 @@ export function ControlRoomDashboard({
     dailyLogs,
     financeSnapshots,
   });
-  const questProgress = calculateQuestProgress(quests);
+  const questProgress = calculateQuestProgress(quests, {
+    activities,
+    consultantLogs,
+    dailyLogs,
+    financeSnapshots,
+    fitnessMetrics,
+    netWorthSnapshots,
+  });
   const activeQuests = questProgress
     .filter((quest) => (quest.status ?? "active").toLowerCase() === "active")
     .slice(0, 3);
@@ -635,7 +626,6 @@ export function ControlRoomDashboard({
     netWorthSnapshots,
   );
   const earnedAchievements = achievements.filter((achievement) => achievement.earned);
-  const visibleAchievements = achievements.slice(0, 11);
   const weekKm = runningDistanceBetween(activities, weekStart(today), today);
   const moodValues = valuesFromRows(dailyLogs, (row) => finiteNumber(row.mood_score));
   const sleepValues = valuesFromRows(fitnessMetrics, (row) =>
@@ -652,8 +642,7 @@ export function ControlRoomDashboard({
     netWorthValues.length > 1 ? Math.max(...netWorthValues) * 1.04 : undefined;
   const latestMood = latestValue(moodValues);
   const moodTrend = trend(moodValues);
-  const routineCompletions = routineCompletionMap(dailyRoutineLogs);
-  const { adherence, rows: ritualRows } = buildRitualRows(
+  const { adherence, completions: routineCompletions, rows: ritualRows } = buildRitualRows(
     today,
     activities,
     dailyLogs,
@@ -1003,6 +992,18 @@ export function ControlRoomDashboard({
                         <span className="truncate font-medium">{quest.title}</span>
                         <span className="text-[#bb5d3a]">{quest.progress}%</span>
                       </div>
+                      <div className="mb-1 flex justify-between gap-3 text-[10.5px] text-[#9a8d7a]">
+                        <span className="truncate">
+                          {quest.target_metric || "target"}
+                          {quest.progress_source === "auto" ? " - auto" : " - manual"}
+                        </span>
+                        <span>
+                          {formatNumber(quest.computed_current_value, {
+                            digits: 1,
+                          })}{" "}
+                          / {formatNumber(quest.target_value, { digits: 1 })}
+                        </span>
+                      </div>
                       <div className="h-1 bg-[#2c2824]/[0.1]">
                         <div
                           className="h-1 bg-[#bb5d3a]"
@@ -1075,7 +1076,7 @@ export function ControlRoomDashboard({
                 </span>
               </div>
               <div className="flex flex-wrap gap-1.5">
-                {visibleAchievements.map((achievement) => (
+                {achievements.map((achievement) => (
                   <span
                     className={`rounded-full px-2.5 py-1 text-[11px] font-semibold leading-tight ${
                       achievement.earned

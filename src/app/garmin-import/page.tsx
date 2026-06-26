@@ -56,13 +56,15 @@ export default async function GarminImportPage({
   const [activitiesCheck, fitnessCheck] = await Promise.all([
     supabase
       .from("activities")
-      .select("id")
+      .select("id,date")
       .eq("user_id", user.id)
+      .order("date", { ascending: false })
       .limit(1),
     supabase
       .from("fitness_metrics")
-      .select("id,sleep_score,training_load")
+      .select("id,date,sleep_score,training_load")
       .eq("user_id", user.id)
+      .order("date", { ascending: false })
       .limit(1),
   ]);
   const databaseSetupIssue = getDatabaseSetupIssue([
@@ -109,7 +111,10 @@ export default async function GarminImportPage({
             title="Run the database schema before importing Garmin data"
           />
         ) : (
-          <GarminImportTool />
+          <GarminImportTool
+            latestActivityDate={activitiesCheck.data?.[0]?.date ?? null}
+            latestFitnessDate={fitnessCheck.data?.[0]?.date ?? null}
+          />
         )}
       </div>
     </main>

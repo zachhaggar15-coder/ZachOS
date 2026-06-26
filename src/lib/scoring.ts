@@ -1,10 +1,14 @@
 import type {
   Activity,
+  ConsultantReadinessLog,
   DailyLog,
   FinanceSnapshot,
   FitnessMetric,
+  NetWorthSnapshot,
   Quest,
 } from "@/lib/supabase/database.types";
+import { calculateConsultantReadiness } from "@/lib/analytics";
+import { DAY_MS, isRunningActivity, numeric, toDate } from "@/lib/utils";
 
 export type CharacterAttribute = {
   detail: string;
@@ -27,32 +31,179 @@ export type LevelProgress = {
 };
 
 export type QuestProgress = Quest & {
+  computed_current_value: number;
   progress: number;
+  progress_source: "auto" | "manual";
+};
+
+export type QuestProgressInput = {
+  activities?: Activity[];
+  consultantLogs?: ConsultantReadinessLog[];
+  dailyLogs?: DailyLog[];
+  financeSnapshots?: FinanceSnapshot[];
+  fitnessMetrics?: FitnessMetric[];
+  netWorthSnapshots?: NetWorthSnapshot[];
 };
 
 const XP_PER_LEVEL = 1000;
-const DAY_MS = 24 * 60 * 60 * 1000;
-
-function numeric(value: number | null | undefined) {
-  return typeof value === "number" && Number.isFinite(value) ? value : 0;
-}
 
 function clampScore(value: number) {
   return Math.max(0, Math.min(100, Math.round(value)));
 }
 
-function toDate(date: string) {
-  return new Date(`${date}T12:00:00Z`);
+function metricKey(quest: Quest) {
+  return [quest.target_metric, quest.category, quest.title]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
 }
 
-function isRunningActivity(activity: Activity) {
-  const type = activity.activity_type?.toLowerCase() ?? "";
-  return (
-    !type ||
-    type.includes("run") ||
-    type.includes("jog") ||
-    type.includes("treadmill")
+function latestByDate<T extends { date: string }>(rows: T[] | undefined) {
+  if (!rows?.length) {
+    return null;
+  }
+
+  return [...rows].sort((a, b) => a.date.localeCompare(b.date)).at(-1) ?? null;
+}
+
+function sumConsultantWriting(consultantLogs: ConsultantReadinessLog[] | undefined) {
+  return (consultantLogs ?? []).reduce(
+    (total, log) => total + numeric(log.writing_minutes),
+    0,
   );
+}
+
+function runningDistanceThisMonth(activities: Activity[] | undefined) {
+  const running = (activities ?? []).filter(isRunningActivity);
+  const latest = latestByDate(running);
+
+  if (!latest) {
+    return 0;
+  }
+
+  const month = latest.date.slice(0, 7);
+  return running
+    .filter((activity) => activity.date.startsWith(month))
+    .reduce((total, activity) => total + numeric(activity.distance_km), 0);
+}
+
+function latestFinanceValue(
+  input: QuestProgressInput,
+  financeKey: "cash" | "invested" | "netWorth",
+) {
+  const latestFinance = latestByDate(input.financeSnapshots);
+  const latestNetWorth = latestByDate(input.netWorthSnapshots);
+
+  if (financeKey === "cash") {
+    return (
+      latestFinance?.cash_gbp ??
+      latestNetWorth?.cash_value ??
+      null
+    );
+  }
+
+  if (financeKey === "invested") {
+    return (
+      latestFinance?.invested_gbp ??
+      latestNetWorth?.invested_value ??
+      null
+    );
+  }
+
+  return (
+    latestFinance?.net_worth_gbp ??
+    latestNetWorth?.estimated_net_worth ??
+    null
+  );
+}
+
+function deriveQuestCurrentValue(quest: Quest, input: QuestProgressInput) {
+  const key = metricKey(quest);
+  const dailyTotals = sumDailyLogs(input.dailyLogs ?? []);
+  const latestDaily = latestByDate(input.dailyLogs);
+  const latestFitness = latestByDate(input.fitnessMetrics);
+
+  if (!key) {
+    return null;
+  }
+
+  if (
+    key.includes("consultant") ||
+    key.includes("readiness") ||
+    key.includes("veeva")
+  ) {
+    return calculateConsultantReadiness({
+      consultantLogs: input.consultantLogs ?? [],
+      dailyLogs: input.dailyLogs ?? [],
+    }).score;
+  }
+
+  if (key.includes("running") || key.includes("run ") || key.includes(" km")) {
+    return key.includes("month")
+      ? runningDistanceThisMonth(input.activities)
+      : runningDistanceTotal(input.activities ?? []);
+  }
+
+  if (key.includes("distance")) {
+    return runningDistanceTotal(input.activities ?? []);
+  }
+
+  if (key.includes("deep work") || key.includes("deepwork")) {
+    return dailyTotals.deepWork;
+  }
+
+  if (key.includes("french")) {
+    return dailyTotals.french;
+  }
+
+  if (key.includes("reading") || key.includes("read ") || key.includes("book")) {
+    return dailyTotals.reading;
+  }
+
+  if (key.includes("writing")) {
+    return sumConsultantWriting(input.consultantLogs);
+  }
+
+  if (key.includes("streak")) {
+    return calculateCurrentStreak(input.dailyLogs ?? []);
+  }
+
+  if (key.includes("log")) {
+    return input.dailyLogs?.length ?? 0;
+  }
+
+  if (
+    key.includes("invested") ||
+    key.includes("portfolio") ||
+    key.includes("isa") ||
+    key.includes("lisa")
+  ) {
+    return latestFinanceValue(input, "invested");
+  }
+
+  if (key.includes("net worth") || key.includes("wealth")) {
+    return latestFinanceValue(input, "netWorth");
+  }
+
+  if (key.includes("cash")) {
+    return latestFinanceValue(input, "cash");
+  }
+
+  if (key.includes("sleep") || key.includes("recovery")) {
+    return latestFitness?.sleep_score ?? null;
+  }
+
+  if (key.includes("hrv")) {
+    return latestFitness?.hrv ?? null;
+  }
+
+  if (key.includes("mood")) {
+    return latestDaily?.mood_score ?? null;
+  }
+
+  return null;
 }
 
 export function runningDistanceTotal(activities: Activity[]) {
@@ -181,7 +332,7 @@ export function calculateCharacterAttributes(input: {
     {
       detail: `${recentRunning.toFixed(1)} km in latest 30-day window`,
       label: "Endurance",
-      value: clampScore((recentRunning / 100) * 100),
+      value: clampScore(recentRunning), // 100 km/month = 100%
     },
     {
       detail: `${Math.round(sleepScore)} sleep score, ${Math.round(hrv)} HRV`,
@@ -278,14 +429,26 @@ export function calculateAchievements(input: {
   ];
 }
 
-export function calculateQuestProgress(quests: Quest[]): QuestProgress[] {
+export function calculateQuestProgress(
+  quests: Quest[],
+  input: QuestProgressInput = {},
+): QuestProgress[] {
   return quests.map((quest) => {
-    const current = numeric(quest.current_value);
+    const autoCurrent = deriveQuestCurrentValue(quest, input);
+    const current =
+      typeof autoCurrent === "number" && Number.isFinite(autoCurrent)
+        ? autoCurrent
+        : numeric(quest.current_value);
     const target = numeric(quest.target_value);
 
     return {
       ...quest,
+      computed_current_value: current,
       progress: target > 0 ? clampScore((current / target) * 100) : 0,
+      progress_source:
+        typeof autoCurrent === "number" && Number.isFinite(autoCurrent)
+          ? "auto"
+          : "manual",
     };
   });
 }
@@ -300,5 +463,44 @@ export function nextQuestAction(quests: QuestProgress[]) {
   }
 
   const quest = active[0];
+  const key = metricKey(quest);
+
+  if (key.includes("running") || key.includes("run ") || key.includes("distance")) {
+    return `Push "${quest.title}" next: import the latest Garmin export or add the next easy run.`;
+  }
+
+  if (key.includes("deep work") || key.includes("deepwork")) {
+    return `Push "${quest.title}" next: do one protected 60-90 minute deep work block.`;
+  }
+
+  if (key.includes("french")) {
+    return `Push "${quest.title}" next: add one 20-30 minute French session.`;
+  }
+
+  if (key.includes("reading") || key.includes("read ") || key.includes("book")) {
+    return `Push "${quest.title}" next: read 10 pages and capture one useful idea.`;
+  }
+
+  if (
+    key.includes("consultant") ||
+    key.includes("readiness") ||
+    key.includes("veeva")
+  ) {
+    return `Push "${quest.title}" next: write one client-style recommendation from today's reading.`;
+  }
+
+  if (
+    key.includes("invested") ||
+    key.includes("portfolio") ||
+    key.includes("net worth") ||
+    key.includes("wealth")
+  ) {
+    return `Push "${quest.title}" next: refresh portfolio prices or add the latest finance snapshot.`;
+  }
+
+  if (key.includes("sleep") || key.includes("recovery") || key.includes("hrv")) {
+    return `Push "${quest.title}" next: keep training light and protect tonight's sleep window.`;
+  }
+
   return `Push "${quest.title}" next: add progress to ${quest.target_metric || "its target metric"}.`;
 }

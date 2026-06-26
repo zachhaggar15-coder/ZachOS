@@ -10,6 +10,11 @@ type ParsedCsv = {
   rows: Record<string, string>[];
 };
 
+type GarminImportToolProps = {
+  latestActivityDate?: string | null;
+  latestFitnessDate?: string | null;
+};
+
 const FIELD_OPTIONS = [
   { label: "Ignore", value: "ignore" },
   { label: "Date", value: "date" },
@@ -32,6 +37,29 @@ const FIELD_OPTIONS = [
 
 const selectClass =
   "h-10 rounded border border-white/10 bg-[#0b1016] px-3 text-sm text-zinc-100 outline-none transition focus:border-cyan-300/70";
+
+function formatFreshness(date: string | null | undefined) {
+  if (!date) {
+    return "No imported data yet";
+  }
+
+  const today = new Date();
+  const value = new Date(`${date}T12:00:00Z`);
+  const days = Math.max(
+    0,
+    Math.round((today.getTime() - value.getTime()) / (24 * 60 * 60 * 1000)),
+  );
+
+  if (days === 0) {
+    return `${date} - up to date`;
+  }
+
+  if (days <= 7) {
+    return `${date} - ${days} day${days === 1 ? "" : "s"} old`;
+  }
+
+  return `${date} - refresh recommended`;
+}
 
 function normaliseHeader(header: string) {
   return header.toLowerCase().replace(/[^a-z0-9]/g, "");
@@ -166,7 +194,10 @@ function toParsedCsv(text: string): ParsedCsv {
   };
 }
 
-export function GarminImportTool() {
+export function GarminImportTool({
+  latestActivityDate,
+  latestFitnessDate,
+}: GarminImportToolProps) {
   const [parsedCsv, setParsedCsv] = useState<ParsedCsv | null>(null);
   const [mapping, setMapping] = useState<Record<string, string>>({});
   const [fileName, setFileName] = useState("");
@@ -278,16 +309,35 @@ export function GarminImportTool() {
   return (
     <div className="grid gap-6">
       <section className="rounded border border-cyan-200/20 bg-cyan-200/[0.045] p-5">
-        <p className="font-mono text-[0.68rem] uppercase tracking-[0.22em] text-cyan-200/70">
-          Historical Garmin export
-        </p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white">
-          Import full Garmin history
-        </h1>
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div>
+            <p className="font-mono text-[0.68rem] uppercase tracking-[0.22em] text-cyan-200/70">
+              Recommended Garmin path
+            </p>
+            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white">
+              One-upload Garmin history import
+            </h1>
+          </div>
+          <div className="grid gap-2 rounded border border-white/10 bg-black/20 p-3 text-xs text-zinc-400">
+            <div>
+              <span className="text-zinc-500">Latest activity: </span>
+              <span className="text-zinc-200">
+                {formatFreshness(latestActivityDate)}
+              </span>
+            </div>
+            <div>
+              <span className="text-zinc-500">Latest recovery day: </span>
+              <span className="text-zinc-200">
+                {formatFreshness(latestFitnessDate)}
+              </span>
+            </div>
+          </div>
+        </div>
         <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-400">
           Upload the original Garmin account export ZIP. Zach OS will import
           historical activity summaries, sleep scores, HRV, resting HR,
-          training status and acute training load where those files exist.
+          training status and acute training load where those files exist. No
+          column mapping is needed for this route.
         </p>
         <form
           className="mt-5 grid gap-3 md:grid-cols-[1fr_auto]"
@@ -310,7 +360,12 @@ export function GarminImportTool() {
         <p className="mt-3 text-xs leading-5 text-zinc-500">
           Large Garmin exports are best imported while running Zach OS locally.
           The import is safe to rerun because rows are upserted by date or
-          Garmin activity ID.
+          Garmin activity ID. If the latest dates above are stale, request a new
+          Garmin export and upload the new ZIP.
+        </p>
+        <p className="mt-2 text-xs leading-5 text-zinc-600">
+          Zach OS does not store your Garmin password or automate Garmin Connect
+          login; the upload uses files you have exported yourself.
         </p>
         {zipImportResult && (
           <p className="mt-3 rounded border border-emerald-300/25 bg-emerald-400/10 px-3 py-2 text-sm text-emerald-100">
@@ -333,8 +388,8 @@ export function GarminImportTool() {
         </h1>
         <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-400">
           Upload an exported Garmin CSV, review the parsed rows, map columns to
-          Zach OS fields, then save. This does not use Garmin credentials,
-          unofficial APIs or Garmin Connect scraping.
+          Zach OS fields, then save. Use this only when the full account export
+          ZIP does not contain the Garmin-specific file you need.
         </p>
         <label className="mt-5 flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-cyan-200/30 bg-cyan-200/[0.035] px-4 py-8 text-center transition hover:bg-cyan-200/[0.06]">
           <span className="text-sm font-semibold text-cyan-100">

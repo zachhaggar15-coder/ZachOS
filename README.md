@@ -10,10 +10,11 @@ It tracks fitness, finance and intellectual habits with a dark analytics dashboa
 - Server-rendered private dashboard after login.
 - One-screen control-room dashboard at `/`, with detailed forms moved to `/manage`.
 - Quick daily check-in on `/manage` for habits, sleep score, recovery metrics and writing practice in one form.
-- Manual add/update forms for daily logs, fitness metrics, finance snapshots and quests.
+- Manual add/update forms for daily logs, fitness metrics and finance snapshots.
+- Auto-derived quest progress from Garmin/Strava activities, daily logs, consultant logs and finance snapshots, with manual quest values only as fallback.
 - One-click import for the historical net worth snapshot from February 2024 to June 2026.
 - Strava OAuth automatic activity import at `/integrations`.
-- Manual Garmin account-export ZIP import at `/garmin-import`.
+- One-upload Garmin account-export ZIP import at `/garmin-import`.
 - Manual Garmin CSV import with preview and column mapping.
 - Imported activity data saved into `activities`; mapped health metrics saved into `fitness_metrics`.
 - Clickable dashboard graphs that open table drilldowns under `/charts/...`.
@@ -42,7 +43,7 @@ The AI prompt is intentionally constrained:
 
 - Use only stored Zach OS dashboard data.
 - Do not make medical claims.
-- Give cautious, practical observations.
+- Give cautious, practical, coach-like observations with the metric evidence behind each recommendation.
 - Say when data is missing or unclear.
 
 Daily summaries include:
@@ -72,15 +73,17 @@ The local fallback also compares the latest 7-day period with the previous
 
 ## Garmin Import
 
-Garmin remains intentionally manual and safe. Use it for Garmin-specific health
-and recovery metrics such as sleep score, HRV, resting HR, training status and
-training load.
+Garmin remains export-based and safe. Use it for Garmin-specific health and
+recovery metrics such as sleep score, HRV, resting HR, training status and
+training load. The recommended path is the account-export ZIP importer because
+it auto-detects known Garmin JSON files and does not require column mapping.
 
 For a full historical import:
 
 - Request/export your Garmin account data from Garmin.
 - Upload the original ZIP at `/garmin-import`.
 - Zach OS imports activity summaries, sleep scores, sleep duration, HRV, resting HR, training status and acute training load where those JSON files exist.
+- The import page shows the latest activity and recovery dates already stored so you can see whether another export is needed.
 - Re-running the same ZIP is safe; activities are upserted by Garmin activity ID and fitness metrics by date.
 - After large historical imports, the dashboard loads the newest rows first and then sorts them for charts, so old archive rows do not hide recent data.
 
@@ -92,7 +95,7 @@ For smaller/manual imports:
 - Map CSV columns to Zach OS fields.
 - Save the import.
 
-This app does **not** use unofficial Garmin credentials, does **not** scrape Garmin Connect login, and does **not** store Garmin account credentials.
+This app does **not** use unofficial Garmin credentials, does **not** scrape Garmin Connect login, and does **not** store Garmin account credentials. This keeps the integration deployable on Vercel and avoids putting Garmin passwords into Zach OS.
 
 Supported import fields:
 
@@ -411,7 +414,9 @@ Achievements:
 
 ## Quests
 
-Quests are created manually from the dashboard.
+Quests are created manually from the dashboard, but progress is mostly derived
+automatically from stored data. The saved `current_value` is treated as a
+fallback/manual override when Zach OS cannot infer the metric.
 
 Fields:
 
@@ -423,6 +428,19 @@ Fields:
 - `deadline`
 - `status`
 
+Auto-derived target examples:
+
+- `running km`
+- `deep work`
+- `French`
+- `reading`
+- `writing`
+- `consultant readiness`
+- `invested`
+- `net worth`
+- `sleep score`
+- `HRV`
+
 Example quests:
 
 - Run Wales
@@ -430,7 +448,7 @@ Example quests:
 - Reach £100k Invested
 - Become Conversational in French
 
-The dashboard shows active quests, progress bars and a next suggested action based on the active quest with the lowest progress.
+The dashboard shows active quests, progress bars and a next suggested action based on the active quest with the lowest progress. Quest progress is auto-derived when the title, category or target metric mentions running/distance, deep work, French, reading, writing, consultant readiness, invested value, net worth, cash, sleep, recovery, HRV, mood, streaks or logs.
 
 ## Historical Net Worth Import
 
