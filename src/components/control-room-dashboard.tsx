@@ -663,15 +663,6 @@ export function ControlRoomDashboard({
           </div>
 
           <div className="flex flex-1 flex-wrap items-start justify-between gap-4">
-            <div className="rounded-full bg-[#1f2422] p-1 shadow-[0_16px_34px_rgba(44,40,36,0.15)]">
-              <button className="h-8 rounded-full px-5 text-sm font-semibold text-[#d3c3ad]">
-                Command
-              </button>
-              <button className="h-8 rounded-full bg-[#cf6942] px-5 text-sm font-semibold text-white">
-                Editorial
-              </button>
-            </div>
-
             <div className="text-center">
               <div className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#9a7d5f]">
                 Level {level.level} · {level.totalXp.toLocaleString("en-GB")} XP
