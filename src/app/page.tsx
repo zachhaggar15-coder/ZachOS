@@ -66,6 +66,7 @@ export default async function Home({ searchParams }: HomeProps) {
     activities,
     quests,
     consultantLogs,
+    dailyRoutineLogs,
     portfolioAccounts,
     marketPrices,
     netWorthSnapshots,
@@ -108,6 +109,12 @@ export default async function Home({ searchParams }: HomeProps) {
         .order("date", { ascending: false })
         .limit(365),
       supabase
+        .from("daily_routine_logs")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("date", { ascending: false })
+        .limit(1000),
+      supabase
         .from("portfolio_accounts")
         .select("*, holdings:portfolio_holdings(*)")
         .eq("user_id", user.id)
@@ -128,6 +135,7 @@ export default async function Home({ searchParams }: HomeProps) {
     activities.error,
     quests.error,
     consultantLogs.error,
+    dailyRoutineLogs.error,
     portfolioAccounts.error,
     marketPrices.error,
     netWorthSnapshots.error,
@@ -143,6 +151,7 @@ export default async function Home({ searchParams }: HomeProps) {
       activities={sortByDateAscending(activities.data ?? [])}
       consultantLogs={sortByDateAscending(consultantLogs.data ?? [])}
       dailyLogs={sortByDateAscending(dailyLogs.data ?? [])}
+      dailyRoutineLogs={sortByDateAscending(dailyRoutineLogs.data ?? [])}
       databaseSetupIssue={databaseSetupIssue}
       error={
         params.error ??

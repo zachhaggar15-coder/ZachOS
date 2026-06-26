@@ -195,7 +195,7 @@ Open [http://localhost:3000](http://localhost:3000).
 2. In Supabase, go to **Authentication > Providers** and enable Email.
 3. Copy the project URL and anon key into `.env.local`.
 4. For a fresh database, run [`supabase/schema.sql`](./supabase/schema.sql) in the Supabase SQL Editor.
-5. For an existing Zach OS database, run the migration files in [`supabase/migrations`](./supabase/migrations), including `20260623_add_sleep_score_simplify_manual_input.sql`, `20260623_add_garmin_training_load.sql` and `20260623_add_portfolio_module.sql`.
+5. For an existing Zach OS database, run the migration files in [`supabase/migrations`](./supabase/migrations), including `20260623_add_sleep_score_simplify_manual_input.sql`, `20260623_add_garmin_training_load.sql`, `20260623_add_portfolio_module.sql` and `20260626_add_daily_routine_logs.sql`.
 6. Start the app, create an account, then log in.
 
 ## Database Schema
@@ -212,6 +212,15 @@ The schema creates these tables:
   - `reading_pages integer`
   - `notes text`
   - `created_at timestamptz`
+
+- `daily_routine_logs`
+  - `id uuid primary key`
+  - `user_id uuid references auth.users(id)`
+  - `date date`
+  - `routine_key text`
+  - `completed boolean`
+  - `created_at timestamptz`
+  - `updated_at timestamptz`
 
 - `fitness_metrics`
   - `id uuid primary key`
@@ -325,13 +334,14 @@ The schema creates these tables:
   - `cash_value numeric`
   - `created_at timestamptz`
 
-`daily_logs`, `fitness_metrics`, `finance_snapshots` and `consultant_readiness_logs` use unique `(user_id, date)` constraints so forms can upsert one daily value per user.
+`daily_logs`, `fitness_metrics`, `finance_snapshots` and `consultant_readiness_logs` use unique `(user_id, date)` constraints so forms can upsert one daily value per user. `daily_routine_logs` uses unique `(user_id, date, routine_key)` rows so each dashboard ritual can be toggled once per day and feed the ritual consistency graph.
 
 ## Row Level Security
 
 RLS is enabled for all user-owned tables:
 
 - `daily_logs`
+- `daily_routine_logs`
 - `fitness_metrics`
 - `finance_snapshots`
 - `activities`

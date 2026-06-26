@@ -71,6 +71,14 @@ const GARMIN_FIELDS = new Set<GarminField>([
   "training_status",
   "weekly_distance_km",
 ]);
+const DAILY_ROUTINE_KEYS = new Set([
+  "train",
+  "deep_work",
+  "french",
+  "read",
+  "ate_well",
+  "cold_shower",
+]);
 
 function formString(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -417,6 +425,34 @@ export async function saveQuickDailyEntry(formData: FormData) {
   revalidatePath("/");
   revalidatePath("/manage");
   redirectToManageWithMessage("Daily check-in saved.");
+}
+
+export async function toggleDailyRoutine(formData: FormData) {
+  const { supabase, user } = await requireAuthenticatedUser();
+  const date = formString(formData, "date") || todayInLondon();
+  const routineKey = formString(formData, "routine_key");
+  const completed = formString(formData, "completed") === "true";
+
+  if (!DAILY_ROUTINE_KEYS.has(routineKey)) {
+    redirectWithError("Unknown daily routine.");
+  }
+
+  const { error } = await supabase.from("daily_routine_logs").upsert(
+    {
+      completed,
+      date,
+      routine_key: routineKey,
+      updated_at: new Date().toISOString(),
+      user_id: user.id,
+    },
+    { onConflict: "user_id,date,routine_key" },
+  );
+
+  if (error) {
+    redirectWithError(friendlyDatabaseError(error));
+  }
+
+  revalidatePath("/");
 }
 
 export async function upsertConsultantReadinessLog(formData: FormData) {

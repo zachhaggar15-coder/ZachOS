@@ -169,6 +169,36 @@ export type Database = {
         };
         Relationships: [];
       };
+      daily_routine_logs: {
+        Row: {
+          completed: boolean;
+          created_at: string;
+          date: string;
+          id: string;
+          routine_key: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          completed?: boolean;
+          created_at?: string;
+          date: string;
+          id?: string;
+          routine_key: string;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          completed?: boolean;
+          created_at?: string;
+          date?: string;
+          id?: string;
+          routine_key?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       finance_snapshots: {
         Row: {
           cash_gbp: number | null;
@@ -420,6 +450,8 @@ export type Database = {
 };
 
 export type DailyLog = Database["public"]["Tables"]["daily_logs"]["Row"];
+export type DailyRoutineLog =
+  Database["public"]["Tables"]["daily_routine_logs"]["Row"];
 export type Activity = Database["public"]["Tables"]["activities"]["Row"];
 export type StravaConnection =
   Database["public"]["Tables"]["strava_connections"]["Row"];

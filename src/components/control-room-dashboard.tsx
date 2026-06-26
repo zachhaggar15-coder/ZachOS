@@ -1,6 +1,10 @@
 import Link from "next/link";
 
-import { saveQuickDailyEntry, signOut } from "@/app/actions";
+import {
+  saveQuickDailyEntry,
+  signOut,
+  toggleDailyRoutine,
+} from "@/app/actions";
 import { DatabaseSetupNotice } from "@/components/database-setup-notice";
 import { PortfolioPriceRefresher } from "@/components/portfolio-price-refresher";
 import { buildOperatingRecommendation } from "@/lib/ai-insights";
@@ -24,6 +28,7 @@ import type {
   Activity,
   ConsultantReadinessLog,
   DailyLog,
+  DailyRoutineLog,
   FinanceSnapshot,
   FitnessMetric,
   MarketPrice,
@@ -35,6 +40,7 @@ type ControlRoomDashboardProps = {
   activities: Activity[];
   consultantLogs: ConsultantReadinessLog[];
   dailyLogs: DailyLog[];
+  dailyRoutineLogs: DailyRoutineLog[];
   databaseSetupIssue?: DatabaseSetupIssue | null;
   error?: string;
   financeSnapshots: FinanceSnapshot[];
@@ -66,6 +72,13 @@ type RitualRow = {
 const ink = "#2c2824";
 const accent = "#bb5d3a";
 const blue = "#6f7d8c";
+type RoutineKey =
+  | "train"
+  | "deep_work"
+  | "french"
+  | "read"
+  | "ate_well"
+  | "cold_shower";
 
 const currencyFormatter = new Intl.NumberFormat("en-GB", {
   currency: "GBP",
@@ -132,6 +145,21 @@ function offsetDate(date: string, offset: number) {
   const value = toDate(date);
   value.setUTCDate(value.getUTCDate() + offset);
   return value.toISOString().slice(0, 10);
+}
+
+function routineCompletionMap(logs: DailyRoutineLog[]) {
+  return new Map(
+    logs.map((log) => [`${log.date}:${log.routine_key}`, log.completed]),
+  );
+}
+
+function routineDone(
+  completions: Map<string, boolean>,
+  date: string,
+  routineKey: RoutineKey,
+  fallback: boolean,
+) {
+  return completions.get(`${date}:${routineKey}`) ?? fallback;
 }
 
 function weekStart(date: string) {
@@ -412,25 +440,38 @@ function RitualHeatmap({ rows }: { rows: RitualRow[] }) {
 }
 
 function DailyRitual({
+  date,
   done,
   name,
+  routineKey,
   target,
   unit,
   value,
 }: {
+  date: string;
   done: boolean;
   name: string;
+  routineKey: RoutineKey;
   target?: number;
   unit?: string;
   value?: number;
 }) {
   return (
-    <div className="flex items-center gap-2.5">
+    <form action={toggleDailyRoutine}>
+      <input name="date" type="hidden" value={date} />
+      <input name="routine_key" type="hidden" value={routineKey} />
+      <input name="completed" type="hidden" value={(!done).toString()} />
+      <button
+        aria-pressed={done}
+        className="group flex w-full items-center gap-2.5 rounded-md px-1 py-0.5 text-left transition hover:bg-[#2c2824]/[0.05]"
+        title={done ? `Mark ${name} incomplete` : `Mark ${name} complete`}
+        type="submit"
+      >
       <span
         className={`flex h-[15px] w-[15px] flex-none items-center justify-center rounded-full text-[10px] font-bold ${
           done
             ? "bg-[#bb5d3a] text-[#f9f4ec]"
-            : "border border-[#2c2824]/25"
+            : "border border-[#2c2824]/25 group-hover:border-[#bb5d3a]/60"
         }`}
       >
         {done ? "✓" : ""}
@@ -446,19 +487,17 @@ function DailyRitual({
       </span>
       {target !== undefined && (
         <>
-          <input
-            className="zach-ui h-8 w-[54px] rounded-md border border-[#2c2824]/20 bg-white px-2 text-center text-xs font-semibold text-[#3a342c] outline-none"
-            readOnly
-            type="number"
-            value={Math.round(value ?? 0)}
-          />
+          <span className="zach-ui h-8 w-[54px] rounded-md border border-[#2c2824]/20 bg-white px-2 text-center text-xs font-semibold leading-8 text-[#3a342c]">
+            {Math.round(value ?? 0)}
+          </span>
           <span className="zach-ui w-10 text-[11px] font-medium text-[#9a8d7a]">
             / {target}
             {unit}
           </span>
         </>
       )}
-    </div>
+      </button>
+    </form>
   );
 }
 
@@ -466,43 +505,56 @@ function buildRitualRows(
   today: string,
   activities: Activity[],
   dailyLogs: DailyLog[],
+  dailyRoutineLogs: DailyRoutineLog[],
 ): { adherence: number; rows: RitualRow[] } {
   const dates = Array.from({ length: 21 }, (_, index) =>
     offsetDate(today, index - 20),
   );
   const dailyByDate = new Map(dailyLogs.map((log) => [log.date, log]));
   const activityDates = new Set(activities.map((activity) => activity.date));
+  const completions = routineCompletionMap(dailyRoutineLogs);
   const defs = [
     {
+      key: "train" as const,
       name: "Train",
-      on: (date: string) => activityDates.has(date),
+      fallback: (date: string) => activityDates.has(date),
     },
     {
+      key: "deep_work" as const,
       name: "Deep work",
-      on: (date: string) => numeric(dailyByDate.get(date)?.deep_work_hours) > 0,
+      fallback: (date: string) =>
+        numeric(dailyByDate.get(date)?.deep_work_hours) > 0,
     },
     {
+      key: "french" as const,
       name: "French",
-      on: (date: string) => numeric(dailyByDate.get(date)?.french_minutes) > 0,
+      fallback: (date: string) =>
+        numeric(dailyByDate.get(date)?.french_minutes) > 0,
     },
     {
+      key: "read" as const,
       name: "Read",
-      on: (date: string) => numeric(dailyByDate.get(date)?.reading_pages) > 0,
+      fallback: (date: string) =>
+        numeric(dailyByDate.get(date)?.reading_pages) > 0,
     },
     {
+      key: "ate_well" as const,
       name: "Ate well",
-      on: (date: string) =>
+      fallback: (date: string) =>
         (dailyByDate.get(date)?.notes ?? "").toLowerCase().includes("ate well"),
     },
     {
+      key: "cold_shower" as const,
       name: "Cold shower",
-      on: (date: string) =>
+      fallback: (date: string) =>
         (dailyByDate.get(date)?.notes ?? "").toLowerCase().includes("cold shower"),
     },
   ];
   let totalDone = 0;
   const rows = defs.map((def) => {
-    const cells = dates.map(def.on);
+    const cells = dates.map((date) =>
+      routineDone(completions, date, def.key, def.fallback(date)),
+    );
     const done = cells.filter(Boolean).length;
     totalDone += done;
 
@@ -543,6 +595,7 @@ export function ControlRoomDashboard({
   portfolioAccounts,
   quests,
   today,
+  dailyRoutineLogs,
   userEmail,
 }: ControlRoomDashboardProps) {
   const todayLog = dailyLogs.find((log) => log.date === today) ?? null;
@@ -599,41 +652,80 @@ export function ControlRoomDashboard({
     netWorthValues.length > 1 ? Math.max(...netWorthValues) * 1.04 : undefined;
   const latestMood = latestValue(moodValues);
   const moodTrend = trend(moodValues);
+  const routineCompletions = routineCompletionMap(dailyRoutineLogs);
   const { adherence, rows: ritualRows } = buildRitualRows(
     today,
     activities,
     dailyLogs,
+    dailyRoutineLogs,
   );
   const deepWorkMinutes = Math.round(numeric(todayLog?.deep_work_hours) * 60);
   const frenchMinutes = numeric(todayLog?.french_minutes);
   const readingPages = numeric(todayLog?.reading_pages);
   const todayHasActivity = activities.some((activity) => activity.date === today);
   const todayNotes = (todayLog?.notes ?? "").toLowerCase();
-  const habitRows = [
-    { done: todayHasActivity, name: "Train - light" },
+  const habitRows: Array<{
+    done: boolean;
+    name: string;
+    routineKey: RoutineKey;
+    target?: number;
+    unit?: string;
+    value?: number;
+  }> = [
     {
-      done: deepWorkMinutes >= 90,
+      done: routineDone(routineCompletions, today, "train", todayHasActivity),
+      name: "Train - light",
+      routineKey: "train",
+    },
+    {
+      done: routineDone(
+        routineCompletions,
+        today,
+        "deep_work",
+        deepWorkMinutes >= 90,
+      ),
       name: "Deep work",
+      routineKey: "deep_work",
       target: 90,
       unit: "m",
       value: deepWorkMinutes,
     },
     {
-      done: frenchMinutes >= 30,
+      done: routineDone(routineCompletions, today, "french", frenchMinutes >= 30),
       name: "French",
+      routineKey: "french",
       target: 30,
       unit: "m",
       value: frenchMinutes,
     },
     {
-      done: readingPages >= 20,
+      done: routineDone(routineCompletions, today, "read", readingPages >= 20),
       name: "Read",
+      routineKey: "read",
       target: 20,
       unit: "p",
       value: readingPages,
     },
-    { done: todayNotes.includes("ate well"), name: "Ate well" },
-    { done: todayNotes.includes("cold shower"), name: "Cold shower" },
+    {
+      done: routineDone(
+        routineCompletions,
+        today,
+        "ate_well",
+        todayNotes.includes("ate well"),
+      ),
+      name: "Ate well",
+      routineKey: "ate_well",
+    },
+    {
+      done: routineDone(
+        routineCompletions,
+        today,
+        "cold_shower",
+        todayNotes.includes("cold shower"),
+      ),
+      name: "Cold shower",
+      routineKey: "cold_shower",
+    },
   ];
   const habitDone = habitRows.filter((row) => row.done).length;
   const investedValue = portfolioSummary.totalInvested || currentFinance?.invested_gbp;
@@ -937,9 +1029,11 @@ export function ControlRoomDashboard({
               <div className="grid gap-2">
                 {habitRows.map((habit) => (
                   <DailyRitual
+                    date={today}
                     done={habit.done}
                     key={habit.name}
                     name={habit.name}
+                    routineKey={habit.routineKey}
                     target={habit.target}
                     unit={habit.unit}
                     value={habit.value}
