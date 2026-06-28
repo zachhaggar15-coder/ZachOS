@@ -216,12 +216,15 @@ function makeSparkPath(values: number[], min?: number, max?: number) {
   const width = 100;
   const height = 30;
   const pad = 2;
+  const clampY = (value: number) => Math.max(pad, Math.min(height - pad, value));
   const x = (index: number) =>
     pad + (width - pad * 2) * (index / (usableValues.length - 1));
   const y = (value: number) =>
-    pad +
-    (height - pad * 2) *
-      (1 - (value - resolvedMin) / (resolvedMax - resolvedMin));
+    clampY(
+      pad +
+        (height - pad * 2) *
+          (1 - (value - resolvedMin) / (resolvedMax - resolvedMin)),
+    );
   const points = usableValues.map((value, index) => [x(index), y(value)]);
   let d = `M ${points[0][0].toFixed(2)} ${points[0][1].toFixed(2)}`;
 
@@ -322,26 +325,21 @@ function SparkPanel({
                 <stop offset="1" stopColor={accent} stopOpacity="0" />
               </linearGradient>
             </defs>
-            {drawable.map((item, index) =>
-              item.area ? (
-                <path
-                  d={item.path?.area}
-                  fill={`url(#${gradientId})`}
-                  key={`${item.color}-${index}-area`}
-                />
-              ) : null,
-            )}
             {drawable.map((item, index) => (
-              <path
-                d={item.path?.d}
-                fill="none"
-                key={`${item.color}-${index}`}
-                stroke={item.color}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={item.strokeWidth ?? 1.5}
-                vectorEffect="non-scaling-stroke"
-              />
+              <g key={`${item.color}-${index}`}>
+                {item.area && (
+                  <path d={item.path?.area} fill={`url(#${gradientId})`} />
+                )}
+                <path
+                  d={item.path?.d}
+                  fill="none"
+                  stroke={item.color}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={item.strokeWidth ?? 1.5}
+                  vectorEffect="non-scaling-stroke"
+                />
+              </g>
             ))}
           </svg>
         ) : (
@@ -458,7 +456,7 @@ function DailyRitual({
             : "border border-[#2c2824]/25 group-hover:border-[#bb5d3a]/60"
         }`}
       >
-        {done ? "✓" : ""}
+        {done ? "x" : ""}
       </span>
       <span
         className={`zach-ui flex-1 text-[12.5px] font-medium leading-tight ${
@@ -558,6 +556,7 @@ function buildRitualRows(
 
 function shortAchievementLabel(label: string) {
   return label
+    .replace("GBP ", "")
     .replace(" Running ", " ")
     .replace(" Reading Pages", " Pages")
     .replace(" Hours ", "h ")
@@ -626,6 +625,7 @@ export function ControlRoomDashboard({
     netWorthSnapshots,
   );
   const earnedAchievements = achievements.filter((achievement) => achievement.earned);
+  const visibleAchievements = achievements.slice(0, 11);
   const weekKm = runningDistanceBetween(activities, weekStart(today), today);
   const moodValues = valuesFromRows(dailyLogs, (row) => finiteNumber(row.mood_score));
   const sleepValues = valuesFromRows(fitnessMetrics, (row) =>
@@ -746,7 +746,7 @@ export function ControlRoomDashboard({
           <div className="flex flex-1 flex-wrap items-start justify-between gap-4">
             <div className="text-center">
               <div className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#9a7d5f]">
-                Level {level.level} · {level.totalXp.toLocaleString("en-GB")} XP
+                Level {level.level} - {level.totalXp.toLocaleString("en-GB")} XP
               </div>
               <div className="zach-display mt-1 text-[18px] leading-none text-[#5a3228]">
                 {formatHeaderDate(today)}
@@ -757,7 +757,7 @@ export function ControlRoomDashboard({
               <details className="group relative">
                 <summary className="zach-ui inline-flex h-9 cursor-pointer list-none items-center rounded-md border border-[#bb5d3a] bg-[#bb5d3a] px-4 text-sm font-semibold text-[#f9f4ec] transition hover:bg-[#a94f31] [&::-webkit-details-marker]:hidden">
                   + Quick add
-                  <span className="ml-2 text-[10px]">▼</span>
+                  <span className="ml-2 text-[10px]">v</span>
                 </summary>
                 <form
                   action={saveQuickDailyEntry}
@@ -830,22 +830,22 @@ export function ControlRoomDashboard({
               <VitalRow
                 label="Mood"
                 sub={todayLog ? "logged today" : "no log today"}
-                value={formatNumber(todayLog?.mood_score, { dash: "—" })}
+                value={formatNumber(todayLog?.mood_score, { dash: "--" })}
               />
               <VitalRow
                 label="Deep work"
                 sub={todayLog ? "hours" : "no log today"}
-                value={formatNumber(todayLog?.deep_work_hours, { dash: "—" })}
+                value={formatNumber(todayLog?.deep_work_hours, { dash: "--" })}
               />
               <VitalRow
                 label="Sleep"
                 sub="score"
-                value={formatNumber(currentFitness?.sleep_score, { dash: "—", digits: 0 })}
+                value={formatNumber(currentFitness?.sleep_score, { dash: "--", digits: 0 })}
               />
               <VitalRow
                 label="Running"
                 sub="weekly km"
-                value={formatNumber(weekKm, { dash: "—", digits: 0 })}
+                value={formatNumber(weekKm, { dash: "--", digits: 0 })}
               />
               <VitalRow
                 label="Readiness"
@@ -855,7 +855,7 @@ export function ControlRoomDashboard({
               <VitalRow
                 label="HRV"
                 sub="ms"
-                value={formatNumber(currentFitness?.hrv, { dash: "—", digits: 0 })}
+                value={formatNumber(currentFitness?.hrv, { dash: "--", digits: 0 })}
               />
             </div>
 
@@ -876,16 +876,16 @@ export function ControlRoomDashboard({
           <section className="flex min-h-0 flex-col px-9">
             <SparkPanel
               href="/charts/mood"
-              label="Mood · 14-day"
+              label="Mood - 14-day"
               series={[{ color: accent, max: 10, min: 0, values: moodValues }]}
               value={
                 <div className="flex items-baseline gap-2">
                   <span className="zach-display text-[34px] font-medium leading-none text-[#0f1720]">
-                    {formatNumber(latestMood, { dash: "—", digits: 1 })}
+                    {formatNumber(latestMood, { dash: "--", digits: 1 })}
                   </span>
                   {moodTrend && (
                     <span className="text-[11px] font-semibold text-[#7a8c5a]">
-                      {moodTrend === "up" ? "▲ up" : "▼ down"}
+                      {moodTrend}
                     </span>
                   )}
                 </div>
@@ -894,7 +894,7 @@ export function ControlRoomDashboard({
 
             <SparkPanel
               href="/charts/recovery"
-              label="Sleep score · HRV"
+              label="Sleep score - HRV"
               series={[
                 { color: blue, max: 70, min: 30, strokeWidth: 1.2, values: hrvValues },
                 { color: ink, max: 100, min: 40, strokeWidth: 1.5, values: sleepValues },
@@ -902,10 +902,10 @@ export function ControlRoomDashboard({
               value={
                 <div className="flex items-baseline gap-3">
                   <span className="zach-display text-[34px] font-medium leading-none text-[#0f1720]">
-                    {formatNumber(currentFitness?.sleep_score, { dash: "—", digits: 0 })}
+                    {formatNumber(currentFitness?.sleep_score, { dash: "--", digits: 0 })}
                   </span>
                   <span className="text-[11px] font-semibold text-[#6f7d8c]">
-                    HRV {formatNumber(currentFitness?.hrv, { dash: "—", digits: 0 })}
+                    HRV {formatNumber(currentFitness?.hrv, { dash: "--", digits: 0 })}
                   </span>
                 </div>
               }
@@ -913,7 +913,7 @@ export function ControlRoomDashboard({
 
             <SparkPanel
               href="/charts/net-worth"
-              label="Net worth · 8-month"
+              label="Net worth - 8-month"
               series={[
                 {
                   area: true,
@@ -937,7 +937,7 @@ export function ControlRoomDashboard({
 
             <div className="flex min-h-0 flex-1 flex-col pt-3.5">
               <div className="flex items-baseline justify-between gap-4">
-                <SectionKicker>Ritual consistency · 21-day</SectionKicker>
+                <SectionKicker>Ritual consistency - 21-day</SectionKicker>
                 <div className="flex items-baseline gap-2">
                   <span className="zach-display text-[34px] font-medium leading-none text-[#0f1720]">
                     {adherence}%
@@ -1076,7 +1076,7 @@ export function ControlRoomDashboard({
                 </span>
               </div>
               <div className="flex flex-wrap gap-1.5">
-                {achievements.map((achievement) => (
+                {visibleAchievements.map((achievement) => (
                   <span
                     className={`rounded-full px-2.5 py-1 text-[11px] font-semibold leading-tight ${
                       achievement.earned

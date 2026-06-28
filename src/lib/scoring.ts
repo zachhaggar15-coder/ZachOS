@@ -413,18 +413,18 @@ export function calculateAchievements(input: {
     },
     {
       earned: maxInvested >= 10000,
-      label: "£10k Invested",
-      progress: `£${Math.round(maxInvested).toLocaleString("en-GB")}`,
+      label: "GBP 10k Invested",
+      progress: `GBP ${Math.round(maxInvested).toLocaleString("en-GB")}`,
     },
     {
       earned: maxNetWorth >= 50000,
-      label: "£50k Net Worth",
-      progress: `£${Math.round(maxNetWorth).toLocaleString("en-GB")}`,
+      label: "GBP 50k Net Worth",
+      progress: `GBP ${Math.round(maxNetWorth).toLocaleString("en-GB")}`,
     },
     {
       earned: maxNetWorth >= 100000,
-      label: "£100k Net Worth",
-      progress: `£${Math.round(maxNetWorth).toLocaleString("en-GB")}`,
+      label: "GBP 100k Net Worth",
+      progress: `GBP ${Math.round(maxNetWorth).toLocaleString("en-GB")}`,
     },
   ];
 }

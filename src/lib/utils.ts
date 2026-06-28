@@ -12,5 +12,10 @@ export function toDate(date: string): Date {
 
 export function isRunningActivity(activity: Activity): boolean {
   const type = activity.activity_type?.toLowerCase() ?? "";
-  return !type || type.includes("run") || type.includes("jog") || type.includes("treadmill");
+  return (
+    !type ||
+    type.includes("run") ||
+    type.includes("jog") ||
+    type.includes("treadmill")
+  );
 }

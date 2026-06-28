@@ -5,7 +5,7 @@ import type {
   FinanceSnapshot,
   FitnessMetric,
 } from "@/lib/supabase/database.types";
-import { DAY_MS, isRunningActivity, numeric } from "@/lib/utils";
+import { DAY_MS, isRunningActivity, numeric, toDate } from "@/lib/utils";
 
 export type AverageMetric = {
   label: string;
@@ -39,7 +39,7 @@ function clamp(value: number) {
 }
 
 function dateMs(date: string) {
-  return new Date(`${date}T12:00:00Z`).getTime();
+  return toDate(date).getTime();
 }
 
 function latestDate(...groups: { date: string }[][]) {
@@ -165,7 +165,7 @@ function weeklyRunningByWeek(activities: Activity[]) {
   const byWeek = new Map<string, number>();
 
   activities.filter(isRunningActivity).forEach((activity) => {
-    const value = new Date(`${activity.date}T12:00:00Z`);
+    const value = toDate(activity.date);
     const day = value.getUTCDay() || 7;
     value.setUTCDate(value.getUTCDate() - day + 1);
     const week = value.toISOString().slice(0, 10);
@@ -215,7 +215,7 @@ export function calculateAnalytics(input: {
     }
     const dayName = new Intl.DateTimeFormat("en-GB", {
       weekday: "long",
-    }).format(new Date(`${log.date}T12:00:00Z`));
+    }).format(toDate(log.date));
     moodByDay.set(dayName, [...(moodByDay.get(dayName) ?? []), mood]);
   });
 
@@ -245,7 +245,7 @@ export function calculateAnalytics(input: {
   const trainingLoadByWeek = new Map<string, number[]>();
   const hrvByWeek = new Map<string, number[]>();
   input.fitnessMetrics.forEach((metric) => {
-    const value = new Date(`${metric.date}T12:00:00Z`);
+    const value = toDate(metric.date);
     const day = value.getUTCDay() || 7;
     value.setUTCDate(value.getUTCDate() - day + 1);
     const week = value.toISOString().slice(0, 10);

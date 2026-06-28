@@ -284,8 +284,10 @@ export function buildOperatingRecommendation(input: InsightInput): OperatingReco
   };
 }
 
-export function buildLocalDailyBriefing(input: InsightInput) {
-  const operating = buildOperatingRecommendation(input);
+export function buildLocalDailyBriefing(
+  input: InsightInput,
+  operating = buildOperatingRecommendation(input),
+) {
   const analytics = calculateAnalytics(input);
   const latestDaily = input.dailyLogs.at(-1);
   const latestFitness = input.fitnessMetrics.at(-1);
@@ -313,10 +315,12 @@ export function buildLocalDailyBriefing(input: InsightInput) {
   ].join("\n");
 }
 
-export function buildLocalWeeklyReport(input: InsightInput) {
+export function buildLocalWeeklyReport(
+  input: InsightInput,
+  operating = buildOperatingRecommendation(input),
+) {
   const analytics = calculateAnalytics(input);
   const consultant = calculateConsultantReadiness(input);
-  const operating = buildOperatingRecommendation(input);
   const fitnessTrend =
     analytics.averages.find((metric) => metric.label === "HRV")?.trend ?? "unknown";
   const recoveryTrend =
@@ -435,15 +439,31 @@ export async function generateAiInsight(
   input: InsightInput,
 ): Promise<AiInsightResult> {
   const generatedAt = new Date().toISOString();
-  const promptData = {
-    ...compactAnalyticsForPrompt(input),
-    operatingRecommendation: buildOperatingRecommendation(input),
+  let operating: OperatingRecommendation | null = null;
+  const getOperating = () => {
+    operating ??= buildOperatingRecommendation(input);
+    return operating;
   };
+  const getPromptData = () => ({
+    ...compactAnalyticsForPrompt(input),
+    operatingRecommendation: getOperating(),
+  });
   const getFallback = () =>
-    kind === "daily" ? buildLocalDailyBriefing(input) : buildLocalWeeklyReport(input);
+    kind === "daily"
+      ? buildLocalDailyBriefing(input, getOperating())
+      : buildLocalWeeklyReport(input, getOperating());
+
+  if (!process.env.OPENAI_API_KEY) {
+    return {
+      content: getFallback(),
+      generatedAt,
+      kind,
+      source: "fallback",
+    };
+  }
 
   try {
-    const aiContent = await callOpenAI(kind, promptData);
+    const aiContent = await callOpenAI(kind, getPromptData());
 
     if (!aiContent) {
       return {

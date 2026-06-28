@@ -34,7 +34,7 @@ AI is optional and controlled by:
 
 ```bash
 OPENAI_API_KEY=your-openai-api-key
-OPENAI_MODEL=gpt-5.5
+OPENAI_MODEL=gpt-4o
 ```
 
 If `OPENAI_API_KEY` is missing, Zach OS still works normally and returns a local fallback briefing based only on stored dashboard data.
@@ -176,7 +176,7 @@ Create a `.env.local` file:
 NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 OPENAI_API_KEY=
-OPENAI_MODEL=gpt-5.5
+OPENAI_MODEL=gpt-4o
 STRAVA_CLIENT_ID=
 STRAVA_CLIENT_SECRET=
 STRAVA_REDIRECT_URI=http://localhost:3000/api/strava/callback
@@ -408,9 +408,9 @@ Achievements:
 - 10 Hours Deep Work
 - 500 French Minutes
 - 500 Reading Pages
-- £10k Invested
-- £50k Net Worth
-- £100k Net Worth
+- GBP 10k Invested
+- GBP 50k Net Worth
+- GBP 100k Net Worth
 
 ## Quests
 
@@ -445,7 +445,7 @@ Example quests:
 
 - Run Wales
 - Become Consultant Ready
-- Reach £100k Invested
+- Reach GBP 100k Invested
 - Become Conversational in French
 
 The dashboard shows active quests, progress bars and a next suggested action based on the active quest with the lowest progress. Quest progress is auto-derived when the title, category or target metric mentions running/distance, deep work, French, reading, writing, consultant readiness, invested value, net worth, cash, sleep, recovery, HRV, mood, streaks or logs.

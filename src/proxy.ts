@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { getSupabaseConfig } from "@/lib/supabase/config";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
 
   const config = getSupabaseConfig();
@@ -29,7 +29,7 @@ export async function middleware(request: NextRequest) {
   });
 
   // Refreshes the session token and writes updated cookies to the response.
-  // Must be called on every request — do not remove.
+  // Must be called on every request; do not remove.
   await supabase.auth.getUser();
 
   return response;

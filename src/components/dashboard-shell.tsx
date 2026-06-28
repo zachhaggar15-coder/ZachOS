@@ -762,7 +762,7 @@ function ConsultantMode({
           <div className="rounded border border-white/10 bg-black/15 p-3 text-sm text-zinc-400 md:col-span-2">
             <p className="text-zinc-300">Tracked from daily logs</p>
             <p className="mt-1">
-              Deep work {formatNumber(todayDaily?.deep_work_hours, "h")} ·
+              Deep work {formatNumber(todayDaily?.deep_work_hours, "h")} -
               Reading {formatNumber(todayDaily?.reading_pages, " pages")}
             </p>
           </div>
@@ -797,8 +797,8 @@ function ActiveQuests({ quests }: { quests: ReturnType<typeof calculateQuestProg
                 <div>
                   <h3 className="font-semibold text-white">{quest.title}</h3>
                   <p className="mt-1 text-xs text-zinc-500">
-                    {quest.category || "General"} · {quest.target_metric || "target"}
-                    {quest.deadline ? ` · due ${quest.deadline}` : ""}
+                    {quest.category || "General"} - {quest.target_metric || "target"}
+                    {quest.deadline ? ` - due ${quest.deadline}` : ""}
                   </p>
                   <p className="mt-1 text-xs text-zinc-500">
                     {quest.progress_source === "auto" ? "Auto" : "Manual"} current:{" "}

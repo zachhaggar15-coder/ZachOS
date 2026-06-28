@@ -109,6 +109,11 @@ function redirectWithMessage(message: string): never {
   redirect(`/?message=${encodeURIComponent(message)}`);
 }
 
+function siteUrl(path = "") {
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
+  return baseUrl ? `${baseUrl}${path}` : undefined;
+}
+
 function redirectToGarminWithError(message: string): never {
   redirect(`/garmin-import?error=${encodeURIComponent(message)}`);
 }
@@ -185,7 +190,7 @@ export async function sendMagicLink(formData: FormData) {
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: process.env.NEXT_PUBLIC_SITE_URL ?? undefined,
+      emailRedirectTo: siteUrl("/auth/callback"),
     },
   });
 
@@ -503,7 +508,7 @@ function parseNumber(value: unknown) {
     return null;
   }
 
-  const cleaned = value.replace(/,/g, "").replace(/£/g, "").trim();
+  const cleaned = value.replace(/,/g, "").replace(/\u00a3/g, "").trim();
   if (!cleaned) {
     return null;
   }
