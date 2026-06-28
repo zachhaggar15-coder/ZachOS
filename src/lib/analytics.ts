@@ -5,6 +5,7 @@ import type {
   FinanceSnapshot,
   FitnessMetric,
 } from "@/lib/supabase/database.types";
+import { DAY_MS, isRunningActivity, numeric } from "@/lib/utils";
 
 export type AverageMetric = {
   label: string;
@@ -32,12 +33,6 @@ export type AnalyticsSummary = {
   bestMoodDay: string;
   relationships: RelationshipMetric[];
 };
-
-const DAY_MS = 24 * 60 * 60 * 1000;
-
-function numeric(value: number | null | undefined) {
-  return typeof value === "number" && Number.isFinite(value) ? value : 0;
-}
 
 function clamp(value: number) {
   return Math.max(0, Math.min(100, Math.round(value)));
@@ -166,22 +161,10 @@ function relationshipNote(value: number | null) {
     : "Strong negative relationship in the current data.";
 }
 
-function runningActivities(activities: Activity[]) {
-  return activities.filter((activity) => {
-    const type = activity.activity_type?.toLowerCase() ?? "";
-    return (
-      !type ||
-      type.includes("run") ||
-      type.includes("jog") ||
-      type.includes("treadmill")
-    );
-  });
-}
-
 function weeklyRunningByWeek(activities: Activity[]) {
   const byWeek = new Map<string, number>();
 
-  runningActivities(activities).forEach((activity) => {
+  activities.filter(isRunningActivity).forEach((activity) => {
     const value = new Date(`${activity.date}T12:00:00Z`);
     const day = value.getUTCDay() || 7;
     value.setUTCDate(value.getUTCDate() - day + 1);

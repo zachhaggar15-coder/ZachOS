@@ -174,6 +174,28 @@ export async function signIn(formData: FormData) {
   redirect("/");
 }
 
+export async function sendMagicLink(formData: FormData) {
+  const email = formString(formData, "email");
+
+  if (!email) {
+    redirectWithError("Enter your email address.");
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.auth.signInWithOtp({
+    email,
+    options: {
+      emailRedirectTo: process.env.NEXT_PUBLIC_SITE_URL ?? undefined,
+    },
+  });
+
+  if (error) {
+    redirectWithError(error.message);
+  }
+
+  redirectWithMessage("Check your email for a sign-in link.");
+}
+
 export async function signUp(formData: FormData) {
   const email = formString(formData, "email");
   const password = formString(formData, "password");

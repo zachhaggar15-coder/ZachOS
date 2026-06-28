@@ -1,4 +1,4 @@
-import { signIn, signUp } from "@/app/actions";
+import { sendMagicLink, signIn, signUp } from "@/app/actions";
 
 type AuthPanelProps = {
   error?: string;
@@ -88,6 +88,36 @@ export function AuthPanel({ error, message }: AuthPanelProps) {
               type="submit"
             >
               Log in
+            </button>
+          </form>
+
+          <div className="my-6 h-px bg-white/10" />
+
+          <div className="mb-3">
+            <h3 className="text-sm font-semibold text-zinc-200">
+              Sign in with email link
+            </h3>
+            <p className="mt-1 text-sm text-zinc-500">
+              Get a one-time sign-in link sent to your inbox.
+            </p>
+          </div>
+
+          <form action={sendMagicLink} className="grid gap-3">
+            <label className="grid gap-1.5 text-sm text-zinc-300">
+              Email
+              <input
+                autoComplete="email"
+                className={inputClass}
+                name="email"
+                required
+                type="email"
+              />
+            </label>
+            <button
+              className="h-11 rounded border border-white/10 bg-white/[0.04] px-4 text-sm font-semibold text-zinc-100 transition hover:border-cyan-200/40 hover:bg-cyan-300/10"
+              type="submit"
+            >
+              Send sign-in link
             </button>
           </form>
 
