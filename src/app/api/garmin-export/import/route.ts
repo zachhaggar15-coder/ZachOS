@@ -8,6 +8,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 type ActivityInsert = Database["public"]["Tables"]["activities"]["Insert"];
 type FitnessMetric = Database["public"]["Tables"]["fitness_metrics"]["Row"];
@@ -15,6 +16,7 @@ type FitnessMetricInsert =
   Database["public"]["Tables"]["fitness_metrics"]["Insert"];
 
 const BATCH_SIZE = 400;
+const DEPLOYED_UPLOAD_LIMIT_BYTES = 4 * 1024 * 1024;
 const CHART_PATHS = [
   "/charts/average-hr",
   "/charts/hrv",
@@ -29,6 +31,14 @@ const CHART_PATHS = [
 
 function jsonError(message: string, status = 400) {
   return NextResponse.json({ error: message }, { status });
+}
+
+function formatUploadSize(bytes: number) {
+  if (bytes < 1024 * 1024) {
+    return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+  }
+
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
 function chunks<T>(rows: T[]) {
@@ -121,6 +131,21 @@ export async function POST(request: Request) {
   const contentType = request.headers.get("content-type") ?? "";
   if (!contentType.includes("zip") && !contentType.includes("octet-stream")) {
     return jsonError("Upload the original Garmin account export ZIP file.");
+  }
+
+  const contentLength = Number(request.headers.get("content-length") ?? 0);
+  if (
+    process.env.VERCEL &&
+    contentLength > DEPLOYED_UPLOAD_LIMIT_BYTES
+  ) {
+    return jsonError(
+      `This Garmin ZIP is ${formatUploadSize(
+        contentLength,
+      )}. Vercel can reject direct uploads above roughly ${formatUploadSize(
+        DEPLOYED_UPLOAD_LIMIT_BYTES,
+      )}. Run Zach OS locally with npm run dev and upload the ZIP at http://localhost:3000/garmin-import so it imports into the same Supabase database.`,
+      413,
+    );
   }
 
   let parsed: ReturnType<typeof parseGarminExportZip>;

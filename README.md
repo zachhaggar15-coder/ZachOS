@@ -105,9 +105,23 @@ Supported import fields:
 
 Distance columns with mile-style headers are converted to kilometres during import.
 
-Large Garmin account exports are best imported while running Zach OS locally
-with `npm run dev`; hosted platforms can reject large ZIP uploads before the
-app sees them.
+Large Garmin account exports should be imported while running Zach OS locally
+with `npm run dev`. Vercel can reject direct ZIP uploads above roughly 4 MB
+before the app sees them, which appears in the browser as a non-JSON
+`Request Entity Too Large` response. The local app still writes to the same
+Supabase project when `.env.local` uses the same Supabase URL and anon key.
+
+Reliable large-ZIP import flow:
+
+1. Make sure `.env.local` points at the Supabase project you use in production.
+2. Run `npm run dev`.
+3. Open `http://localhost:3000/garmin-import`.
+4. Log in with the same Zach OS account.
+5. Upload the Garmin account export ZIP.
+
+If local email-link login does not work, add
+`http://localhost:3000/auth/callback` to **Supabase > Authentication > URL
+Configuration > Redirect URLs**.
 
 ## Strava OAuth
 

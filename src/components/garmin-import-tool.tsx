@@ -37,6 +37,63 @@ const FIELD_OPTIONS = [
 
 const selectClass =
   "h-10 rounded border border-white/10 bg-[#0b1016] px-3 text-sm text-zinc-100 outline-none transition focus:border-cyan-300/70";
+const DEPLOYED_ZIP_UPLOAD_LIMIT_BYTES = 4 * 1024 * 1024;
+
+type GarminZipImportResponse = {
+  activitiesImported?: number;
+  error?: string;
+  fitnessDaysImported?: number;
+  jsonFilesRead?: number;
+  latestActivityDate?: string | null;
+  latestFitnessDate?: string | null;
+};
+
+function formatFileSize(bytes: number) {
+  if (bytes < 1024 * 1024) {
+    return `${Math.max(1, Math.round(bytes / 1024))} KB`;
+  }
+
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function isLocalImportHost() {
+  return ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname);
+}
+
+function deployedSizeLimitMessage(file: File) {
+  return `This Garmin ZIP is ${formatFileSize(
+    file.size,
+  )}. The deployed Vercel app can reject direct ZIP uploads above roughly ${formatFileSize(
+    DEPLOYED_ZIP_UPLOAD_LIMIT_BYTES,
+  )} before Zach OS can read them. Run Zach OS locally with npm run dev, open http://localhost:3000/garmin-import, and upload this same ZIP there so it imports into the same Supabase database.`;
+}
+
+async function readGarminZipImportResponse(response: Response) {
+  const contentType = response.headers.get("content-type") ?? "";
+
+  if (contentType.includes("application/json")) {
+    return (await response.json()) as GarminZipImportResponse;
+  }
+
+  const rawText = (await response.text()).trim();
+  const responseText = rawText || `HTTP ${response.status}`;
+
+  if (
+    response.status === 413 ||
+    responseText.toLowerCase().includes("request entity too large")
+  ) {
+    throw new Error(
+      "That Garmin ZIP is too large for the deployed upload route. Run Zach OS locally with npm run dev, open http://localhost:3000/garmin-import, and upload the same ZIP there.",
+    );
+  }
+
+  throw new Error(
+    `Garmin import failed before Zach OS could parse the response. Server said: ${responseText.slice(
+      0,
+      180,
+    )}`,
+  );
+}
 
 function formatFreshness(date: string | null | undefined) {
   if (!date) {
@@ -261,6 +318,12 @@ export function GarminImportTool({
 
     setZipImportError("");
     setZipImportResult("");
+
+    if (!isLocalImportHost() && file.size > DEPLOYED_ZIP_UPLOAD_LIMIT_BYTES) {
+      setZipImportError(deployedSizeLimitMessage(file));
+      return;
+    }
+
     setZipImporting(true);
 
     try {
@@ -271,14 +334,7 @@ export function GarminImportTool({
         },
         method: "POST",
       });
-      const payload = (await response.json()) as {
-        activitiesImported?: number;
-        error?: string;
-        fitnessDaysImported?: number;
-        jsonFilesRead?: number;
-        latestActivityDate?: string | null;
-        latestFitnessDate?: string | null;
-      };
+      const payload = await readGarminZipImportResponse(response);
 
       if (!response.ok) {
         throw new Error(payload.error || "Garmin export import failed.");
@@ -362,6 +418,14 @@ export function GarminImportTool({
           The import is safe to rerun because rows are upserted by date or
           Garmin activity ID. If the latest dates above are stale, request a new
           Garmin export and upload the new ZIP.
+        </p>
+        <p className="mt-2 text-xs leading-5 text-zinc-500">
+          For ZIPs over roughly 4 MB, use the local app: run{" "}
+          <span className="font-mono text-zinc-300">npm run dev</span>, open{" "}
+          <span className="font-mono text-zinc-300">
+            http://localhost:3000/garmin-import
+          </span>
+          , then upload the same file.
         </p>
         <p className="mt-2 text-xs leading-5 text-zinc-600">
           Zach OS does not store your Garmin password or automate Garmin Connect
