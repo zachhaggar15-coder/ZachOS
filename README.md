@@ -160,14 +160,20 @@ The default seed button adds:
 
 Holdings can be edited from the UI and new accounts or holdings can be added later.
 
-Market prices are optional. Add one or both keys:
+Market price keys are optional. Add one or both keys for the preferred paid/API
+providers:
 
 ```bash
 FMP_API_KEY=your-financial-modeling-prep-key
 ALPHA_VANTAGE_API_KEY=your-alpha-vantage-key
 ```
 
-Zach OS tries Financial Modeling Prep first, then Alpha Vantage. Prices are refreshed at most once per day while signed in, and there is also a manual **Refresh prices** button on `/portfolio`. If no market API key is set, portfolio editing still works and any manual prices you enter are kept.
+Zach OS tries Financial Modeling Prep first, then Alpha Vantage, then a no-key
+Yahoo Finance chart fallback that works better for simple London-listed ETF
+quotes such as `VUAG.L` and `WEXU.L`. Prices are refreshed at most once per day
+while signed in, and there is also a manual **Refresh prices** button on
+`/portfolio`. If no live quote is found, portfolio editing still works and any
+manual prices you enter are kept.
 
 The dashboard displays:
 
@@ -514,7 +520,7 @@ FMP_API_KEY
 ALPHA_VANTAGE_API_KEY
 ```
 
-`OPENAI_API_KEY`, `FMP_API_KEY` and `ALPHA_VANTAGE_API_KEY` are optional. Do not add them if you do not want AI summaries or automatic market prices enabled.
+`OPENAI_API_KEY`, `FMP_API_KEY` and `ALPHA_VANTAGE_API_KEY` are optional. Do not add `OPENAI_API_KEY` if you do not want AI summaries enabled. Automatic market prices can use the FMP and Alpha Vantage keys when available, then fall back to no-key Yahoo Finance chart quotes.
 
 4. Deploy.
 5. In Supabase Auth settings, add your Vercel domain to the allowed redirect/site URLs if you enable email confirmation links.

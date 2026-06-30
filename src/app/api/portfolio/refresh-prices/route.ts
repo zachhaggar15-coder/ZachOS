@@ -73,6 +73,7 @@ export async function POST() {
   );
   const rowsToUpsert: MarketPriceInsert[] = [];
   const errors: string[] = [];
+  const unavailableTickers: string[] = [];
 
   if (hasMarketDataProvider()) {
     for (const holding of holdings) {
@@ -101,6 +102,8 @@ export async function POST() {
             ticker,
             updated_at: new Date().toISOString(),
           });
+        } else {
+          unavailableTickers.push(ticker);
         }
       } catch (error) {
         errors.push(
@@ -181,5 +184,6 @@ export async function POST() {
     pricesUpdated: rowsToUpsert.length,
     tickersChecked: tickers.length,
     totalInvested: summary.totalInvested,
+    unavailableTickers,
   });
 }

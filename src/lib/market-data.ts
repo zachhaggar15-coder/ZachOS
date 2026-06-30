@@ -3,7 +3,7 @@ import "server-only";
 type MarketDataResult = {
   currency: string;
   price: number;
-  provider: "alpha_vantage" | "fmp";
+  provider: "alpha_vantage" | "fmp" | "yahoo";
   symbol: string;
 };
 
@@ -16,6 +16,19 @@ type AlphaQuote = {
   "Global Quote"?: {
     "01. symbol"?: string;
     "05. price"?: string;
+  };
+};
+
+type YahooChartQuote = {
+  chart?: {
+    error?: unknown;
+    result?: Array<{
+      meta?: {
+        currency?: string;
+        regularMarketPrice?: number;
+        symbol?: string;
+      };
+    }>;
   };
 };
 
@@ -42,16 +55,16 @@ export function marketLookupSymbols(ticker: string, exchange: string | null) {
     return [];
   }
 
-  const symbols = [normalised];
   const exchangeName = exchange?.toLowerCase() ?? "";
   const looksLikeLse =
     exchangeName.includes("lse") ||
     exchangeName.includes("london") ||
     ["WEXU", "VUAG"].includes(normalised);
 
-  if (looksLikeLse && !normalised.endsWith(".L")) {
-    symbols.push(`${normalised}.L`);
-  }
+  const symbols =
+    looksLikeLse && !normalised.endsWith(".L")
+      ? [`${normalised}.L`, normalised]
+      : [normalised];
 
   return Array.from(new Set(symbols));
 }
@@ -114,6 +127,37 @@ async function fetchAlphaVantagePrice(symbol: string, currency: string) {
       } satisfies MarketDataResult);
 }
 
+async function fetchYahooPrice(symbol: string, fallbackCurrency: string) {
+  const url = new URL(
+    `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(
+      symbol,
+    )}`,
+  );
+  url.searchParams.set("range", "1d");
+  url.searchParams.set("interval", "1d");
+
+  const response = await fetch(url.toString(), {
+    cache: "no-store",
+    headers: { "User-Agent": "Mozilla/5.0" },
+  });
+  if (!response.ok) {
+    return null;
+  }
+
+  const payload = (await response.json()) as YahooChartQuote;
+  const quote = payload?.chart?.result?.[0]?.meta;
+  const price = numeric(quote?.regularMarketPrice);
+
+  return price === null
+    ? null
+    : ({
+        currency: quote?.currency ?? fallbackCurrency,
+        price,
+        provider: "yahoo",
+        symbol: quote?.symbol ?? symbol,
+      } satisfies MarketDataResult);
+}
+
 export async function fetchLatestMarketPrice(
   ticker: string,
   exchange: string | null,
@@ -129,11 +173,19 @@ export async function fetchLatestMarketPrice(
     if (alphaPrice) {
       return alphaPrice;
     }
+
+    const yahooPrice = await fetchYahooPrice(symbol, currency);
+    if (yahooPrice) {
+      return yahooPrice;
+    }
   }
 
   return null;
 }
 
 export function hasMarketDataProvider() {
-  return Boolean(process.env.FMP_API_KEY || process.env.ALPHA_VANTAGE_API_KEY);
+  // Yahoo Finance chart quotes are used as a no-key fallback for simple ETF
+  // pricing, especially London-listed holdings that are not covered by free
+  // FMP or Alpha Vantage plans.
+  return true;
 }

@@ -46,22 +46,38 @@ export function PortfolioRefreshButton() {
         method: "POST",
       });
       const payload = (await response.json()) as {
+        errors?: string[];
         error?: string;
         hasProvider?: boolean;
         pricesUpdated?: number;
         tickersChecked?: number;
+        unavailableTickers?: string[];
       };
 
       if (!response.ok) {
         throw new Error(payload.error || "Could not refresh prices.");
       }
 
+      const unavailable = payload.unavailableTickers ?? [];
+      const providerErrors = payload.errors ?? [];
+      const baseStatus = payload.hasProvider
+        ? `Checked ${payload.tickersChecked ?? 0} tickers, updated ${
+            payload.pricesUpdated ?? 0
+          } stale prices.`
+        : "No market data provider is available. Existing/manual prices were kept.";
+
       setStatus(
-        payload.hasProvider
-          ? `Checked ${payload.tickersChecked ?? 0} tickers, updated ${
-              payload.pricesUpdated ?? 0
-            } stale prices.`
-          : "No market API key is configured yet. Existing/manual prices were kept.",
+        [
+          baseStatus,
+          unavailable.length
+            ? `No live quote found for ${unavailable.join(", ")}.`
+            : "",
+          providerErrors.length
+            ? `Provider error: ${providerErrors.slice(0, 2).join("; ")}`
+            : "",
+        ]
+          .filter(Boolean)
+          .join(" "),
       );
       router.refresh();
     } catch (error) {
