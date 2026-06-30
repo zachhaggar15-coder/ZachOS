@@ -172,6 +172,12 @@ export async function signIn(formData: FormData) {
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
+    if (error.message.toLowerCase().includes("invalid login credentials")) {
+      redirectWithError(
+        "Invalid email or password. If you normally use email links, send a password setup link or sign in once with an email link, then set a password in Manage.",
+      );
+    }
+
     redirectWithError(error.message);
   }
 
@@ -201,6 +207,27 @@ export async function sendMagicLink(formData: FormData) {
   redirectWithMessage("Check your email for a sign-in link.");
 }
 
+export async function sendPasswordReset(formData: FormData) {
+  const email = formString(formData, "email");
+
+  if (!email) {
+    redirectWithError("Enter your email address.");
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: siteUrl("/auth/callback?next=/manage"),
+  });
+
+  if (error) {
+    redirectWithError(error.message);
+  }
+
+  redirectWithMessage(
+    "Check your email for a password setup link, then open Manage to set the new password.",
+  );
+}
+
 export async function signUp(formData: FormData) {
   const email = formString(formData, "email");
   const password = formString(formData, "password");
@@ -210,7 +237,13 @@ export async function signUp(formData: FormData) {
   }
 
   const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.auth.signUp({ email, password });
+  const { error } = await supabase.auth.signUp({
+    email,
+    options: {
+      emailRedirectTo: siteUrl("/auth/callback?next=/manage"),
+    },
+    password,
+  });
 
   if (error) {
     redirectWithError(error.message);
@@ -218,6 +251,33 @@ export async function signUp(formData: FormData) {
 
   revalidatePath("/", "layout");
   redirectWithMessage("Account created. If email confirmation is enabled, check your inbox.");
+}
+
+export async function updatePassword(formData: FormData) {
+  const { supabase } = await requireAuthenticatedUser();
+  const password = formString(formData, "password");
+  const confirmPassword = formString(formData, "confirm_password");
+
+  if (!password || !confirmPassword) {
+    redirectToManageWithError("Enter and confirm the new password.");
+  }
+
+  if (password.length < 8) {
+    redirectToManageWithError("Use at least 8 characters for the password.");
+  }
+
+  if (password !== confirmPassword) {
+    redirectToManageWithError("The password confirmation does not match.");
+  }
+
+  const { error } = await supabase.auth.updateUser({ password });
+
+  if (error) {
+    redirectToManageWithError(error.message);
+  }
+
+  revalidatePath("/", "layout");
+  redirectToManageWithMessage("Password updated. You can now use email and password login.");
 }
 
 export async function signOut() {

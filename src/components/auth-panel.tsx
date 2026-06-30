@@ -1,4 +1,9 @@
-import { sendMagicLink, signIn, signUp } from "@/app/actions";
+import {
+  sendMagicLink,
+  sendPasswordReset,
+  signIn,
+  signUp,
+} from "@/app/actions";
 
 type AuthPanelProps = {
   error?: string;
@@ -46,7 +51,8 @@ export function AuthPanel({ error, message }: AuthPanelProps) {
           <div className="mb-5">
             <h2 className="text-xl font-semibold text-white">Sign in</h2>
             <p className="mt-1 text-sm text-zinc-500">
-              Supabase Auth keeps the app private.
+              Use your password for normal access. Email links are now just for
+              setup or recovery.
             </p>
           </div>
 
@@ -95,10 +101,40 @@ export function AuthPanel({ error, message }: AuthPanelProps) {
 
           <div className="mb-3">
             <h3 className="text-sm font-semibold text-zinc-200">
-              Sign in with email link
+              Set or reset password
             </h3>
             <p className="mt-1 text-sm text-zinc-500">
-              Get a one-time sign-in link sent to your inbox.
+              Use this once if your account was created with email-link login.
+            </p>
+          </div>
+
+          <form action={sendPasswordReset} className="grid gap-3">
+            <label className="grid gap-1.5 text-sm text-zinc-300">
+              Email
+              <input
+                autoComplete="email"
+                className={inputClass}
+                name="email"
+                required
+                type="email"
+              />
+            </label>
+            <button
+              className="h-11 rounded border border-cyan-200/20 bg-cyan-200/10 px-4 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-200/15"
+              type="submit"
+            >
+              Send password setup link
+            </button>
+          </form>
+
+          <div className="my-6 h-px bg-white/10" />
+
+          <div className="mb-3">
+            <h3 className="text-sm font-semibold text-zinc-200">
+              Backup email-link login
+            </h3>
+            <p className="mt-1 text-sm text-zinc-500">
+              Keep this as a recovery route if password login ever fails.
             </p>
           </div>
 

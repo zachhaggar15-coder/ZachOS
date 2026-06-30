@@ -6,6 +6,7 @@ import {
   upsertConsultantReadinessLog,
   saveQuest,
   signOut,
+  updatePassword,
   upsertDailyLog,
   upsertFinanceSnapshot,
   upsertFitnessMetrics,
@@ -196,6 +197,58 @@ function SectionHeader({
       </p>
       <h2 className="mt-1 text-lg font-semibold text-white">{title}</h2>
     </div>
+  );
+}
+
+function AccountSecurity({ userEmail }: { userEmail?: string }) {
+  return (
+    <section className={cardClass}>
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <SectionHeader kicker="Account" title="Password access" />
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">
+            Set a password once, then use the normal email and password login
+            instead of waiting for a sign-in email each time.
+          </p>
+          <p className="mt-2 text-xs text-zinc-500">
+            Signed in as {userEmail ?? "private user"}.
+          </p>
+        </div>
+        <form
+          action={updatePassword}
+          className="grid w-full gap-3 sm:grid-cols-2 lg:max-w-xl"
+        >
+          <label className="grid gap-1.5 text-sm text-zinc-300">
+            New password
+            <input
+              autoComplete="new-password"
+              className={inputClass}
+              minLength={8}
+              name="password"
+              required
+              type="password"
+            />
+          </label>
+          <label className="grid gap-1.5 text-sm text-zinc-300">
+            Confirm password
+            <input
+              autoComplete="new-password"
+              className={inputClass}
+              minLength={8}
+              name="confirm_password"
+              required
+              type="password"
+            />
+          </label>
+          <button
+            className="h-10 rounded bg-cyan-200 px-4 text-sm font-semibold text-slate-950 transition hover:bg-cyan-100 sm:col-span-2"
+            type="submit"
+          >
+            Set password
+          </button>
+        </form>
+      </div>
+    </section>
   );
 }
 
@@ -981,6 +1034,8 @@ export function DashboardShell({
         {databaseSetupIssue && (
           <DatabaseSetupNotice issue={databaseSetupIssue} />
         )}
+
+        <AccountSecurity userEmail={userEmail} />
 
         <QuickEntryForm
           consultantLog={todayConsultant}

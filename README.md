@@ -6,7 +6,7 @@ It tracks fitness, finance and intellectual habits with a dark analytics dashboa
 
 ## Features
 
-- Supabase email/password login, signup and logout.
+- Supabase email/password login, signup, password setup/recovery and logout.
 - Server-rendered private dashboard after login.
 - One-screen control-room dashboard at `/`, with detailed forms moved to `/manage`.
 - Quick daily check-in on `/manage` for habits, sleep score, recovery metrics and writing practice in one form.
@@ -216,10 +216,31 @@ Open [http://localhost:3000](http://localhost:3000).
 
 1. Create a Supabase project.
 2. In Supabase, go to **Authentication > Providers** and enable Email.
-3. Copy the project URL and anon key into `.env.local`.
-4. For a fresh database, run [`supabase/schema.sql`](./supabase/schema.sql) in the Supabase SQL Editor.
-5. For an existing Zach OS database, run the migration files in [`supabase/migrations`](./supabase/migrations), including `20260623_add_sleep_score_simplify_manual_input.sql`, `20260623_add_garmin_training_load.sql`, `20260623_add_portfolio_module.sql` and `20260626_add_daily_routine_logs.sql`.
-6. Start the app, create an account, then log in.
+3. Make sure password-based email login is enabled. For easiest personal use,
+   use an email and password as the normal login method; keep email-link login
+   only as a backup/recovery route.
+4. In **Authentication > URL Configuration**, add redirect URLs for the app:
+   - `http://localhost:3000/auth/callback`
+   - `https://your-vercel-domain.vercel.app/auth/callback`
+5. Copy the project URL and anon key into `.env.local`.
+6. For a fresh database, run [`supabase/schema.sql`](./supabase/schema.sql) in the Supabase SQL Editor.
+7. For an existing Zach OS database, run the migration files in [`supabase/migrations`](./supabase/migrations), including `20260623_add_sleep_score_simplify_manual_input.sql`, `20260623_add_garmin_training_load.sql`, `20260623_add_portfolio_module.sql` and `20260626_add_daily_routine_logs.sql`.
+8. Start the app, create an account, then log in.
+
+### Easier Login Flow
+
+If the account was originally made through an email sign-in link and password
+login says "invalid login credentials":
+
+1. On the Zach OS login screen, use **Send password setup link**.
+2. Open the link from your email.
+3. Go to `/manage`.
+4. Use **Account > Password access** to set a password.
+5. Log out and sign back in with email and password.
+
+You can also sign in once with the backup email-link login and then set the
+password from `/manage`. After that, the email link should only be needed for
+recovery.
 
 ## Database Schema
 
