@@ -824,7 +824,16 @@ export async function importGarminCsv(formData: FormData) {
     });
 
     if (activity.date && hasActivityData(activity)) {
-      activities.push(activity);
+      activities.push({
+        ...activity,
+        external_id: [
+          activity.date,
+          activity.activity_type ?? "",
+          activity.distance_km?.toFixed(3) ?? "",
+          activity.duration_minutes?.toFixed(2) ?? "",
+        ].join("|"),
+        source: "garmin",
+      });
     }
 
     if (fitness.date && hasFitnessData(fitness)) {
@@ -843,7 +852,9 @@ export async function importGarminCsv(formData: FormData) {
   }
 
   if (activities.length) {
-    const { error } = await supabase.from("activities").insert(activities);
+    const { error } = await supabase
+      .from("activities")
+      .upsert(activities, { onConflict: "user_id,source,external_id" });
 
     if (error) {
       redirectToGarminWithError(friendlyDatabaseError(error));
