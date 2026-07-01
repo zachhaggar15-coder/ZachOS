@@ -42,6 +42,23 @@ const BROWSER_JSON_BATCH_LIMIT_CHARS = 80_000;
 const CENTRAL_DIRECTORY_SIGNATURE = 0x02014b50;
 const END_OF_CENTRAL_DIRECTORY_SIGNATURE = 0x06054b50;
 const LOCAL_FILE_SIGNATURE = 0x04034b50;
+const ACTIVITY_SUMMARY_FIELDS = [
+  "activityId",
+  "activityType",
+  "aerobicTrainingEffect",
+  "anaerobicTrainingEffect",
+  "avgHr",
+  "beginTimestamp",
+  "calories",
+  "distance",
+  "duration",
+  "maxHr",
+  "name",
+  "sportType",
+  "startTimeGmt",
+  "startTimeLocal",
+  "trainingEffectLabel",
+] as const;
 
 type GarminZipImportResponse = {
   activitiesImported?: number;
@@ -231,10 +248,71 @@ function splitPayloadBySize(
   return entries;
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === "object" && !Array.isArray(value);
+}
+
+function compactActivityRecord(row: Record<string, unknown>) {
+  return Object.fromEntries(
+    ACTIVITY_SUMMARY_FIELDS.flatMap((field) =>
+      field in row ? [[field, row[field]]] : [],
+    ),
+  );
+}
+
+function activityRowsFromGarminPayload(payload: unknown) {
+  const rows = Array.isArray(payload)
+    ? payload.filter(isRecord)
+    : isRecord(payload) && Array.isArray(payload.summarizedActivitiesExport)
+      ? payload.summarizedActivitiesExport.filter(isRecord)
+      : [];
+
+  return rows.flatMap((row) =>
+    Array.isArray(row.summarizedActivitiesExport)
+      ? row.summarizedActivitiesExport.filter(isRecord)
+      : [row],
+  );
+}
+
+function compactSummarizedActivitiesEntry(
+  entry: GarminJsonEntry,
+  limit = BROWSER_JSON_ENTRY_LIMIT_CHARS,
+) {
+  if (!entry.fullName.includes("summarizedActivities")) {
+    return null;
+  }
+
+  try {
+    const payload = JSON.parse(entry.text) as unknown;
+    const compactRows = activityRowsFromGarminPayload(payload).map(
+      compactActivityRecord,
+    );
+
+    if (!compactRows.length) {
+      return null;
+    }
+
+    return splitPayloadBySize(
+      entry.fullName,
+      compactRows,
+      (rows) => JSON.stringify({ summarizedActivitiesExport: rows }),
+      limit,
+    );
+  } catch {
+    return null;
+  }
+}
+
 function splitLargeGarminEntry(
   entry: GarminJsonEntry,
   limit = BROWSER_JSON_ENTRY_LIMIT_CHARS,
 ) {
+  const compactedActivities = compactSummarizedActivitiesEntry(entry, limit);
+
+  if (compactedActivities) {
+    return compactedActivities;
+  }
+
   if (entry.text.length <= limit) {
     return [entry];
   }

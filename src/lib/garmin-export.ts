@@ -261,8 +261,18 @@ function arrayPayload(payload: unknown, key?: string) {
   return [];
 }
 
+function activityPayloadRows(payload: unknown) {
+  return arrayPayload(payload, "summarizedActivitiesExport").flatMap((row) => {
+    if (Array.isArray(row.summarizedActivitiesExport)) {
+      return row.summarizedActivitiesExport.filter(isRecord);
+    }
+
+    return [row];
+  });
+}
+
 function parseActivities(payload: unknown, userId: string) {
-  return arrayPayload(payload, "summarizedActivitiesExport")
+  return activityPayloadRows(payload)
     .map((row): ActivityInsert | null => {
       const date = dateFromActivity(row);
       if (!date) {
