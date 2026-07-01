@@ -18,6 +18,7 @@ import type { Database } from "@/lib/supabase/database.types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 type ActivityInsert = Database["public"]["Tables"]["activities"]["Insert"];
+type DailyLogInsert = Database["public"]["Tables"]["daily_logs"]["Insert"];
 type FitnessMetricInsert =
   Database["public"]["Tables"]["fitness_metrics"]["Insert"];
 type FinanceSnapshotInsert =
@@ -78,6 +79,11 @@ const DAILY_ROUTINE_KEYS = new Set([
   "read",
   "ate_well",
   "cold_shower",
+]);
+const DAILY_RITUAL_METRICS = new Set([
+  "deep_work_minutes",
+  "french_minutes",
+  "reading_pages",
 ]);
 
 function formString(formData: FormData, key: string) {
@@ -540,6 +546,49 @@ export async function toggleDailyRoutine(formData: FormData) {
   }
 
   revalidatePath("/");
+}
+
+export async function updateDailyRitualMetric(formData: FormData) {
+  const { supabase, user } = await requireAuthenticatedUser();
+  const date = formString(formData, "date") || todayInLondon();
+  const metric = formString(formData, "metric");
+  const value = nullableNumber(formData, "value");
+
+  if (!DAILY_RITUAL_METRICS.has(metric)) {
+    redirectWithError("Unknown daily ritual metric.");
+  }
+
+  if (value !== null && value < 0) {
+    redirectWithError("Daily ritual values cannot be negative.");
+  }
+
+  const row: DailyLogInsert = {
+    date,
+    user_id: user.id,
+  };
+
+  if (metric === "deep_work_minutes") {
+    row.deep_work_hours = value === null ? null : value / 60;
+  }
+
+  if (metric === "french_minutes") {
+    row.french_minutes = value === null ? null : Math.round(value);
+  }
+
+  if (metric === "reading_pages") {
+    row.reading_pages = value === null ? null : Math.round(value);
+  }
+
+  const { error } = await supabase
+    .from("daily_logs")
+    .upsert(row, { onConflict: "user_id,date" });
+
+  if (error) {
+    redirectWithError(friendlyDatabaseError(error));
+  }
+
+  revalidatePath("/");
+  revalidatePath("/manage");
 }
 
 export async function upsertConsultantReadinessLog(formData: FormData) {

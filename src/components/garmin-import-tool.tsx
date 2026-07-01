@@ -37,8 +37,8 @@ const FIELD_OPTIONS = [
 
 const selectClass =
   "h-10 rounded border border-white/10 bg-[#0b1016] px-3 text-sm text-zinc-100 outline-none transition focus:border-cyan-300/70";
-const BROWSER_JSON_ENTRY_LIMIT_CHARS = 80_000;
-const BROWSER_JSON_BATCH_LIMIT_CHARS = 180_000;
+const BROWSER_JSON_ENTRY_LIMIT_CHARS = 25_000;
+const BROWSER_JSON_BATCH_LIMIT_CHARS = 80_000;
 const CENTRAL_DIRECTORY_SIGNATURE = 0x02014b50;
 const END_OF_CENTRAL_DIRECTORY_SIGNATURE = 0x06054b50;
 const LOCAL_FILE_SIGNATURE = 0x04034b50;
@@ -65,6 +65,7 @@ type GarminImportTotals = Required<
 > & {
   latestActivityDate: string | null;
   latestFitnessDate: string | null;
+  skippedOversizedEntries: string[];
 };
 
 class GarminPayloadTooLargeError extends Error {
@@ -314,6 +315,14 @@ function addImportPayloadToTotals(
       .at(-1) ?? null;
 }
 
+function recordSkippedOversizedEntry(
+  totals: GarminImportTotals,
+  entry: GarminJsonEntry,
+) {
+  const shortName = entry.fullName.split("/").at(-1) ?? entry.fullName;
+  totals.skippedOversizedEntries.push(shortName);
+}
+
 async function saveGarminJsonBatch(
   batch: GarminJsonEntry[],
   totals: GarminImportTotals,
@@ -371,6 +380,12 @@ async function saveGarminJsonBatch(
         );
         return;
       }
+
+      recordSkippedOversizedEntry(totals, entry);
+      onProgress(
+        `${label} is still too large after splitting, so Zach OS skipped that Garmin chunk and continued.`,
+      );
+      return;
     }
 
     throw error;
@@ -689,6 +704,7 @@ export function GarminImportTool({
           jsonFilesRead: 0,
           latestActivityDate: null,
           latestFitnessDate: null,
+          skippedOversizedEntries: [],
         };
 
         for (let index = 0; index < batches.length; index += 1) {
@@ -704,13 +720,24 @@ export function GarminImportTool({
         }
 
         setZipImportResult(
-          `Imported ${totals.activitiesImported} activities and ${
-            totals.fitnessDaysImported
-          } fitness metric days from ${
-            totals.jsonFilesRead
-          } Garmin JSON chunks. Latest activity: ${
-            totals.latestActivityDate ?? "none"
-          }. Latest fitness day: ${totals.latestFitnessDate ?? "none"}.`,
+          [
+            `Imported ${totals.activitiesImported} activities and ${
+              totals.fitnessDaysImported
+            } fitness metric days from ${
+              totals.jsonFilesRead
+            } Garmin JSON chunks. Latest activity: ${
+              totals.latestActivityDate ?? "none"
+            }. Latest fitness day: ${totals.latestFitnessDate ?? "none"}.`,
+            totals.skippedOversizedEntries.length
+              ? `Skipped ${
+                  totals.skippedOversizedEntries.length
+                } oversized Garmin chunks: ${totals.skippedOversizedEntries
+                  .slice(0, 4)
+                  .join(", ")}.`
+              : "",
+          ]
+            .filter(Boolean)
+            .join(" "),
         );
         setZipImportProgress("");
         form.reset();

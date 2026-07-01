@@ -6,6 +6,7 @@ import {
   signOut,
   toggleDailyRoutine,
 } from "@/app/actions";
+import { DailyRitualMetricInput } from "@/components/daily-ritual-metric-input";
 import { DatabaseSetupNotice } from "@/components/database-setup-notice";
 import { PortfolioPriceRefresher } from "@/components/portfolio-price-refresher";
 import { buildOperatingRecommendation } from "@/lib/ai-insights";
@@ -449,6 +450,7 @@ function RitualHeatmap({ rows }: { rows: RitualRow[] }) {
 function DailyRitual({
   date,
   done,
+  metric,
   name,
   routineKey,
   target,
@@ -457,6 +459,7 @@ function DailyRitual({
 }: {
   date: string;
   done: boolean;
+  metric?: "deep_work_minutes" | "french_minutes" | "reading_pages";
   name: string;
   routineKey: RoutineKey;
   target?: number;
@@ -464,53 +467,57 @@ function DailyRitual({
   value?: number;
 }) {
   return (
-    <form action={toggleDailyRoutine} className="w-full">
-      <input name="date" type="hidden" value={date} />
-      <input name="routine_key" type="hidden" value={routineKey} />
-      <input name="completed" type="hidden" value={(!done).toString()} />
-      <button
-        aria-label={done ? `Mark ${name} incomplete` : `Mark ${name} complete`}
-        aria-pressed={done}
-        className={`group flex min-h-[26px] w-full cursor-pointer select-none items-center gap-2.5 rounded-md border border-transparent px-1.5 py-1 text-left transition hover:border-[#bb5d3a]/20 hover:bg-[#bb5d3a]/[0.08] focus-visible:border-[#bb5d3a]/45 focus-visible:bg-[#bb5d3a]/[0.08] focus-visible:outline-none active:scale-[0.99] ${
-          done ? "bg-[#bb5d3a]/[0.09]" : ""
-        }`}
-        title={done ? `Mark ${name} incomplete` : `Mark ${name} complete`}
-        type="submit"
-      >
-        <span
-          className={`flex h-[17px] w-[17px] flex-none items-center justify-center rounded-full text-[10px] font-bold transition group-hover:scale-105 ${
-            done
-              ? "bg-[#bb5d3a] text-[#f9f4ec]"
-              : "border border-[#2c2824]/25 group-hover:border-[#bb5d3a]/70"
-          }`}
+    <div
+      className={`flex min-h-[30px] w-full items-center gap-2 rounded-md border border-transparent px-1 py-0.5 transition hover:border-[#bb5d3a]/20 hover:bg-[#bb5d3a]/[0.06] ${
+        done ? "bg-[#bb5d3a]/[0.07]" : ""
+      }`}
+    >
+      <form action={toggleDailyRoutine} className="min-w-0 flex-1">
+        <input name="date" type="hidden" value={date} />
+        <input name="routine_key" type="hidden" value={routineKey} />
+        <input name="completed" type="hidden" value={(!done).toString()} />
+        <button
+          aria-label={
+            done ? `Mark ${name} incomplete` : `Mark ${name} complete`
+          }
+          aria-pressed={done}
+          className="group flex w-full cursor-pointer select-none items-center gap-2.5 rounded-md py-1 text-left transition focus-visible:bg-[#bb5d3a]/[0.08] focus-visible:outline-none active:scale-[0.99]"
+          title={done ? `Mark ${name} incomplete` : `Mark ${name} complete`}
+          type="submit"
         >
-          {done ? "x" : ""}
-        </span>
-        <span
-          className={`zach-ui flex-1 text-[12.5px] font-medium leading-tight transition group-hover:text-[#bb5d3a] ${
-            done && target === undefined
-              ? "text-[#9a8d7a] line-through"
-              : "text-[#3a342c]"
-          }`}
-        >
-          {name}
-        </span>
-        {target !== undefined && (
-          <>
-            <span className="zach-ui pointer-events-none h-8 w-[58px] rounded-md border border-[#2c2824]/20 bg-white px-2 text-center text-xs font-semibold leading-8 text-[#3a342c] transition group-hover:border-[#bb5d3a]/35">
-              {Math.round(value ?? 0)}
-            </span>
-            <span className="zach-ui pointer-events-none w-10 text-[11px] font-medium text-[#9a8d7a]">
-              / {target}
-              {unit}
-            </span>
-          </>
-        )}
-        <span className="sr-only">
-          {done ? "Currently complete." : "Currently incomplete."}
-        </span>
-      </button>
-    </form>
+          <span
+            className={`flex h-[17px] w-[17px] flex-none items-center justify-center rounded-full text-[10px] font-bold transition group-hover:scale-105 ${
+              done
+                ? "bg-[#bb5d3a] text-[#f9f4ec]"
+                : "border border-[#2c2824]/25 group-hover:border-[#bb5d3a]/70"
+            }`}
+          >
+            {done ? "x" : ""}
+          </span>
+          <span
+            className={`zach-ui min-w-0 flex-1 text-[12.5px] font-medium leading-tight transition group-hover:text-[#bb5d3a] ${
+              done && target === undefined
+                ? "text-[#9a8d7a] line-through"
+                : "text-[#3a342c]"
+            }`}
+          >
+            {name}
+          </span>
+          <span className="sr-only">
+            {done ? "Currently complete." : "Currently incomplete."}
+          </span>
+        </button>
+      </form>
+      {target !== undefined && metric && (
+        <DailyRitualMetricInput
+          date={date}
+          metric={metric}
+          target={target}
+          unit={unit}
+          value={value}
+        />
+      )}
+    </div>
   );
 }
 
@@ -688,6 +695,7 @@ export function ControlRoomDashboard({
   const todayNotes = (todayLog?.notes ?? "").toLowerCase();
   const habitRows: Array<{
     done: boolean;
+    metric?: "deep_work_minutes" | "french_minutes" | "reading_pages";
     name: string;
     routineKey: RoutineKey;
     target?: number;
@@ -706,6 +714,7 @@ export function ControlRoomDashboard({
         "deep_work",
         deepWorkMinutes >= 90,
       ),
+      metric: "deep_work_minutes",
       name: "Deep work",
       routineKey: "deep_work",
       target: 90,
@@ -714,6 +723,7 @@ export function ControlRoomDashboard({
     },
     {
       done: routineDone(routineCompletions, today, "french", frenchMinutes >= 30),
+      metric: "french_minutes",
       name: "French",
       routineKey: "french",
       target: 30,
@@ -722,6 +732,7 @@ export function ControlRoomDashboard({
     },
     {
       done: routineDone(routineCompletions, today, "read", readingPages >= 20),
+      metric: "reading_pages",
       name: "Read",
       routineKey: "read",
       target: 20,
@@ -1079,6 +1090,7 @@ export function ControlRoomDashboard({
                     date={today}
                     done={habit.done}
                     key={habit.name}
+                    metric={habit.metric}
                     name={habit.name}
                     routineKey={habit.routineKey}
                     target={habit.target}
