@@ -15,6 +15,11 @@ type GarminExportResult = {
   skippedFiles: number;
 };
 
+export type GarminExportJsonEntry = {
+  fullName: string;
+  text: string;
+};
+
 type JsonRecord = Record<string, unknown>;
 
 const CENTRAL_DIRECTORY_SIGNATURE = 0x02014b50;
@@ -126,7 +131,7 @@ function findEndOfCentralDirectory(buffer: Buffer) {
   throw new Error("Could not read the Garmin ZIP directory.");
 }
 
-function shouldReadJson(fullName: string) {
+export function shouldReadGarminJson(fullName: string) {
   return (
     fullName.endsWith(".json") &&
     (fullName.includes("summarizedActivities") ||
@@ -163,7 +168,7 @@ function readRelevantZipJsonEntries(buffer: Buffer) {
 
     directoryOffset += 46 + fileNameLength + extraLength + commentLength;
 
-    if (!shouldReadJson(fullName)) {
+    if (!shouldReadGarminJson(fullName)) {
       skippedFiles += 1;
       continue;
     }
@@ -421,6 +426,14 @@ export function parseGarminExportZip(
 ): GarminExportResult {
   const buffer = Buffer.from(arrayBuffer);
   const { entries, skippedFiles } = readRelevantZipJsonEntries(buffer);
+  return parseGarminExportJsonEntries(entries, userId, skippedFiles);
+}
+
+export function parseGarminExportJsonEntries(
+  entries: GarminExportJsonEntry[],
+  userId: string,
+  skippedFiles = 0,
+): GarminExportResult {
   const activitiesByExternalId = new Map<string, ActivityInsert>();
   const fitnessByDate = new Map<string, FitnessMetricInsert>();
 

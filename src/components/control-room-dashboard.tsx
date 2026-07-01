@@ -180,6 +180,31 @@ function valuesFromRows<T>(rows: T[], getValue: (row: T) => number | null) {
     .slice(-14);
 }
 
+function latestDatedValues(
+  financeSnapshots: FinanceSnapshot[],
+  netWorthSnapshots: NetWorthSnapshot[],
+) {
+  const valuesByDate = new Map<string, number>();
+
+  financeSnapshots.forEach((snapshot) => {
+    const value = finiteNumber(snapshot.net_worth_gbp);
+    if (value !== null) {
+      valuesByDate.set(snapshot.date, value);
+    }
+  });
+
+  netWorthSnapshots.forEach((snapshot) => {
+    const value = finiteNumber(snapshot.estimated_net_worth);
+    if (value !== null) {
+      valuesByDate.set(snapshot.date, value);
+    }
+  });
+
+  return Array.from(valuesByDate.entries())
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([, value]) => value);
+}
+
 function latestValue(values: number[]) {
   return values.length ? values[values.length - 1] : null;
 }
@@ -584,11 +609,13 @@ export function ControlRoomDashboard({
   const todayLog = dailyLogs.find((log) => log.date === today) ?? null;
   const currentFitness = latest(fitnessMetrics);
   const currentFinance = latest(financeSnapshots);
+  const currentNetWorthSnapshot = latest(netWorthSnapshots);
   const attributes = calculateCharacterAttributes({
     activities,
     dailyLogs,
     financeSnapshots,
     fitnessMetrics,
+    netWorthSnapshots,
   });
   const level = calculateLevelProgress({ activities, dailyLogs, fitnessMetrics });
   const achievements = calculateAchievements({
@@ -632,10 +659,10 @@ export function ControlRoomDashboard({
     finiteNumber(row.sleep_score),
   );
   const hrvValues = valuesFromRows(fitnessMetrics, (row) => finiteNumber(row.hrv));
-  const netWorthValues = financeSnapshots
-    .map((row) => finiteNumber(row.net_worth_gbp))
-    .filter((value): value is number => value !== null)
-    .slice(-8);
+  const netWorthValues = latestDatedValues(
+    financeSnapshots,
+    netWorthSnapshots,
+  ).slice(-8);
   const netMin =
     netWorthValues.length > 1 ? Math.min(...netWorthValues) * 0.96 : undefined;
   const netMax =
@@ -718,6 +745,19 @@ export function ControlRoomDashboard({
   ];
   const habitDone = habitRows.filter((row) => row.done).length;
   const investedValue = portfolioSummary.totalInvested || currentFinance?.invested_gbp;
+  const currentNetWorthValue =
+    currentFinance?.net_worth_gbp ??
+    currentNetWorthSnapshot?.estimated_net_worth ??
+    (portfolioSummary.totalInvested || null);
+  const currentNetWorthChangePercent =
+    currentFinance?.net_worth_change_percent ??
+    (portfolioSummary.weeklyGainLoss !== null &&
+    currentNetWorthValue &&
+    currentNetWorthValue !== portfolioSummary.weeklyGainLoss
+      ? (portfolioSummary.weeklyGainLoss /
+          (currentNetWorthValue - portfolioSummary.weeklyGainLoss)) *
+        100
+      : null);
 
   if (databaseSetupIssue) {
     return (
@@ -926,10 +966,10 @@ export function ControlRoomDashboard({
               value={
                 <div className="flex items-baseline gap-2">
                   <span className="zach-display text-[34px] font-medium leading-none text-[#0f1720]">
-                    {formatCurrency(currentFinance?.net_worth_gbp)}
+                    {formatCurrency(currentNetWorthValue)}
                   </span>
                   <span className="text-[11px] font-semibold text-[#7a8c5a]">
-                    {formatPercent(currentFinance?.net_worth_change_percent)}
+                    {formatPercent(currentNetWorthChangePercent)}
                   </span>
                 </div>
               }

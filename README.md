@@ -105,23 +105,11 @@ Supported import fields:
 
 Distance columns with mile-style headers are converted to kilometres during import.
 
-Large Garmin account exports should be imported while running Zach OS locally
-with `npm run dev`. Vercel can reject direct ZIP uploads above roughly 4 MB
-before the app sees them, which appears in the browser as a non-JSON
-`Request Entity Too Large` response. The local app still writes to the same
-Supabase project when `.env.local` uses the same Supabase URL and anon key.
-
-Reliable large-ZIP import flow:
-
-1. Make sure `.env.local` points at the Supabase project you use in production.
-2. Run `npm run dev`.
-3. Open `http://localhost:3000/garmin-import`.
-4. Log in with the same Zach OS account.
-5. Upload the Garmin account export ZIP.
-
-If local email-link login does not work, add
-`http://localhost:3000/auth/callback` to **Supabase > Authentication > URL
-Configuration > Redirect URLs**.
+Large Garmin account exports can be uploaded on the deployed site. If the ZIP is
+too large for a direct Vercel upload, Zach OS extracts the useful Garmin JSON
+files in the browser and saves them in smaller batches. Keep the tab open while
+that import runs. A local `npm run dev` import is still fine, but it is no
+longer required for large ZIPs.
 
 ## Strava OAuth
 
@@ -156,7 +144,7 @@ The default seed button adds:
   - `WEXU`, 395 units
   - `VUAG`, 29 units
 - Lifetime ISA, OneFamily
-  - `Amundi Prime All Country World UCITS ETF Acc GBP`, 1000 units
+  - `Amundi Prime All Country World UCITS ETF Acc GBP`, 1000 units, priced through the `AMUNDI_PRIME_ACWI` alias where a public quote is available
 
 Holdings can be edited from the UI and new accounts or holdings can be added later.
 
@@ -169,11 +157,13 @@ ALPHA_VANTAGE_API_KEY=your-alpha-vantage-key
 ```
 
 Zach OS tries Financial Modeling Prep first, then Alpha Vantage, then a no-key
-Yahoo Finance chart fallback that works better for simple London-listed ETF
-quotes such as `VUAG.L` and `WEXU.L`. Prices are refreshed at most once per day
-while signed in, and there is also a manual **Refresh prices** button on
-`/portfolio`. If no live quote is found, portfolio editing still works and any
-manual prices you enter are kept.
+Yahoo Finance chart fallback that works better for ETF quotes such as `VUAG.L`,
+`WEXU.L` and the `AMUNDI_PRIME_ACWI` alias. Prices are refreshed at most once
+per day while signed in, and there is also a manual **Refresh prices** button on
+`/portfolio`. Yahoo quotes in GBp are converted to GBP, and EUR/USD/CHF quotes
+are converted back to GBP when a Yahoo FX quote is available. If no live quote
+is found, portfolio editing still works and any manual prices you enter are
+kept.
 
 The dashboard displays:
 

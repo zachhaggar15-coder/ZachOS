@@ -32,6 +32,14 @@ type YahooChartQuote = {
   };
 };
 
+const MARKET_ALIASES: Record<string, string[]> = {
+  AMUNDI_PRIME_ACWI: ["WEBN.DE", "WEBN.MI", "WEBG.DE"],
+  WEBN: ["WEBN.DE", "WEBN.MI"],
+  WEBG: ["WEBG.DE", "WEBG.SW"],
+  WEXU: ["WEXU.L", "WEXU"],
+  VUAG: ["VUAG.L", "VUAG"],
+};
+
 function numeric(value: unknown) {
   if (typeof value === "number" && Number.isFinite(value)) {
     return value;
@@ -53,6 +61,10 @@ export function marketLookupSymbols(ticker: string, exchange: string | null) {
   const normalised = normaliseTicker(ticker);
   if (!normalised) {
     return [];
+  }
+
+  if (MARKET_ALIASES[normalised]) {
+    return MARKET_ALIASES[normalised];
   }
 
   const exchangeName = exchange?.toLowerCase() ?? "";
@@ -127,6 +139,71 @@ async function fetchAlphaVantagePrice(symbol: string, currency: string) {
       } satisfies MarketDataResult);
 }
 
+function yahooFxSymbol(fromCurrency: string, toCurrency: string) {
+  const from = fromCurrency.toUpperCase();
+  const to = toCurrency.toUpperCase();
+
+  if (from === to) {
+    return null;
+  }
+
+  return `${from}${to}=X`;
+}
+
+async function fetchYahooFxRate(fromCurrency: string, toCurrency: string) {
+  const symbol = yahooFxSymbol(fromCurrency, toCurrency);
+  if (!symbol) {
+    return 1;
+  }
+
+  const url = new URL(
+    `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(
+      symbol,
+    )}`,
+  );
+  url.searchParams.set("range", "1d");
+  url.searchParams.set("interval", "1d");
+
+  const response = await fetch(url.toString(), {
+    cache: "no-store",
+    headers: { "User-Agent": "Mozilla/5.0" },
+  });
+  if (!response.ok) {
+    return null;
+  }
+
+  const payload = (await response.json()) as YahooChartQuote;
+  return numeric(payload?.chart?.result?.[0]?.meta?.regularMarketPrice);
+}
+
+async function normaliseYahooQuote(
+  price: number,
+  quoteCurrency: string | undefined,
+  fallbackCurrency: string,
+) {
+  const rawCurrency = quoteCurrency ?? fallbackCurrency;
+  const normalisedCurrency =
+    rawCurrency.toLowerCase() === "gbp" ? "GBP" : rawCurrency.toUpperCase();
+
+  if (rawCurrency.toLowerCase() === "gbp") {
+    return { currency: "GBP", price: price / 100 };
+  }
+
+  if (normalisedCurrency === fallbackCurrency.toUpperCase()) {
+    return { currency: fallbackCurrency, price };
+  }
+
+  const fxRate = await fetchYahooFxRate(normalisedCurrency, fallbackCurrency);
+  if (fxRate === null) {
+    return { currency: normalisedCurrency, price };
+  }
+
+  return {
+    currency: fallbackCurrency,
+    price: price * fxRate,
+  };
+}
+
 async function fetchYahooPrice(symbol: string, fallbackCurrency: string) {
   const url = new URL(
     `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(
@@ -147,12 +224,16 @@ async function fetchYahooPrice(symbol: string, fallbackCurrency: string) {
   const payload = (await response.json()) as YahooChartQuote;
   const quote = payload?.chart?.result?.[0]?.meta;
   const price = numeric(quote?.regularMarketPrice);
+  const normalised =
+    price === null
+      ? null
+      : await normaliseYahooQuote(price, quote?.currency, fallbackCurrency);
 
-  return price === null
+  return normalised === null
     ? null
     : ({
-        currency: quote?.currency ?? fallbackCurrency,
-        price,
+        currency: normalised.currency,
+        price: normalised.price,
         provider: "yahoo",
         symbol: quote?.symbol ?? symbol,
       } satisfies MarketDataResult);

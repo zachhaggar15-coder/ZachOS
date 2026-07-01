@@ -1026,9 +1026,9 @@ export async function seedDefaultPortfolio() {
       }),
       upsertSeedHolding(supabase, {
         account_id: lisaAccountId,
-        auto_price_updates: false,
+        auto_price_updates: true,
         currency: "GBP",
-        exchange: null,
+        exchange: "Yahoo",
         fund_name: "Amundi Prime All Country World UCITS ETF Acc GBP",
         ticker: "AMUNDI_PRIME_ACWI",
         units: 1000,

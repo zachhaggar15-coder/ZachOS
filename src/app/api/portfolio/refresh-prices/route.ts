@@ -26,6 +26,13 @@ function priceIsFresh(updatedAt: string | null | undefined, today: string) {
   return Boolean(updatedAt && updatedAt.slice(0, 10) >= today);
 }
 
+function shouldAutoPriceHolding(holding: PortfolioAccountWithHoldings["holdings"][number]) {
+  return (
+    holding.auto_price_updates ||
+    marketPriceKey(holding.ticker) === "AMUNDI_PRIME_ACWI"
+  );
+}
+
 export async function POST() {
   const supabase = await createSupabaseServerClient();
   const {
@@ -49,10 +56,25 @@ export async function POST() {
 
   const accounts = (accountsResult.data ?? []) as PortfolioAccountWithHoldings[];
   const holdings = accounts.flatMap((account) => account.holdings ?? []);
+  const amundiAutoRepairIds = holdings
+    .filter(
+      (holding) =>
+        marketPriceKey(holding.ticker) === "AMUNDI_PRIME_ACWI" &&
+        !holding.auto_price_updates,
+    )
+    .map((holding) => holding.id);
+
+  if (amundiAutoRepairIds.length) {
+    await supabase
+      .from("portfolio_holdings")
+      .update({ auto_price_updates: true, exchange: "Yahoo" })
+      .in("id", amundiAutoRepairIds);
+  }
+
   const tickers = Array.from(
     new Set(
       holdings
-        .filter((holding) => holding.auto_price_updates)
+        .filter(shouldAutoPriceHolding)
         .map((holding) => marketPriceKey(holding.ticker))
         .filter(Boolean),
     ),
@@ -81,7 +103,7 @@ export async function POST() {
 
       if (
         !ticker ||
-        !holding.auto_price_updates ||
+        !shouldAutoPriceHolding(holding) ||
         priceIsFresh(pricesByTicker.get(ticker)?.updated_at, today) ||
         rowsToUpsert.some((row) => row.ticker === ticker)
       ) {

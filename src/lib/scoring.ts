@@ -318,15 +318,19 @@ export function calculateCharacterAttributes(input: {
   dailyLogs: DailyLog[];
   financeSnapshots: FinanceSnapshot[];
   fitnessMetrics: FitnessMetric[];
+  netWorthSnapshots?: NetWorthSnapshot[];
 }): CharacterAttribute[] {
   const latestFitness = input.fitnessMetrics.at(-1) ?? null;
   const latestFinance = input.financeSnapshots.at(-1) ?? null;
+  const latestNetWorth = input.netWorthSnapshots?.at(-1) ?? null;
   const dailyTotals = sumDailyLogs(input.dailyLogs);
   const streak = calculateCurrentStreak(input.dailyLogs);
   const recentRunning = runningDistanceSince(input.activities, 30);
   const hrv = numeric(latestFitness?.hrv);
   const sleepScore = numeric(latestFitness?.sleep_score);
-  const netWorth = numeric(latestFinance?.net_worth_gbp);
+  const netWorth = numeric(
+    latestFinance?.net_worth_gbp ?? latestNetWorth?.estimated_net_worth,
+  );
 
   return [
     {

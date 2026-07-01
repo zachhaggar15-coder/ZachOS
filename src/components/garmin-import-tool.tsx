@@ -38,6 +38,11 @@ const FIELD_OPTIONS = [
 const selectClass =
   "h-10 rounded border border-white/10 bg-[#0b1016] px-3 text-sm text-zinc-100 outline-none transition focus:border-cyan-300/70";
 const DEPLOYED_ZIP_UPLOAD_LIMIT_BYTES = 4 * 1024 * 1024;
+const BROWSER_JSON_ENTRY_LIMIT_CHARS = 900_000;
+const BROWSER_JSON_BATCH_LIMIT_CHARS = 1_600_000;
+const CENTRAL_DIRECTORY_SIGNATURE = 0x02014b50;
+const END_OF_CENTRAL_DIRECTORY_SIGNATURE = 0x06054b50;
+const LOCAL_FILE_SIGNATURE = 0x04034b50;
 
 type GarminZipImportResponse = {
   activitiesImported?: number;
@@ -46,6 +51,11 @@ type GarminZipImportResponse = {
   jsonFilesRead?: number;
   latestActivityDate?: string | null;
   latestFitnessDate?: string | null;
+};
+
+type GarminJsonEntry = {
+  fullName: string;
+  text: string;
 };
 
 function formatFileSize(bytes: number) {
@@ -58,14 +68,6 @@ function formatFileSize(bytes: number) {
 
 function isLocalImportHost() {
   return ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname);
-}
-
-function deployedSizeLimitMessage(file: File) {
-  return `This Garmin ZIP is ${formatFileSize(
-    file.size,
-  )}. The deployed Vercel app can reject direct ZIP uploads above roughly ${formatFileSize(
-    DEPLOYED_ZIP_UPLOAD_LIMIT_BYTES,
-  )} before Zach OS can read them. Run Zach OS locally with npm run dev, open http://localhost:3000/garmin-import, and upload this same ZIP there so it imports into the same Supabase database.`;
 }
 
 async function readGarminZipImportResponse(response: Response) {
@@ -83,7 +85,7 @@ async function readGarminZipImportResponse(response: Response) {
     responseText.toLowerCase().includes("request entity too large")
   ) {
     throw new Error(
-      "That Garmin ZIP is too large for the deployed upload route. Run Zach OS locally with npm run dev, open http://localhost:3000/garmin-import, and upload the same ZIP there.",
+      "That Garmin ZIP is too large for direct upload. Zach OS can usually import it through the browser importer instead; reload the page and try again.",
     );
   }
 
@@ -93,6 +95,207 @@ async function readGarminZipImportResponse(response: Response) {
       180,
     )}`,
   );
+}
+
+function shouldReadGarminJson(fullName: string) {
+  return (
+    fullName.endsWith(".json") &&
+    (fullName.includes("summarizedActivities") ||
+      fullName.includes("sleepData") ||
+      fullName.includes("healthStatusData") ||
+      fullName.includes("UDSFile_") ||
+      fullName.includes("TrainingReadinessDTO") ||
+      fullName.includes("TrainingHistory_") ||
+      fullName.includes("MetricsAcuteTrainingLoad"))
+  );
+}
+
+function findEndOfCentralDirectory(view: DataView) {
+  const minimumOffset = Math.max(0, view.byteLength - 65557);
+
+  for (let offset = view.byteLength - 22; offset >= minimumOffset; offset -= 1) {
+    if (view.getUint32(offset, true) === END_OF_CENTRAL_DIRECTORY_SIGNATURE) {
+      return offset;
+    }
+  }
+
+  throw new Error("Could not read the Garmin ZIP directory.");
+}
+
+async function inflateZipData(data: Uint8Array) {
+  const StreamCtor = globalThis.DecompressionStream as unknown as
+    | (new (format: string) => TransformStream<Uint8Array, Uint8Array>)
+    | undefined;
+
+  if (!StreamCtor) {
+    throw new Error(
+      "This browser cannot decompress Garmin ZIP files directly. Try Chrome or Edge, then upload the same ZIP again.",
+    );
+  }
+
+  const formats = ["deflate-raw", "deflate"];
+  const blobPart = data.buffer.slice(
+    data.byteOffset,
+    data.byteOffset + data.byteLength,
+  ) as ArrayBuffer;
+
+  for (const format of formats) {
+    try {
+      const stream = new Blob([blobPart])
+        .stream()
+        .pipeThrough(new StreamCtor(format));
+      return await new Response(stream).text();
+    } catch {
+      // Try the next browser-supported deflate variant.
+    }
+  }
+
+  throw new Error("Could not decompress the Garmin ZIP entries in this browser.");
+}
+
+function splitPayloadBySize(
+  fullName: string,
+  rows: unknown[],
+  serialise: (rows: unknown[]) => string,
+) {
+  const entries: GarminJsonEntry[] = [];
+  let chunk: unknown[] = [];
+
+  rows.forEach((row) => {
+    chunk.push(row);
+    const text = serialise(chunk);
+
+    if (text.length > BROWSER_JSON_ENTRY_LIMIT_CHARS && chunk.length > 1) {
+      const last = chunk.pop();
+      entries.push({ fullName, text: serialise(chunk) });
+      chunk = last === undefined ? [] : [last];
+    }
+  });
+
+  if (chunk.length) {
+    entries.push({ fullName, text: serialise(chunk) });
+  }
+
+  return entries;
+}
+
+function splitLargeGarminEntry(entry: GarminJsonEntry) {
+  if (entry.text.length <= BROWSER_JSON_ENTRY_LIMIT_CHARS) {
+    return [entry];
+  }
+
+  try {
+    const payload = JSON.parse(entry.text) as unknown;
+
+    if (Array.isArray(payload)) {
+      return splitPayloadBySize(entry.fullName, payload, (rows) =>
+        JSON.stringify(rows),
+      );
+    }
+
+    if (payload && typeof payload === "object") {
+      const record = payload as Record<string, unknown>;
+      const arrayKey = Object.keys(record).find((key) =>
+        Array.isArray(record[key]),
+      );
+
+      if (arrayKey && Array.isArray(record[arrayKey])) {
+        return splitPayloadBySize(
+          entry.fullName,
+          record[arrayKey],
+          (rows) => JSON.stringify({ ...record, [arrayKey]: rows }),
+        );
+      }
+    }
+  } catch {
+    // Send the original entry and let the server return the parse error.
+  }
+
+  return [entry];
+}
+
+function batchGarminEntries(entries: GarminJsonEntry[]) {
+  const batches: GarminJsonEntry[][] = [];
+  let batch: GarminJsonEntry[] = [];
+  let batchSize = 0;
+
+  entries.forEach((entry) => {
+    const entrySize = entry.fullName.length + entry.text.length;
+
+    if (batch.length && batchSize + entrySize > BROWSER_JSON_BATCH_LIMIT_CHARS) {
+      batches.push(batch);
+      batch = [];
+      batchSize = 0;
+    }
+
+    batch.push(entry);
+    batchSize += entrySize;
+  });
+
+  if (batch.length) {
+    batches.push(batch);
+  }
+
+  return batches;
+}
+
+async function readGarminZipEntriesInBrowser(
+  file: File,
+  onProgress: (message: string) => void,
+) {
+  const arrayBuffer = await file.arrayBuffer();
+  const bytes = new Uint8Array(arrayBuffer);
+  const view = new DataView(arrayBuffer);
+  const decoder = new TextDecoder();
+  const eocdOffset = findEndOfCentralDirectory(view);
+  const entryCount = view.getUint16(eocdOffset + 10, true);
+  let directoryOffset = view.getUint32(eocdOffset + 16, true);
+  const entries: GarminJsonEntry[] = [];
+
+  for (let index = 0; index < entryCount; index += 1) {
+    if (view.getUint32(directoryOffset, true) !== CENTRAL_DIRECTORY_SIGNATURE) {
+      throw new Error("The Garmin ZIP central directory is not readable.");
+    }
+
+    const compressionMethod = view.getUint16(directoryOffset + 10, true);
+    const compressedSize = view.getUint32(directoryOffset + 20, true);
+    const fileNameLength = view.getUint16(directoryOffset + 28, true);
+    const extraLength = view.getUint16(directoryOffset + 30, true);
+    const commentLength = view.getUint16(directoryOffset + 32, true);
+    const localHeaderOffset = view.getUint32(directoryOffset + 42, true);
+    const fullName = decoder.decode(
+      bytes.subarray(directoryOffset + 46, directoryOffset + 46 + fileNameLength),
+    );
+
+    directoryOffset += 46 + fileNameLength + extraLength + commentLength;
+
+    if (!shouldReadGarminJson(fullName)) {
+      continue;
+    }
+
+    onProgress(`Extracting ${fullName.split("/").at(-1) ?? fullName}...`);
+
+    if (view.getUint32(localHeaderOffset, true) !== LOCAL_FILE_SIGNATURE) {
+      continue;
+    }
+
+    const localNameLength = view.getUint16(localHeaderOffset + 26, true);
+    const localExtraLength = view.getUint16(localHeaderOffset + 28, true);
+    const dataStart = localHeaderOffset + 30 + localNameLength + localExtraLength;
+    const compressedData = bytes.subarray(dataStart, dataStart + compressedSize);
+    const text =
+      compressionMethod === 0
+        ? decoder.decode(compressedData)
+        : compressionMethod === 8
+          ? await inflateZipData(compressedData)
+          : null;
+
+    if (text) {
+      entries.push(...splitLargeGarminEntry({ fullName, text }));
+    }
+  }
+
+  return entries;
 }
 
 function formatFreshness(date: string | null | undefined) {
@@ -260,6 +463,7 @@ export function GarminImportTool({
   const [fileName, setFileName] = useState("");
   const [parseError, setParseError] = useState("");
   const [zipImportError, setZipImportError] = useState("");
+  const [zipImportProgress, setZipImportProgress] = useState("");
   const [zipImportResult, setZipImportResult] = useState("");
   const [zipImporting, setZipImporting] = useState(false);
   const router = useRouter();
@@ -317,16 +521,93 @@ export function GarminImportTool({
     }
 
     setZipImportError("");
+    setZipImportProgress("");
     setZipImportResult("");
-
-    if (!isLocalImportHost() && file.size > DEPLOYED_ZIP_UPLOAD_LIMIT_BYTES) {
-      setZipImportError(deployedSizeLimitMessage(file));
-      return;
-    }
 
     setZipImporting(true);
 
     try {
+      if (!isLocalImportHost() && file.size > DEPLOYED_ZIP_UPLOAD_LIMIT_BYTES) {
+        setZipImportProgress(
+          `Large ZIP detected (${formatFileSize(
+            file.size,
+          )}). Extracting Garmin JSON in the browser so Vercel does not reject the upload...`,
+        );
+        const entries = await readGarminZipEntriesInBrowser(
+          file,
+          setZipImportProgress,
+        );
+
+        if (!entries.length) {
+          throw new Error(
+            "No usable Garmin JSON files were found in that ZIP export.",
+          );
+        }
+
+        const batches = batchGarminEntries(entries);
+        const totals: Required<
+          Pick<
+            GarminZipImportResponse,
+            "activitiesImported" | "fitnessDaysImported" | "jsonFilesRead"
+          >
+        > & {
+          latestActivityDate: string | null;
+          latestFitnessDate: string | null;
+        } = {
+          activitiesImported: 0,
+          fitnessDaysImported: 0,
+          jsonFilesRead: 0,
+          latestActivityDate: null,
+          latestFitnessDate: null,
+        };
+
+        for (let index = 0; index < batches.length; index += 1) {
+          setZipImportProgress(
+            `Saving Garmin batch ${index + 1} of ${batches.length}...`,
+          );
+          const response = await fetch("/api/garmin-export/import-json", {
+            body: JSON.stringify({ entries: batches[index] }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+            method: "POST",
+          });
+          const payload = await readGarminZipImportResponse(response);
+
+          if (!response.ok) {
+            throw new Error(payload.error || "Garmin export import failed.");
+          }
+
+          totals.activitiesImported += payload.activitiesImported ?? 0;
+          totals.fitnessDaysImported += payload.fitnessDaysImported ?? 0;
+          totals.jsonFilesRead += payload.jsonFilesRead ?? 0;
+          totals.latestActivityDate =
+            [totals.latestActivityDate, payload.latestActivityDate]
+              .filter((date): date is string => Boolean(date))
+              .sort((a, b) => a.localeCompare(b))
+              .at(-1) ?? null;
+          totals.latestFitnessDate =
+            [totals.latestFitnessDate, payload.latestFitnessDate]
+              .filter((date): date is string => Boolean(date))
+              .sort((a, b) => a.localeCompare(b))
+              .at(-1) ?? null;
+        }
+
+        setZipImportResult(
+          `Imported ${totals.activitiesImported} activities and ${
+            totals.fitnessDaysImported
+          } fitness metric days from ${
+            totals.jsonFilesRead
+          } Garmin JSON chunks. Latest activity: ${
+            totals.latestActivityDate ?? "none"
+          }. Latest fitness day: ${totals.latestFitnessDate ?? "none"}.`,
+        );
+        setZipImportProgress("");
+        form.reset();
+        router.refresh();
+        return;
+      }
+
       const response = await fetch("/api/garmin-export/import", {
         body: file,
         headers: {
@@ -349,9 +630,11 @@ export function GarminImportTool({
           payload.latestActivityDate ?? "none"
         }. Latest fitness day: ${payload.latestFitnessDate ?? "none"}.`,
       );
+      setZipImportProgress("");
       form.reset();
       router.refresh();
     } catch (error) {
+      setZipImportProgress("");
       setZipImportError(
         error instanceof Error
           ? error.message
@@ -414,18 +697,14 @@ export function GarminImportTool({
           </button>
         </form>
         <p className="mt-3 text-xs leading-5 text-zinc-500">
-          Large Garmin exports are best imported while running Zach OS locally.
+          Large Garmin exports are imported in your browser first, then saved in
+          smaller batches so the deployed app does not hit upload-size limits.
           The import is safe to rerun because rows are upserted by date or
-          Garmin activity ID. If the latest dates above are stale, request a new
-          Garmin export and upload the new ZIP.
+          Garmin activity ID.
         </p>
         <p className="mt-2 text-xs leading-5 text-zinc-500">
-          For ZIPs over roughly 4 MB, use the local app: run{" "}
-          <span className="font-mono text-zinc-300">npm run dev</span>, open{" "}
-          <span className="font-mono text-zinc-300">
-            http://localhost:3000/garmin-import
-          </span>
-          , then upload the same file.
+          Keep this tab open while the import is running. If the latest dates
+          above are stale, request a fresh Garmin export and upload the new ZIP.
         </p>
         <p className="mt-2 text-xs leading-5 text-zinc-600">
           Zach OS does not store your Garmin password or automate Garmin Connect
@@ -434,6 +713,11 @@ export function GarminImportTool({
         {zipImportResult && (
           <p className="mt-3 rounded border border-emerald-300/25 bg-emerald-400/10 px-3 py-2 text-sm text-emerald-100">
             {zipImportResult}
+          </p>
+        )}
+        {zipImportProgress && (
+          <p className="mt-3 rounded border border-cyan-300/25 bg-cyan-400/10 px-3 py-2 text-sm text-cyan-100">
+            {zipImportProgress}
           </p>
         )}
         {zipImportError && (
