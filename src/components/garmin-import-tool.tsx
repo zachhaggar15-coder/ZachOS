@@ -37,8 +37,8 @@ const FIELD_OPTIONS = [
 
 const selectClass =
   "h-10 rounded border border-white/10 bg-[#0b1016] px-3 text-sm text-zinc-100 outline-none transition focus:border-cyan-300/70";
-const BROWSER_JSON_ENTRY_LIMIT_CHARS = 180_000;
-const BROWSER_JSON_BATCH_LIMIT_CHARS = 420_000;
+const BROWSER_JSON_ENTRY_LIMIT_CHARS = 80_000;
+const BROWSER_JSON_BATCH_LIMIT_CHARS = 180_000;
 const CENTRAL_DIRECTORY_SIGNATURE = 0x02014b50;
 const END_OF_CENTRAL_DIRECTORY_SIGNATURE = 0x06054b50;
 const LOCAL_FILE_SIGNATURE = 0x04034b50;
@@ -67,7 +67,12 @@ type GarminImportTotals = Required<
   latestFitnessDate: string | null;
 };
 
-class GarminPayloadTooLargeError extends Error {}
+class GarminPayloadTooLargeError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "GarminPayloadTooLargeError";
+  }
+}
 
 function formatFileSize(bytes: number) {
   if (bytes < 1024 * 1024) {
@@ -81,6 +86,32 @@ function isLocalImportHost() {
   return ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname);
 }
 
+function isPayloadTooLargeMessage(message: string) {
+  const lower = message.toLowerCase();
+  return (
+    lower.includes("request entity too large") ||
+    lower.includes("body exceeded") ||
+    lower.includes("payload too large") ||
+    lower.includes("too large for vercel") ||
+    lower.includes("too large for direct upload")
+  );
+}
+
+function payloadTooLargeMessage(source: "json-batch" | "zip-upload") {
+  return source === "json-batch"
+    ? "A Garmin JSON batch was too large for Vercel. Zach OS will retry it in smaller pieces."
+    : "That Garmin ZIP is too large for direct upload. Zach OS can usually import it through the browser importer instead; reload the page and try again.";
+}
+
+function isGarminPayloadTooLargeError(error: unknown) {
+  return (
+    error instanceof GarminPayloadTooLargeError ||
+    (error instanceof Error &&
+      (error.name === "GarminPayloadTooLargeError" ||
+        isPayloadTooLargeMessage(error.message)))
+  );
+}
+
 async function readGarminZipImportResponse(
   response: Response,
   source: "json-batch" | "zip-upload" = "zip-upload",
@@ -88,7 +119,14 @@ async function readGarminZipImportResponse(
   const contentType = response.headers.get("content-type") ?? "";
 
   if (contentType.includes("application/json")) {
-    return (await response.json()) as GarminZipImportResponse;
+    const payload = (await response.json()) as GarminZipImportResponse;
+    const errorMessage = payload.error ?? "";
+
+    if (response.status === 413 || isPayloadTooLargeMessage(errorMessage)) {
+      throw new GarminPayloadTooLargeError(payloadTooLargeMessage(source));
+    }
+
+    return payload;
   }
 
   const rawText = (await response.text()).trim();
@@ -98,11 +136,7 @@ async function readGarminZipImportResponse(
     response.status === 413 ||
     responseText.toLowerCase().includes("request entity too large")
   ) {
-    throw new GarminPayloadTooLargeError(
-      source === "json-batch"
-        ? "A Garmin JSON batch was too large for Vercel. Zach OS will retry it in smaller pieces."
-        : "That Garmin ZIP is too large for direct upload. Zach OS can usually import it through the browser importer instead; reload the page and try again.",
-    );
+    throw new GarminPayloadTooLargeError(payloadTooLargeMessage(source));
   }
 
   throw new Error(
@@ -302,7 +336,7 @@ async function saveGarminJsonBatch(
 
     addImportPayloadToTotals(totals, payload);
   } catch (error) {
-    if (error instanceof GarminPayloadTooLargeError && batch.length > 1) {
+    if (isGarminPayloadTooLargeError(error) && batch.length > 1) {
       const midpoint = Math.ceil(batch.length / 2);
       onProgress(`${label} was too large. Retrying in smaller batches...`);
       await saveGarminJsonBatch(
@@ -320,7 +354,7 @@ async function saveGarminJsonBatch(
       return;
     }
 
-    if (error instanceof GarminPayloadTooLargeError && batch.length === 1) {
+    if (isGarminPayloadTooLargeError(error) && batch.length === 1) {
       const [entry] = batch;
       const smallerEntries = splitLargeGarminEntry(
         entry,
