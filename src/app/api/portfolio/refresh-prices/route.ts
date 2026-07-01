@@ -10,6 +10,7 @@ import {
   marketPriceKey,
   type PortfolioAccountWithHoldings,
 } from "@/lib/portfolio";
+import { priceRefreshWindowId } from "@/lib/price-refresh";
 import type { Database } from "@/lib/supabase/database.types";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -22,8 +23,11 @@ function jsonError(message: string, status = 400) {
   return NextResponse.json({ error: message }, { status });
 }
 
-function priceIsFresh(updatedAt: string | null | undefined, today: string) {
-  return Boolean(updatedAt && updatedAt.slice(0, 10) >= today);
+function priceIsFresh(
+  updatedAt: string | null | undefined,
+  refreshWindowId: string,
+) {
+  return Boolean(updatedAt && updatedAt.slice(0, 10) >= refreshWindowId);
 }
 
 function shouldAutoPriceHolding(holding: PortfolioAccountWithHoldings["holdings"][number]) {
@@ -33,7 +37,8 @@ function shouldAutoPriceHolding(holding: PortfolioAccountWithHoldings["holdings"
   );
 }
 
-export async function POST() {
+export async function POST(request: Request) {
+  const forceRefresh = new URL(request.url).searchParams.get("force") === "1";
   const supabase = await createSupabaseServerClient();
   const {
     data: { user },
@@ -89,6 +94,7 @@ export async function POST() {
   }
 
   const today = todayInLondon();
+  const refreshWindow = priceRefreshWindowId();
   const existingPrices = existingPricesResult.data ?? [];
   const pricesByTicker = new Map(
     existingPrices.map((price) => [marketPriceKey(price.ticker), price]),
@@ -104,7 +110,11 @@ export async function POST() {
       if (
         !ticker ||
         !shouldAutoPriceHolding(holding) ||
-        priceIsFresh(pricesByTicker.get(ticker)?.updated_at, today) ||
+        (!forceRefresh &&
+          priceIsFresh(
+            pricesByTicker.get(ticker)?.updated_at,
+            refreshWindow,
+          )) ||
         rowsToUpsert.some((row) => row.ticker === ticker)
       ) {
         continue;
@@ -202,8 +212,10 @@ export async function POST() {
 
   return NextResponse.json({
     errors,
+    forceRefresh,
     hasProvider: hasMarketDataProvider(),
     pricesUpdated: rowsToUpsert.length,
+    refreshWindowId: refreshWindow,
     tickersChecked: tickers.length,
     totalInvested: summary.totalInvested,
     unavailableTickers,

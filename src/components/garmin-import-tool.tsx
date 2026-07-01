@@ -37,8 +37,8 @@ const FIELD_OPTIONS = [
 
 const selectClass =
   "h-10 rounded border border-white/10 bg-[#0b1016] px-3 text-sm text-zinc-100 outline-none transition focus:border-cyan-300/70";
-const BROWSER_JSON_ENTRY_LIMIT_CHARS = 900_000;
-const BROWSER_JSON_BATCH_LIMIT_CHARS = 1_600_000;
+const BROWSER_JSON_ENTRY_LIMIT_CHARS = 180_000;
+const BROWSER_JSON_BATCH_LIMIT_CHARS = 420_000;
 const CENTRAL_DIRECTORY_SIGNATURE = 0x02014b50;
 const END_OF_CENTRAL_DIRECTORY_SIGNATURE = 0x06054b50;
 const LOCAL_FILE_SIGNATURE = 0x04034b50;
@@ -57,6 +57,18 @@ type GarminJsonEntry = {
   text: string;
 };
 
+type GarminImportTotals = Required<
+  Pick<
+    GarminZipImportResponse,
+    "activitiesImported" | "fitnessDaysImported" | "jsonFilesRead"
+  >
+> & {
+  latestActivityDate: string | null;
+  latestFitnessDate: string | null;
+};
+
+class GarminPayloadTooLargeError extends Error {}
+
 function formatFileSize(bytes: number) {
   if (bytes < 1024 * 1024) {
     return `${Math.max(1, Math.round(bytes / 1024))} KB`;
@@ -69,7 +81,10 @@ function isLocalImportHost() {
   return ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname);
 }
 
-async function readGarminZipImportResponse(response: Response) {
+async function readGarminZipImportResponse(
+  response: Response,
+  source: "json-batch" | "zip-upload" = "zip-upload",
+) {
   const contentType = response.headers.get("content-type") ?? "";
 
   if (contentType.includes("application/json")) {
@@ -83,8 +98,10 @@ async function readGarminZipImportResponse(response: Response) {
     response.status === 413 ||
     responseText.toLowerCase().includes("request entity too large")
   ) {
-    throw new Error(
-      "That Garmin ZIP is too large for direct upload. Zach OS can usually import it through the browser importer instead; reload the page and try again.",
+    throw new GarminPayloadTooLargeError(
+      source === "json-batch"
+        ? "A Garmin JSON batch was too large for Vercel. Zach OS will retry it in smaller pieces."
+        : "That Garmin ZIP is too large for direct upload. Zach OS can usually import it through the browser importer instead; reload the page and try again.",
     );
   }
 
@@ -156,6 +173,7 @@ function splitPayloadBySize(
   fullName: string,
   rows: unknown[],
   serialise: (rows: unknown[]) => string,
+  limit = BROWSER_JSON_ENTRY_LIMIT_CHARS,
 ) {
   const entries: GarminJsonEntry[] = [];
   let chunk: unknown[] = [];
@@ -164,7 +182,7 @@ function splitPayloadBySize(
     chunk.push(row);
     const text = serialise(chunk);
 
-    if (text.length > BROWSER_JSON_ENTRY_LIMIT_CHARS && chunk.length > 1) {
+    if (text.length > limit && chunk.length > 1) {
       const last = chunk.pop();
       entries.push({ fullName, text: serialise(chunk) });
       chunk = last === undefined ? [] : [last];
@@ -178,8 +196,11 @@ function splitPayloadBySize(
   return entries;
 }
 
-function splitLargeGarminEntry(entry: GarminJsonEntry) {
-  if (entry.text.length <= BROWSER_JSON_ENTRY_LIMIT_CHARS) {
+function splitLargeGarminEntry(
+  entry: GarminJsonEntry,
+  limit = BROWSER_JSON_ENTRY_LIMIT_CHARS,
+) {
+  if (entry.text.length <= limit) {
     return [entry];
   }
 
@@ -189,6 +210,7 @@ function splitLargeGarminEntry(entry: GarminJsonEntry) {
     if (Array.isArray(payload)) {
       return splitPayloadBySize(entry.fullName, payload, (rows) =>
         JSON.stringify(rows),
+        limit,
       );
     }
 
@@ -203,6 +225,7 @@ function splitLargeGarminEntry(entry: GarminJsonEntry) {
           entry.fullName,
           record[arrayKey],
           (rows) => JSON.stringify({ ...record, [arrayKey]: rows }),
+          limit,
         );
       }
     }
@@ -236,6 +259,88 @@ function batchGarminEntries(entries: GarminJsonEntry[]) {
   }
 
   return batches;
+}
+
+function addImportPayloadToTotals(
+  totals: GarminImportTotals,
+  payload: GarminZipImportResponse,
+) {
+  totals.activitiesImported += payload.activitiesImported ?? 0;
+  totals.fitnessDaysImported += payload.fitnessDaysImported ?? 0;
+  totals.jsonFilesRead += payload.jsonFilesRead ?? 0;
+  totals.latestActivityDate =
+    [totals.latestActivityDate, payload.latestActivityDate]
+      .filter((date): date is string => Boolean(date))
+      .sort((a, b) => a.localeCompare(b))
+      .at(-1) ?? null;
+  totals.latestFitnessDate =
+    [totals.latestFitnessDate, payload.latestFitnessDate]
+      .filter((date): date is string => Boolean(date))
+      .sort((a, b) => a.localeCompare(b))
+      .at(-1) ?? null;
+}
+
+async function saveGarminJsonBatch(
+  batch: GarminJsonEntry[],
+  totals: GarminImportTotals,
+  onProgress: (message: string) => void,
+  label: string,
+) {
+  try {
+    const response = await fetch("/api/garmin-export/import-json", {
+      body: JSON.stringify({ entries: batch }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    });
+    const payload = await readGarminZipImportResponse(response, "json-batch");
+
+    if (!response.ok) {
+      throw new Error(payload.error || "Garmin export import failed.");
+    }
+
+    addImportPayloadToTotals(totals, payload);
+  } catch (error) {
+    if (error instanceof GarminPayloadTooLargeError && batch.length > 1) {
+      const midpoint = Math.ceil(batch.length / 2);
+      onProgress(`${label} was too large. Retrying in smaller batches...`);
+      await saveGarminJsonBatch(
+        batch.slice(0, midpoint),
+        totals,
+        onProgress,
+        `${label}a`,
+      );
+      await saveGarminJsonBatch(
+        batch.slice(midpoint),
+        totals,
+        onProgress,
+        `${label}b`,
+      );
+      return;
+    }
+
+    if (error instanceof GarminPayloadTooLargeError && batch.length === 1) {
+      const [entry] = batch;
+      const smallerEntries = splitLargeGarminEntry(
+        entry,
+        Math.max(20_000, Math.floor(entry.text.length / 2)),
+      );
+
+      if (smallerEntries.length > 1) {
+        onProgress(`${label} was too large. Splitting one Garmin file...`);
+        await saveGarminJsonBatch(
+          smallerEntries,
+          totals,
+          onProgress,
+          `${label}-split`,
+        );
+        return;
+      }
+    }
+
+    throw error;
+  }
 }
 
 async function readGarminZipEntriesInBrowser(
@@ -544,15 +649,7 @@ export function GarminImportTool({
         }
 
         const batches = batchGarminEntries(entries);
-        const totals: Required<
-          Pick<
-            GarminZipImportResponse,
-            "activitiesImported" | "fitnessDaysImported" | "jsonFilesRead"
-          >
-        > & {
-          latestActivityDate: string | null;
-          latestFitnessDate: string | null;
-        } = {
+        const totals: GarminImportTotals = {
           activitiesImported: 0,
           fitnessDaysImported: 0,
           jsonFilesRead: 0,
@@ -564,32 +661,12 @@ export function GarminImportTool({
           setZipImportProgress(
             `Saving Garmin batch ${index + 1} of ${batches.length}...`,
           );
-          const response = await fetch("/api/garmin-export/import-json", {
-            body: JSON.stringify({ entries: batches[index] }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-            method: "POST",
-          });
-          const payload = await readGarminZipImportResponse(response);
-
-          if (!response.ok) {
-            throw new Error(payload.error || "Garmin export import failed.");
-          }
-
-          totals.activitiesImported += payload.activitiesImported ?? 0;
-          totals.fitnessDaysImported += payload.fitnessDaysImported ?? 0;
-          totals.jsonFilesRead += payload.jsonFilesRead ?? 0;
-          totals.latestActivityDate =
-            [totals.latestActivityDate, payload.latestActivityDate]
-              .filter((date): date is string => Boolean(date))
-              .sort((a, b) => a.localeCompare(b))
-              .at(-1) ?? null;
-          totals.latestFitnessDate =
-            [totals.latestFitnessDate, payload.latestFitnessDate]
-              .filter((date): date is string => Boolean(date))
-              .sort((a, b) => a.localeCompare(b))
-              .at(-1) ?? null;
+          await saveGarminJsonBatch(
+            batches[index],
+            totals,
+            setZipImportProgress,
+            `Batch ${index + 1}`,
+          );
         }
 
         setZipImportResult(
@@ -614,7 +691,7 @@ export function GarminImportTool({
         },
         method: "POST",
       });
-      const payload = await readGarminZipImportResponse(response);
+      const payload = await readGarminZipImportResponse(response, "zip-upload");
 
       if (!response.ok) {
         throw new Error(payload.error || "Garmin export import failed.");

@@ -18,7 +18,7 @@ It tracks fitness, finance and intellectual habits with a dark analytics dashboa
 - Manual Garmin CSV import with preview and column mapping.
 - Imported activity data saved into `activities`; mapped health metrics saved into `fitness_metrics`.
 - Clickable dashboard graphs that open table drilldowns under `/charts/...`.
-- Portfolio module at `/portfolio` with editable ISA/LISA holdings, daily price refresh and weekly gain/loss.
+- Portfolio module at `/portfolio` with editable ISA/LISA holdings, Monday/Thursday price refresh and weekly gain/loss.
 - Supabase Row Level Security policies for every user-owned table.
 - Charts for mood, sleep score, HRV, net worth, average HR, weekly running distance, monthly running distance, sleep score versus mood and HRV versus training load.
 - XP, levels, character attributes and achievement badges.
@@ -158,12 +158,13 @@ ALPHA_VANTAGE_API_KEY=your-alpha-vantage-key
 
 Zach OS tries Financial Modeling Prep first, then Alpha Vantage, then a no-key
 Yahoo Finance chart fallback that works better for ETF quotes such as `VUAG.L`,
-`WEXU.L` and the `AMUNDI_PRIME_ACWI` alias. Prices are refreshed at most once
-per day while signed in, and there is also a manual **Refresh prices** button on
-`/portfolio`. Yahoo quotes in GBp are converted to GBP, and EUR/USD/CHF quotes
-are converted back to GBP when a Yahoo FX quote is available. If no live quote
-is found, portfolio editing still works and any manual prices you enter are
-kept.
+`WEXU.L` and the `AMUNDI_PRIME_ACWI` alias. Automatic price refreshes run while
+signed in on Mondays and Thursdays, using the most recent Monday/Thursday as the
+active price window. The manual **Refresh prices** button on `/portfolio`
+forces an immediate refresh outside that cadence. Yahoo quotes in GBp are
+converted to GBP, and EUR/USD/CHF quotes are converted back to GBP when a Yahoo
+FX quote is available. If no live quote is found, portfolio editing still works
+and any manual prices you enter are kept.
 
 The dashboard displays:
 

@@ -458,8 +458,8 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
               Investments
             </h1>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-500">
-              Track ISA and LISA holdings, refresh market prices once per day,
-              and keep total invested visible inside Zach OS.
+              Track ISA and LISA holdings, refresh market prices on Mondays
+              and Thursdays, and keep total invested visible inside Zach OS.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">

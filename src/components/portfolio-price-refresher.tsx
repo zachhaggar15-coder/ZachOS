@@ -3,12 +3,18 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { isPriceRefreshDay, priceRefreshWindowId } from "@/lib/price-refresh";
+
 export function PortfolioPriceRefresher() {
   const router = useRouter();
 
   useEffect(() => {
-    const today = new Date().toISOString().slice(0, 10);
-    const key = `zach-os-portfolio-refresh-${today}`;
+    if (!isPriceRefreshDay()) {
+      return;
+    }
+
+    const refreshWindow = priceRefreshWindowId();
+    const key = `zach-os-portfolio-refresh-${refreshWindow}`;
 
     if (sessionStorage.getItem(key)) {
       return;
@@ -42,7 +48,7 @@ export function PortfolioRefreshButton() {
     setStatus("");
 
     try {
-      const response = await fetch("/api/portfolio/refresh-prices", {
+      const response = await fetch("/api/portfolio/refresh-prices?force=1", {
         method: "POST",
       });
       const payload = (await response.json()) as {
@@ -50,6 +56,7 @@ export function PortfolioRefreshButton() {
         error?: string;
         hasProvider?: boolean;
         pricesUpdated?: number;
+        refreshWindowId?: string;
         tickersChecked?: number;
         unavailableTickers?: string[];
       };
@@ -61,9 +68,9 @@ export function PortfolioRefreshButton() {
       const unavailable = payload.unavailableTickers ?? [];
       const providerErrors = payload.errors ?? [];
       const baseStatus = payload.hasProvider
-        ? `Checked ${payload.tickersChecked ?? 0} tickers, updated ${
-            payload.pricesUpdated ?? 0
-          } stale prices.`
+        ? `Checked ${payload.tickersChecked ?? 0} tickers for the ${
+            payload.refreshWindowId ?? "current"
+          } price window, updated ${payload.pricesUpdated ?? 0} prices.`
         : "No market data provider is available. Existing/manual prices were kept.";
 
       setStatus(
