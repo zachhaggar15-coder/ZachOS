@@ -37,7 +37,6 @@ const FIELD_OPTIONS = [
 
 const selectClass =
   "h-10 rounded border border-white/10 bg-[#0b1016] px-3 text-sm text-zinc-100 outline-none transition focus:border-cyan-300/70";
-const DEPLOYED_ZIP_UPLOAD_LIMIT_BYTES = 4 * 1024 * 1024;
 const BROWSER_JSON_ENTRY_LIMIT_CHARS = 900_000;
 const BROWSER_JSON_BATCH_LIMIT_CHARS = 1_600_000;
 const CENTRAL_DIRECTORY_SIGNATURE = 0x02014b50;
@@ -527,11 +526,11 @@ export function GarminImportTool({
     setZipImporting(true);
 
     try {
-      if (!isLocalImportHost() && file.size > DEPLOYED_ZIP_UPLOAD_LIMIT_BYTES) {
+      if (!isLocalImportHost()) {
         setZipImportProgress(
-          `Large ZIP detected (${formatFileSize(
+          `Preparing Garmin ZIP (${formatFileSize(
             file.size,
-          )}). Extracting Garmin JSON in the browser so Vercel does not reject the upload...`,
+          )}). Extracting Garmin JSON in the browser so Vercel never receives the full ZIP upload...`,
         );
         const entries = await readGarminZipEntriesInBrowser(
           file,
