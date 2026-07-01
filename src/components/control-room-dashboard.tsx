@@ -464,45 +464,51 @@ function DailyRitual({
   value?: number;
 }) {
   return (
-    <form action={toggleDailyRoutine}>
+    <form action={toggleDailyRoutine} className="w-full">
       <input name="date" type="hidden" value={date} />
       <input name="routine_key" type="hidden" value={routineKey} />
       <input name="completed" type="hidden" value={(!done).toString()} />
       <button
+        aria-label={done ? `Mark ${name} incomplete` : `Mark ${name} complete`}
         aria-pressed={done}
-        className="group flex w-full items-center gap-2.5 rounded-md px-1 py-0.5 text-left transition hover:bg-[#2c2824]/[0.05]"
+        className={`group flex min-h-[26px] w-full cursor-pointer select-none items-center gap-2.5 rounded-md border border-transparent px-1.5 py-1 text-left transition hover:border-[#bb5d3a]/20 hover:bg-[#bb5d3a]/[0.08] focus-visible:border-[#bb5d3a]/45 focus-visible:bg-[#bb5d3a]/[0.08] focus-visible:outline-none active:scale-[0.99] ${
+          done ? "bg-[#bb5d3a]/[0.09]" : ""
+        }`}
         title={done ? `Mark ${name} incomplete` : `Mark ${name} complete`}
         type="submit"
       >
-      <span
-        className={`flex h-[15px] w-[15px] flex-none items-center justify-center rounded-full text-[10px] font-bold ${
-          done
-            ? "bg-[#bb5d3a] text-[#f9f4ec]"
-            : "border border-[#2c2824]/25 group-hover:border-[#bb5d3a]/60"
-        }`}
-      >
-        {done ? "x" : ""}
-      </span>
-      <span
-        className={`zach-ui flex-1 text-[12.5px] font-medium leading-tight ${
-          done && target === undefined
-            ? "text-[#9a8d7a] line-through"
-            : "text-[#3a342c]"
-        }`}
-      >
-        {name}
-      </span>
-      {target !== undefined && (
-        <>
-          <span className="zach-ui h-8 w-[54px] rounded-md border border-[#2c2824]/20 bg-white px-2 text-center text-xs font-semibold leading-8 text-[#3a342c]">
-            {Math.round(value ?? 0)}
-          </span>
-          <span className="zach-ui w-10 text-[11px] font-medium text-[#9a8d7a]">
-            / {target}
-            {unit}
-          </span>
-        </>
-      )}
+        <span
+          className={`flex h-[17px] w-[17px] flex-none items-center justify-center rounded-full text-[10px] font-bold transition group-hover:scale-105 ${
+            done
+              ? "bg-[#bb5d3a] text-[#f9f4ec]"
+              : "border border-[#2c2824]/25 group-hover:border-[#bb5d3a]/70"
+          }`}
+        >
+          {done ? "x" : ""}
+        </span>
+        <span
+          className={`zach-ui flex-1 text-[12.5px] font-medium leading-tight transition group-hover:text-[#bb5d3a] ${
+            done && target === undefined
+              ? "text-[#9a8d7a] line-through"
+              : "text-[#3a342c]"
+          }`}
+        >
+          {name}
+        </span>
+        {target !== undefined && (
+          <>
+            <span className="zach-ui pointer-events-none h-8 w-[58px] rounded-md border border-[#2c2824]/20 bg-white px-2 text-center text-xs font-semibold leading-8 text-[#3a342c] transition group-hover:border-[#bb5d3a]/35">
+              {Math.round(value ?? 0)}
+            </span>
+            <span className="zach-ui pointer-events-none w-10 text-[11px] font-medium text-[#9a8d7a]">
+              / {target}
+              {unit}
+            </span>
+          </>
+        )}
+        <span className="sr-only">
+          {done ? "Currently complete." : "Currently incomplete."}
+        </span>
       </button>
     </form>
   );
