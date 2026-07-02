@@ -9,6 +9,7 @@ import {
 import { DailyRitualMetricInput } from "@/components/daily-ritual-metric-input";
 import { DatabaseSetupNotice } from "@/components/database-setup-notice";
 import { PortfolioPriceRefresher } from "@/components/portfolio-price-refresher";
+import { ZachTopNav } from "@/components/zach-shell";
 import { buildOperatingRecommendation } from "@/lib/ai-insights";
 import {
   calculateAnalytics,
@@ -380,16 +381,18 @@ function SparkPanel({
 }
 
 function VitalRow({
+  href,
   label,
   sub,
   value,
 }: {
+  href?: string;
   label: string;
   sub: string;
   value: string;
 }) {
-  return (
-    <div className="flex items-center justify-between border-b border-[#2c2824]/[0.13] py-3">
+  const content = (
+    <>
       <div>
         <div className="zach-ui text-[15px] font-medium leading-tight text-[#2c2824]">
           {label}
@@ -401,6 +404,23 @@ function VitalRow({
       <div className="zach-display text-[28px] font-medium leading-none text-[#0f1720]">
         {value}
       </div>
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link
+        className="group flex items-center justify-between border-b border-[#2c2824]/[0.13] py-3 transition hover:bg-[#bb5d3a]/[0.06]"
+        href={href}
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <div className="flex items-center justify-between border-b border-[#2c2824]/[0.13] py-3">
+      {content}
     </div>
   );
 }
@@ -867,6 +887,9 @@ export function ControlRoomDashboard({
             </nav>
           </div>
         </header>
+        <div className="mt-3 shrink-0">
+          <ZachTopNav active="dashboard" />
+        </div>
 
         {(error || message) && (
           <div
@@ -885,6 +908,7 @@ export function ControlRoomDashboard({
             <SectionKicker>Today</SectionKicker>
             <div className="mt-4">
               <VitalRow
+                href="/mood"
                 label="Mood"
                 sub={todayLog ? "logged today" : "no log today"}
                 value={formatNumber(todayLog?.mood_score, { dash: "--" })}
@@ -895,11 +919,13 @@ export function ControlRoomDashboard({
                 value={formatNumber(todayLog?.deep_work_hours, { dash: "--" })}
               />
               <VitalRow
+                href="/recovery"
                 label="Sleep"
                 sub="score"
                 value={formatNumber(currentFitness?.sleep_score, { dash: "--", digits: 0 })}
               />
               <VitalRow
+                href="/running"
                 label="Running"
                 sub="weekly km"
                 value={formatNumber(weekKm, { dash: "--", digits: 0 })}
@@ -910,6 +936,7 @@ export function ControlRoomDashboard({
                 value={consultantReadiness.score.toString()}
               />
               <VitalRow
+                href="/hrv"
                 label="HRV"
                 sub="ms"
                 value={formatNumber(currentFitness?.hrv, { dash: "--", digits: 0 })}
@@ -932,7 +959,7 @@ export function ControlRoomDashboard({
 
           <section className="flex min-h-0 flex-col px-9">
             <SparkPanel
-              href="/charts/mood"
+              href="/mood"
               label="Mood - 14-day"
               series={[{ color: accent, max: 10, min: 0, values: moodValues }]}
               value={
@@ -950,7 +977,7 @@ export function ControlRoomDashboard({
             />
 
             <SparkPanel
-              href="/charts/recovery"
+              href="/recovery"
               label="Sleep score - HRV"
               series={[
                 { color: blue, max: 70, min: 30, strokeWidth: 1.2, values: hrvValues },

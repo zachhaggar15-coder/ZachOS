@@ -1,8 +1,15 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { AuthPanel } from "@/components/auth-panel";
-import { DatabaseSetupNotice } from "@/components/database-setup-notice";
+import {
+  ZachButtonLink,
+  ZachDatabaseSetupNotice,
+  ZachNotice,
+  ZachPageShell,
+  ZachPanel,
+  ZachSetupRequired,
+  ZachTable,
+} from "@/components/zach-shell";
 import {
   friendlyDatabaseError,
   getDatabaseSetupIssue,
@@ -49,22 +56,7 @@ const CHART_TITLES: Record<string, string> = {
 };
 
 function SetupRequired() {
-  return (
-    <main className="flex min-h-screen items-center justify-center bg-[#07090d] px-4 text-zinc-100">
-      <section className="w-full max-w-2xl rounded border border-white/10 bg-white/[0.035] p-8">
-        <p className="font-mono text-xs uppercase tracking-[0.32em] text-cyan-200/80">
-          Setup required
-        </p>
-        <h1 className="mt-4 text-3xl font-semibold tracking-tight text-white">
-          Connect Supabase to inspect chart data
-        </h1>
-        <p className="mt-3 text-sm leading-6 text-zinc-400">
-          Add your Supabase environment variables and run the SQL schema before
-          opening chart drilldowns.
-        </p>
-      </section>
-    </main>
-  );
+  return <ZachSetupRequired title="Connect Supabase to inspect chart data" />;
 }
 
 function numeric(value: number | null | undefined) {
@@ -415,97 +407,54 @@ export default async function ChartDataPage({
   );
 
   return (
-    <main className="min-h-screen bg-[#07090d] text-zinc-100">
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(34,211,238,0.13),transparent_28%),radial-gradient(circle_at_80%_10%,rgba(16,185,129,0.1),transparent_26%)]" />
-      <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
-        <header className="flex flex-col gap-4 border-b border-white/10 pb-6 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="font-mono text-xs uppercase tracking-[0.32em] text-cyan-200/80">
-              Chart data
-            </p>
-            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-white">
-              {view.title}
-            </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-500">
-              {view.description}
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <Link
-              className="inline-flex h-10 items-center rounded border border-cyan-200/20 bg-cyan-200/10 px-4 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-200/15"
-              href="/"
-            >
-              Dashboard
-            </Link>
-            <Link
-              className="inline-flex h-10 items-center rounded border border-white/10 bg-white/[0.04] px-4 text-sm font-semibold text-zinc-100 transition hover:border-cyan-200/30 hover:bg-cyan-300/10"
-              href="/manage"
-            >
-              Manage
-            </Link>
-          </div>
-        </header>
-
+    <ZachPageShell
+      actions={
+        <>
+          <ZachButtonLink href="/">Dashboard</ZachButtonLink>
+          <ZachButtonLink href="/manage">Manage</ZachButtonLink>
+        </>
+      }
+      subtitle={view.description}
+      title={view.title}
+      userEmail={user.email}
+    >
         {dataError && (
-          <div className="rounded border border-rose-300/25 bg-rose-400/10 px-4 py-3 text-sm text-rose-100">
+          <ZachNotice tone="error">
             {friendlyDatabaseError(dataError)}
-          </div>
+          </ZachNotice>
         )}
 
         {databaseSetupIssue ? (
-          <DatabaseSetupNotice issue={databaseSetupIssue} />
+          <ZachDatabaseSetupNotice issue={databaseSetupIssue} />
         ) : (
-          <section className="rounded border border-white/10 bg-white/[0.035] p-5">
+          <ZachPanel>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <p className="font-mono text-[0.68rem] uppercase tracking-[0.22em] text-cyan-200/70">
+                <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
                   Data table
                 </p>
-                <h2 className="mt-1 text-lg font-semibold text-white">
+                <h2 className="zach-display mt-1 text-3xl font-medium text-[#111820]">
                   {view.rows.length} rows
                 </h2>
               </div>
-              <p className="text-sm text-zinc-500">
+              <p className="text-sm text-[#8c8273]">
                 Last refreshed {formatShortDate(new Date().toISOString().slice(0, 10))}
               </p>
             </div>
 
-            {view.rows.length ? (
-              <div className="mt-4 overflow-x-auto">
-                <table className="min-w-full text-left text-sm">
-                  <thead className="text-xs uppercase tracking-[0.16em] text-zinc-500">
-                    <tr>
-                      {columns.map((column) => (
-                        <th
-                          className="whitespace-nowrap border-b border-white/10 px-3 py-2"
-                          key={column}
-                        >
-                          {column}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody className="text-zinc-300">
-                    {view.rows.map((row, index) => (
-                      <tr className="border-b border-white/5" key={index}>
-                        {columns.map((column) => (
-                          <td className="whitespace-nowrap px-3 py-2" key={column}>
-                            {formatCell(row[column])}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <div className="mt-4 rounded border border-dashed border-white/15 p-6 text-sm text-zinc-500">
-                No rows yet for this chart.
-              </div>
-            )}
-          </section>
+            <div className="mt-4">
+              <ZachTable
+                columns={columns}
+                empty="No rows yet for this chart."
+                rows={view.rows.map((row) =>
+                  Object.fromEntries(
+                    columns.map((column) => [column, formatCell(row[column])]),
+                  ),
+                )}
+              />
+            </div>
+          </ZachPanel>
         )}
-      </div>
-    </main>
+    </ZachPageShell>
   );
 }

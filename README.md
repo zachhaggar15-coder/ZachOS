@@ -18,14 +18,18 @@ It tracks fitness, finance and intellectual habits with a dark analytics dashboa
 - Optional local Garmin Connect daily sync using the `garminconnect` Python package.
 - Manual Garmin CSV import with preview and column mapping.
 - Imported activity data saved into `activities`; mapped health metrics saved into `fitness_metrics`.
-- Clickable dashboard graphs that open table drilldowns under `/charts/...`.
+- Clickable dashboard sections for mood, running, recovery, HRV and activities,
+  with `/charts/...` retained as table drilldowns.
 - Portfolio module at `/portfolio` with editable ISA/LISA holdings, Monday/Thursday price refresh and weekly gain/loss.
 - Supabase Row Level Security policies for every user-owned table.
 - Charts for mood, sleep score, HRV, net worth, average HR, weekly running distance, monthly running distance, sleep score versus mood and HRV versus training load.
 - XP, levels, character attributes and achievement badges.
 - Active quest board with progress bars and a next suggested action.
-- AI Insights page for optional daily and weekly summaries.
+- AI Insights page for optional daily and weekly summaries, plus stored weekly
+  running coach insights on `/running`.
 - Dashboard card: **Today's move** with a practical next action, bottleneck and consultant rep.
+- Running detail pages with weekly distance, monthly distance, average HR trend,
+  pace-band HR comparison, recent run rows and clickable run dossiers.
 - Simple analytics: 7-day averages, 30-day averages, trend direction, best mood day and relationship checks.
 - Consultant Mode for Veeva readiness practice.
 
@@ -342,7 +346,7 @@ Open [http://localhost:3000](http://localhost:3000).
    - `https://your-vercel-domain.vercel.app/auth/callback`
 5. Copy the project URL and anon key into `.env.local`.
 6. For a fresh database, run [`supabase/schema.sql`](./supabase/schema.sql) in the Supabase SQL Editor.
-7. For an existing Zach OS database, run the migration files in [`supabase/migrations`](./supabase/migrations), including `20260623_add_sleep_score_simplify_manual_input.sql`, `20260623_add_garmin_training_load.sql`, `20260623_add_portfolio_module.sql` and `20260626_add_daily_routine_logs.sql`.
+7. For an existing Zach OS database, run the migration files in [`supabase/migrations`](./supabase/migrations), including `20260623_add_sleep_score_simplify_manual_input.sql`, `20260623_add_garmin_training_load.sql`, `20260623_add_portfolio_module.sql`, `20260626_add_daily_routine_logs.sql`, `20260702_add_garmin_sync_runs.sql` and `20260702_add_ai_weekly_insights.sql`.
 8. Start the app, create an account, then log in.
 
 ### Easier Login Flow
@@ -451,6 +455,18 @@ The schema creates these tables:
   - `lookback_days integer`
   - `created_at timestamptz`
 
+- `ai_weekly_insights`
+  - `id uuid primary key`
+  - `user_id uuid references auth.users(id)`
+  - `insight_type text`
+  - `period_start date`
+  - `period_end date`
+  - `source text`
+  - `model text`
+  - `content text`
+  - `generated_at timestamptz`
+  - `created_at timestamptz`
+
 - `quests`
   - `id uuid primary key`
   - `user_id uuid references auth.users(id)`
@@ -521,6 +537,7 @@ RLS is enabled for all user-owned tables:
 - `activities`
 - `strava_connections`
 - `garmin_sync_runs`
+- `ai_weekly_insights`
 - `quests`
 - `consultant_readiness_logs`
 - `portfolio_accounts`
@@ -548,6 +565,20 @@ The AI Insights page and dashboard quick-read calculate:
 - Relationship between sleep score and mood.
 - Relationship between deep work and mood.
 - Relationship between training volume and HRV.
+
+## Drilldown Pages
+
+The dashboard is the home screen. Detail pages use the same editorial dashboard
+style and feed directly from the same Supabase tables:
+
+- `/mood` shows mood only.
+- `/running` shows weekly/monthly running trends, average HR trend, coach cards,
+  pace-band HR comparisons and a stored weekly running insight.
+- `/activities` groups activities into running, gym and other. Garmin strength
+  training is treated as gym. Running rows open into `/activities/[id]`.
+- `/recovery` uses Garmin-style recovery inputs only: sleep score, HRV, resting
+  HR and training load.
+- `/hrv` focuses on HRV and its relationship to load.
 
 ## XP And Character Sheet
 

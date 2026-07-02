@@ -36,7 +36,7 @@ const FIELD_OPTIONS = [
 ] as const;
 
 const selectClass =
-  "h-10 rounded border border-white/10 bg-[#0b1016] px-3 text-sm text-zinc-100 outline-none transition focus:border-cyan-300/70";
+  "h-10 rounded-md border border-[#d2c8b8] bg-white px-3 text-sm text-[#2c2824] outline-none transition focus:border-[#bb5d3a]/70 focus:ring-2 focus:ring-[#bb5d3a]/10";
 const BROWSER_JSON_ENTRY_LIMIT_CHARS = 25_000;
 const BROWSER_JSON_BATCH_LIMIT_CHARS = 80_000;
 const CENTRAL_DIRECTORY_SIGNATURE = 0x02014b50;
@@ -862,32 +862,32 @@ export function GarminImportTool({
 
   return (
     <div className="grid gap-6">
-      <section className="rounded border border-cyan-200/20 bg-cyan-200/[0.045] p-5">
+      <section className="rounded-md border border-[#2c2824]/[0.13] bg-[#fffaf2] p-5">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <p className="font-mono text-[0.68rem] uppercase tracking-[0.22em] text-cyan-200/70">
+            <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
               Recommended Garmin path
             </p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white">
+            <h1 className="zach-display mt-2 text-4xl font-medium tracking-tight text-[#111820]">
               One-upload Garmin history import
             </h1>
           </div>
-          <div className="grid gap-2 rounded border border-white/10 bg-black/20 p-3 text-xs text-zinc-400">
+          <div className="grid gap-2 rounded-md border border-[#2c2824]/[0.13] bg-[#f9f4ec] p-3 text-xs text-[#71685c]">
             <div>
-              <span className="text-zinc-500">Latest activity: </span>
-              <span className="text-zinc-200">
+              <span className="text-[#8c8273]">Latest activity: </span>
+              <span className="font-semibold text-[#2c2824]">
                 {formatFreshness(latestActivityDate)}
               </span>
             </div>
             <div>
-              <span className="text-zinc-500">Latest recovery day: </span>
-              <span className="text-zinc-200">
+              <span className="text-[#8c8273]">Latest recovery day: </span>
+              <span className="font-semibold text-[#2c2824]">
                 {formatFreshness(latestFitnessDate)}
               </span>
             </div>
           </div>
         </div>
-        <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-400">
+        <p className="mt-3 max-w-3xl text-sm leading-6 text-[#71685c]">
           Upload the original Garmin account export ZIP. Zach OS will import
           historical activity summaries, sleep scores, HRV, resting HR,
           training status and acute training load where those files exist. No
@@ -899,66 +899,66 @@ export function GarminImportTool({
         >
           <input
             accept=".zip,application/zip,application/x-zip-compressed"
-            className="h-10 rounded border border-white/10 bg-black/20 px-3 py-2 text-sm text-zinc-100 file:mr-3 file:rounded file:border-0 file:bg-cyan-200 file:px-3 file:py-1 file:text-sm file:font-semibold file:text-slate-950"
+            className="h-10 rounded-md border border-[#d2c8b8] bg-white px-3 py-2 text-sm text-[#2c2824] file:mr-3 file:rounded-md file:border-0 file:bg-[#bb5d3a] file:px-3 file:py-1 file:text-sm file:font-semibold file:text-[#f9f4ec]"
             name="garmin_zip"
             type="file"
           />
           <button
-            className="h-10 rounded bg-cyan-200 px-4 text-sm font-semibold text-slate-950 transition hover:bg-cyan-100 disabled:cursor-not-allowed disabled:opacity-60"
+            className="h-10 rounded-md bg-[#bb5d3a] px-4 text-sm font-semibold text-[#f9f4ec] transition hover:bg-[#a94f31] disabled:cursor-not-allowed disabled:opacity-60"
             disabled={zipImporting}
             type="submit"
           >
             {zipImporting ? "Importing..." : "Import Garmin history"}
           </button>
         </form>
-        <p className="mt-3 text-xs leading-5 text-zinc-500">
+        <p className="mt-3 text-xs leading-5 text-[#8c8273]">
           Large Garmin exports are imported in your browser first, then saved in
           smaller batches so the deployed app does not hit upload-size limits.
           The import is safe to rerun because rows are upserted by date or
           Garmin activity ID.
         </p>
-        <p className="mt-2 text-xs leading-5 text-zinc-500">
+        <p className="mt-2 text-xs leading-5 text-[#8c8273]">
           Keep this tab open while the import is running. If the latest dates
           above are stale, request a fresh Garmin export and upload the new ZIP.
         </p>
-        <p className="mt-2 text-xs leading-5 text-zinc-600">
+        <p className="mt-2 text-xs leading-5 text-[#9a8d7a]">
           Zach OS does not store your Garmin password or automate Garmin Connect
           login; the upload uses files you have exported yourself.
         </p>
         {zipImportResult && (
-          <p className="mt-3 rounded border border-emerald-300/25 bg-emerald-400/10 px-3 py-2 text-sm text-emerald-100">
+          <p className="mt-3 rounded-md border border-[#7a8c5a]/30 bg-[#7a8c5a]/10 px-3 py-2 text-sm text-[#54683b]">
             {zipImportResult}
           </p>
         )}
         {zipImportProgress && (
-          <p className="mt-3 rounded border border-cyan-300/25 bg-cyan-400/10 px-3 py-2 text-sm text-cyan-100">
+          <p className="mt-3 rounded-md border border-[#6f7d8c]/30 bg-[#6f7d8c]/10 px-3 py-2 text-sm text-[#475467]">
             {zipImportProgress}
           </p>
         )}
         {zipImportError && (
-          <p className="mt-3 rounded border border-rose-300/25 bg-rose-400/10 px-3 py-2 text-sm text-rose-100">
+          <p className="mt-3 rounded-md border border-[#bb5d3a]/35 bg-[#bb5d3a]/10 px-3 py-2 text-sm text-[#8d3f26]">
             {zipImportError}
           </p>
         )}
       </section>
 
-      <section className="rounded border border-white/10 bg-white/[0.035] p-5">
-        <p className="font-mono text-[0.68rem] uppercase tracking-[0.22em] text-cyan-200/70">
+      <section className="rounded-md border border-[#2c2824]/[0.13] bg-[#fffaf2] p-5">
+        <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
           Manual Garmin export
         </p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white">
+        <h1 className="zach-display mt-2 text-4xl font-medium tracking-tight text-[#111820]">
           Garmin Import
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-400">
+        <p className="mt-3 max-w-3xl text-sm leading-6 text-[#71685c]">
           Upload an exported Garmin CSV, review the parsed rows, map columns to
           Zach OS fields, then save. Use this only when the full account export
           ZIP does not contain the Garmin-specific file you need.
         </p>
-        <label className="mt-5 flex cursor-pointer flex-col items-center justify-center rounded border border-dashed border-cyan-200/30 bg-cyan-200/[0.035] px-4 py-8 text-center transition hover:bg-cyan-200/[0.06]">
-          <span className="text-sm font-semibold text-cyan-100">
+        <label className="mt-5 flex cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-[#bb5d3a]/30 bg-[#bb5d3a]/[0.04] px-4 py-8 text-center transition hover:bg-[#bb5d3a]/[0.07]">
+          <span className="text-sm font-semibold text-[#bb5d3a]">
             Upload CSV
           </span>
-          <span className="mt-1 text-xs text-zinc-500">
+          <span className="mt-1 text-xs text-[#8c8273]">
             Activity exports, health exports, or mixed CSVs
           </span>
           <input
@@ -969,12 +969,12 @@ export function GarminImportTool({
           />
         </label>
         {fileName && (
-          <p className="mt-3 text-sm text-zinc-500">
-            Loaded <span className="text-zinc-200">{fileName}</span>
+          <p className="mt-3 text-sm text-[#8c8273]">
+            Loaded <span className="font-semibold text-[#2c2824]">{fileName}</span>
           </p>
         )}
         {parseError && (
-          <p className="mt-3 rounded border border-rose-300/25 bg-rose-400/10 px-3 py-2 text-sm text-rose-100">
+          <p className="mt-3 rounded-md border border-[#bb5d3a]/35 bg-[#bb5d3a]/10 px-3 py-2 text-sm text-[#8d3f26]">
             {parseError}
           </p>
         )}
@@ -993,23 +993,23 @@ export function GarminImportTool({
             value={JSON.stringify(usableMapping)}
           />
 
-          <section className="rounded border border-white/10 bg-white/[0.035] p-5">
+          <section className="rounded-md border border-[#2c2824]/[0.13] bg-[#fffaf2] p-5">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <p className="font-mono text-[0.68rem] uppercase tracking-[0.22em] text-cyan-200/70">
+                <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
                   Column mapping
                 </p>
-                <h2 className="mt-1 text-lg font-semibold text-white">
+                <h2 className="zach-display mt-1 text-3xl font-medium text-[#111820]">
                   Map CSV columns to Zach OS fields
                 </h2>
               </div>
-              <p className="text-sm text-zinc-500">
+              <p className="text-sm text-[#8c8273]">
                 {parsedCsv.rows.length} rows ready to preview
               </p>
             </div>
             <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
               {parsedCsv.headers.map((header) => (
-                <label className="grid gap-1.5 text-sm text-zinc-300" key={header}>
+                <label className="grid gap-1.5 text-sm text-[#3a342c]" key={header}>
                   {header}
                   <select
                     className={selectClass}
@@ -1032,18 +1032,18 @@ export function GarminImportTool({
             </div>
           </section>
 
-          <section className="rounded border border-white/10 bg-white/[0.035] p-5">
+          <section className="rounded-md border border-[#2c2824]/[0.13] bg-[#fffaf2] p-5">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="font-mono text-[0.68rem] uppercase tracking-[0.22em] text-cyan-200/70">
+                <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
                   Preview
                 </p>
-                <h2 className="mt-1 text-lg font-semibold text-white">
+                <h2 className="zach-display mt-1 text-3xl font-medium text-[#111820]">
                   First parsed rows
                 </h2>
               </div>
               <button
-                className="h-10 rounded bg-cyan-200 px-4 text-sm font-semibold text-slate-950 transition hover:bg-cyan-100"
+                className="h-10 rounded-md bg-[#bb5d3a] px-4 text-sm font-semibold text-[#f9f4ec] transition hover:bg-[#a94f31]"
                 type="submit"
               >
                 Save import
@@ -1051,18 +1051,18 @@ export function GarminImportTool({
             </div>
             <div className="mt-4 overflow-x-auto">
               <table className="min-w-full text-left text-sm">
-                <thead className="text-xs uppercase tracking-[0.16em] text-zinc-500">
+                <thead className="text-xs uppercase tracking-[0.16em] text-[#9a7d5f]">
                   <tr>
                     {parsedCsv.headers.map((header) => (
-                      <th className="whitespace-nowrap border-b border-white/10 px-3 py-2" key={header}>
+                      <th className="whitespace-nowrap border-b border-[#2c2824]/[0.13] px-3 py-2" key={header}>
                         {header}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="text-zinc-300">
+                <tbody className="text-[#3a342c]">
                   {parsedCsv.rows.slice(0, 8).map((row, index) => (
-                    <tr className="border-b border-white/5" key={index}>
+                    <tr className="border-b border-[#2c2824]/[0.08]" key={index}>
                       {parsedCsv.headers.map((header) => (
                         <td className="max-w-56 truncate px-3 py-2" key={header}>
                           {row[header] || "--"}

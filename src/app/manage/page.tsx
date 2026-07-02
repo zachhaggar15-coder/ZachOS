@@ -118,7 +118,7 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
     <>
       <div className="fixed right-4 top-4 z-20">
         <Link
-          className="rounded border border-cyan-200/20 bg-cyan-200/10 px-3 py-2 text-xs font-semibold text-cyan-100"
+          className="rounded-md border border-[#d2c8b8] bg-[#fffaf2] px-3 py-2 text-xs font-semibold text-[#2c2824] shadow-sm"
           href="/"
         >
           Back to one-screen dashboard

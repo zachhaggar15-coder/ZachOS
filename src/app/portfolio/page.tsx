@@ -1,16 +1,20 @@
-import Link from "next/link";
-
 import {
   savePortfolioAccount,
   savePortfolioHolding,
   seedDefaultPortfolio,
 } from "@/app/actions";
 import { AuthPanel } from "@/components/auth-panel";
-import { DatabaseSetupNotice } from "@/components/database-setup-notice";
 import {
   PortfolioPriceRefresher,
   PortfolioRefreshButton,
 } from "@/components/portfolio-price-refresher";
+import {
+  ZachButtonLink,
+  ZachDatabaseSetupNotice,
+  ZachNotice,
+  ZachPageShell,
+  ZachSetupRequired,
+} from "@/components/zach-shell";
 import {
   friendlyDatabaseError,
   getDatabaseSetupIssue,
@@ -38,9 +42,9 @@ type PortfolioPageProps = {
   }>;
 };
 
-const cardClass = "rounded border border-white/10 bg-white/[0.035] p-5";
+const cardClass = "rounded-md border border-[#2c2824]/[0.13] bg-[#fffaf2] p-5";
 const inputClass =
-  "h-10 rounded border border-white/10 bg-black/20 px-3 text-sm text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-cyan-300/70 focus:bg-white/[0.06]";
+  "h-10 rounded-md border border-[#d2c8b8] bg-white px-3 text-sm text-[#2c2824] outline-none transition placeholder:text-[#9a8d7a] focus:border-[#bb5d3a]/70 focus:ring-2 focus:ring-[#bb5d3a]/10";
 
 const currencyFormatter = new Intl.NumberFormat("en-GB", {
   currency: "GBP",
@@ -72,14 +76,14 @@ function MetricCard({
   value: string;
 }) {
   return (
-    <article className="rounded border border-white/10 bg-black/20 p-4">
-      <p className="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-zinc-500">
+    <article className="rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] p-4">
+      <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.2em] text-[#9a7d5f]">
         {label}
       </p>
-      <p className="mt-3 text-2xl font-semibold tracking-tight text-white">
+      <p className="zach-display mt-3 text-3xl font-medium tracking-tight text-[#111820]">
         {value}
       </p>
-      {meta && <p className="mt-1 text-xs text-zinc-500">{meta}</p>}
+      {meta && <p className="mt-1 text-xs text-[#8c8273]">{meta}</p>}
     </article>
   );
 }
@@ -87,31 +91,18 @@ function MetricCard({
 function SectionHeader({ kicker, title }: { kicker: string; title: string }) {
   return (
     <div>
-      <p className="font-mono text-[0.68rem] uppercase tracking-[0.22em] text-cyan-200/70">
+      <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
         {kicker}
       </p>
-      <h2 className="mt-1 text-lg font-semibold text-white">{title}</h2>
+      <h2 className="zach-display mt-1 text-3xl font-medium text-[#111820]">
+        {title}
+      </h2>
     </div>
   );
 }
 
 function SetupRequired() {
-  return (
-    <main className="flex min-h-screen items-center justify-center bg-[#07090d] px-4 text-zinc-100">
-      <section className="w-full max-w-2xl rounded border border-white/10 bg-white/[0.035] p-8">
-        <p className="font-mono text-xs uppercase tracking-[0.32em] text-cyan-200/80">
-          Setup required
-        </p>
-        <h1 className="mt-4 text-3xl font-semibold tracking-tight text-white">
-          Connect Supabase to manage the portfolio
-        </h1>
-        <p className="mt-3 text-sm leading-6 text-zinc-400">
-          Add your Supabase environment variables and run the SQL schema before
-          using portfolio tracking.
-        </p>
-      </section>
-    </main>
-  );
+  return <ZachSetupRequired title="Connect Supabase to manage the portfolio" />;
 }
 
 function AccountSelect({
@@ -148,20 +139,20 @@ function AddAccountForm() {
     <form action={savePortfolioAccount} className={cardClass}>
       <SectionHeader kicker="Accounts" title="Add account" />
       <div className="mt-4 grid gap-3 md:grid-cols-4">
-        <label className="grid gap-1.5 text-sm text-zinc-300">
+        <label className="grid gap-1.5 text-sm text-[#3a342c]">
           Name
           <input className={inputClass} name="name" placeholder="Stocks & Shares ISA" />
         </label>
-        <label className="grid gap-1.5 text-sm text-zinc-300">
+        <label className="grid gap-1.5 text-sm text-[#3a342c]">
           Type
           <AccountTypeSelect />
         </label>
-        <label className="grid gap-1.5 text-sm text-zinc-300">
+        <label className="grid gap-1.5 text-sm text-[#3a342c]">
           Provider
           <input className={inputClass} name="provider" placeholder="Trading212" />
         </label>
         <button
-          className="h-10 self-end rounded bg-cyan-200 px-4 text-sm font-semibold text-slate-950 transition hover:bg-cyan-100"
+          className="h-10 self-end rounded-md bg-[#bb5d3a] px-4 text-sm font-semibold text-[#f9f4ec] transition hover:bg-[#a94f31]"
           type="submit"
         >
           Add account
@@ -176,37 +167,37 @@ function AddHoldingForm({ accounts }: { accounts: PortfolioAccount[] }) {
     <form action={savePortfolioHolding} className={cardClass}>
       <SectionHeader kicker="Holdings" title="Add holding" />
       <div className="mt-4 grid gap-3 md:grid-cols-3 xl:grid-cols-7">
-        <label className="grid gap-1.5 text-sm text-zinc-300">
+        <label className="grid gap-1.5 text-sm text-[#3a342c]">
           Account
           <AccountSelect accounts={accounts} />
         </label>
-        <label className="grid gap-1.5 text-sm text-zinc-300">
+        <label className="grid gap-1.5 text-sm text-[#3a342c]">
           Ticker
           <input className={inputClass} name="ticker" placeholder="VUAG" />
         </label>
-        <label className="grid gap-1.5 text-sm text-zinc-300 xl:col-span-2">
+        <label className="grid gap-1.5 text-sm text-[#3a342c] xl:col-span-2">
           Fund name
           <input className={inputClass} name="fund_name" placeholder="Fund or ETF name" />
         </label>
-        <label className="grid gap-1.5 text-sm text-zinc-300">
+        <label className="grid gap-1.5 text-sm text-[#3a342c]">
           Exchange
           <input className={inputClass} name="exchange" placeholder="LSE" />
         </label>
-        <label className="grid gap-1.5 text-sm text-zinc-300">
+        <label className="grid gap-1.5 text-sm text-[#3a342c]">
           Units
           <input className={inputClass} min="0" name="units" step="0.0001" type="number" />
         </label>
-        <label className="grid gap-1.5 text-sm text-zinc-300">
+        <label className="grid gap-1.5 text-sm text-[#3a342c]">
           Currency
           <input className={inputClass} defaultValue="GBP" name="currency" />
         </label>
-        <label className="grid gap-1.5 text-sm text-zinc-300">
+        <label className="grid gap-1.5 text-sm text-[#3a342c]">
           Manual price
           <input className={inputClass} min="0" name="latest_price" step="0.0001" type="number" />
         </label>
-        <label className="flex items-center gap-2 self-end text-sm text-zinc-300">
+        <label className="flex items-center gap-2 self-end text-sm text-[#3a342c]">
           <input
-            className="h-4 w-4 accent-cyan-200"
+            className="h-4 w-4 accent-[#bb5d3a]"
             defaultChecked
             name="auto_price_updates"
             type="checkbox"
@@ -214,7 +205,7 @@ function AddHoldingForm({ accounts }: { accounts: PortfolioAccount[] }) {
           Auto price
         </label>
         <button
-          className="h-10 self-end rounded bg-cyan-200 px-4 text-sm font-semibold text-slate-950 transition hover:bg-cyan-100"
+          className="h-10 self-end rounded-md bg-[#bb5d3a] px-4 text-sm font-semibold text-[#f9f4ec] transition hover:bg-[#a94f31]"
           type="submit"
         >
           Add holding
@@ -232,19 +223,19 @@ function EditAccounts({ accounts }: { accounts: PortfolioAccount[] }) {
         {accounts.map((account) => (
           <form
             action={savePortfolioAccount}
-            className="grid gap-3 rounded border border-white/10 bg-black/15 p-3 md:grid-cols-4"
+            className="grid gap-3 rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] p-3 md:grid-cols-4"
             key={account.id}
           >
             <input name="id" type="hidden" value={account.id} />
-            <label className="grid gap-1.5 text-sm text-zinc-300">
+            <label className="grid gap-1.5 text-sm text-[#3a342c]">
               Name
               <input className={inputClass} defaultValue={account.name} name="name" />
             </label>
-            <label className="grid gap-1.5 text-sm text-zinc-300">
+            <label className="grid gap-1.5 text-sm text-[#3a342c]">
               Type
               <AccountTypeSelect defaultValue={account.type} />
             </label>
-            <label className="grid gap-1.5 text-sm text-zinc-300">
+            <label className="grid gap-1.5 text-sm text-[#3a342c]">
               Provider
               <input
                 className={inputClass}
@@ -253,7 +244,7 @@ function EditAccounts({ accounts }: { accounts: PortfolioAccount[] }) {
               />
             </label>
             <button
-              className="h-10 self-end rounded border border-white/10 bg-white/[0.04] px-4 text-sm font-semibold text-zinc-100 transition hover:border-cyan-200/30 hover:bg-cyan-300/10"
+              className="h-10 self-end rounded-md border border-[#d2c8b8] bg-[#fffaf2] px-4 text-sm font-semibold text-[#2c2824] transition hover:border-[#bb5d3a]/40"
               type="submit"
             >
               Save
@@ -291,15 +282,15 @@ function HoldingsTable({
             return (
               <form
                 action={savePortfolioHolding}
-                className="grid gap-3 rounded border border-white/10 bg-black/15 p-3 lg:grid-cols-10"
+                className="grid gap-3 rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] p-3 lg:grid-cols-10"
                 key={holding.id}
               >
                 <input name="id" type="hidden" value={holding.id} />
-                <label className="grid gap-1.5 text-sm text-zinc-300 lg:col-span-2">
+                <label className="grid gap-1.5 text-sm text-[#3a342c] lg:col-span-2">
                   Account
                   <AccountSelect accounts={accounts} defaultValue={holding.account_id} />
                 </label>
-                <label className="grid gap-1.5 text-sm text-zinc-300">
+                <label className="grid gap-1.5 text-sm text-[#3a342c]">
                   Ticker
                   <input
                     className={inputClass}
@@ -307,7 +298,7 @@ function HoldingsTable({
                     name="ticker"
                   />
                 </label>
-                <label className="grid gap-1.5 text-sm text-zinc-300 lg:col-span-2">
+                <label className="grid gap-1.5 text-sm text-[#3a342c] lg:col-span-2">
                   Fund
                   <input
                     className={inputClass}
@@ -315,7 +306,7 @@ function HoldingsTable({
                     name="fund_name"
                   />
                 </label>
-                <label className="grid gap-1.5 text-sm text-zinc-300">
+                <label className="grid gap-1.5 text-sm text-[#3a342c]">
                   Exchange
                   <input
                     className={inputClass}
@@ -323,7 +314,7 @@ function HoldingsTable({
                     name="exchange"
                   />
                 </label>
-                <label className="grid gap-1.5 text-sm text-zinc-300">
+                <label className="grid gap-1.5 text-sm text-[#3a342c]">
                   Units
                   <input
                     className={inputClass}
@@ -334,7 +325,7 @@ function HoldingsTable({
                     type="number"
                   />
                 </label>
-                <label className="grid gap-1.5 text-sm text-zinc-300">
+                <label className="grid gap-1.5 text-sm text-[#3a342c]">
                   Currency
                   <input
                     className={inputClass}
@@ -342,7 +333,7 @@ function HoldingsTable({
                     name="currency"
                   />
                 </label>
-                <label className="grid gap-1.5 text-sm text-zinc-300">
+                <label className="grid gap-1.5 text-sm text-[#3a342c]">
                   Price
                   <input
                     className={inputClass}
@@ -353,10 +344,10 @@ function HoldingsTable({
                     type="number"
                   />
                 </label>
-                <div className="grid gap-2 text-xs text-zinc-500">
-                  <label className="flex items-center gap-2 text-sm text-zinc-300">
+                <div className="grid gap-2 text-xs text-[#8c8273]">
+                  <label className="flex items-center gap-2 text-sm text-[#3a342c]">
                     <input
-                      className="h-4 w-4 accent-cyan-200"
+                      className="h-4 w-4 accent-[#bb5d3a]"
                       defaultChecked={holding.auto_price_updates}
                       name="auto_price_updates"
                       type="checkbox"
@@ -366,7 +357,7 @@ function HoldingsTable({
                   <span>{price?.updated_at?.slice(0, 10) ?? "No price"}</span>
                 </div>
                 <button
-                  className="h-10 self-end rounded border border-white/10 bg-white/[0.04] px-4 text-sm font-semibold text-zinc-100 transition hover:border-cyan-200/30 hover:bg-cyan-300/10"
+                  className="h-10 self-end rounded-md border border-[#d2c8b8] bg-[#fffaf2] px-4 text-sm font-semibold text-[#2c2824] transition hover:border-[#bb5d3a]/40"
                   type="submit"
                 >
                   Save
@@ -375,7 +366,7 @@ function HoldingsTable({
             );
           })
         ) : (
-          <div className="rounded border border-dashed border-white/15 p-5 text-sm text-zinc-500">
+          <div className="rounded-md border border-dashed border-[#2c2824]/[0.18] p-5 text-sm text-[#8c8273]">
             No holdings yet. Seed the defaults or add a holding below.
           </div>
         )}
@@ -445,54 +436,29 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
   );
 
   return (
-    <main className="min-h-screen bg-[#07090d] text-zinc-100">
+    <ZachPageShell
+      active="portfolio"
+      actions={
+        <>
+          <ZachButtonLink href="/manage">Update data</ZachButtonLink>
+          <ZachButtonLink href="/running">Running</ZachButtonLink>
+        </>
+      }
+      subtitle="Track ISA and LISA holdings, refresh market prices on Mondays and Thursdays, and keep invested value visible inside Zach OS."
+      title="Portfolio"
+      userEmail={user.email}
+    >
       <PortfolioPriceRefresher />
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(34,211,238,0.13),transparent_28%),radial-gradient(circle_at_80%_10%,rgba(16,185,129,0.1),transparent_26%)]" />
-      <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
-        <header className="flex flex-col gap-4 border-b border-white/10 pb-6 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="font-mono text-xs uppercase tracking-[0.32em] text-cyan-200/80">
-              Portfolio module
-            </p>
-            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-white">
-              Investments
-            </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-500">
-              Track ISA and LISA holdings, refresh market prices on Mondays
-              and Thursdays, and keep total invested visible inside Zach OS.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <Link
-              className="inline-flex h-10 items-center rounded border border-cyan-200/20 bg-cyan-200/10 px-4 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-200/15"
-              href="/"
-            >
-              Dashboard
-            </Link>
-            <Link
-              className="inline-flex h-10 items-center rounded border border-white/10 bg-white/[0.04] px-4 text-sm font-semibold text-zinc-100 transition hover:border-cyan-200/30 hover:bg-cyan-300/10"
-              href="/manage"
-            >
-              Manage
-            </Link>
-          </div>
-        </header>
 
         {(params.error || params.message || dataError) && (
-          <div
-            className={`rounded border px-4 py-3 text-sm ${
-              params.error || dataError
-                ? "border-rose-300/25 bg-rose-400/10 text-rose-100"
-                : "border-emerald-300/25 bg-emerald-400/10 text-emerald-100"
-            }`}
-          >
+          <ZachNotice tone={params.error || dataError ? "error" : "success"}>
             {params.error ||
               (dataError ? friendlyDatabaseError(dataError) : params.message)}
-          </div>
+          </ZachNotice>
         )}
 
         {databaseSetupIssue ? (
-          <DatabaseSetupNotice issue={databaseSetupIssue} />
+          <ZachDatabaseSetupNotice issue={databaseSetupIssue} />
         ) : (
           <>
             <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
@@ -512,8 +478,8 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
                     : formatCurrency(summary.weeklyGainLoss)
                 }
               />
-              <article className="rounded border border-cyan-200/20 bg-cyan-200/[0.05] p-4">
-                <p className="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-cyan-200/70">
+              <article className="rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] p-4">
+                <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.2em] text-[#9a7d5f]">
                   Pricing
                 </p>
                 <div className="mt-3">
@@ -526,7 +492,7 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
               <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                 <div>
                   <SectionHeader kicker="Seed data" title="Default holdings" />
-                  <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">
+                  <p className="mt-2 max-w-2xl text-sm leading-6 text-[#71685c]">
                     Adds Trading212 ISA holdings for WEXU and VUAG, plus the
                     OneFamily Lifetime ISA fund. Safe to rerun; matching
                     holdings are updated.
@@ -534,7 +500,7 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
                 </div>
                 <form action={seedDefaultPortfolio}>
                   <button
-                    className="h-10 rounded bg-cyan-200 px-4 text-sm font-semibold text-slate-950 transition hover:bg-cyan-100"
+                    className="h-10 rounded-md bg-[#bb5d3a] px-4 text-sm font-semibold text-[#f9f4ec] transition hover:bg-[#a94f31]"
                     type="submit"
                   >
                     Seed default portfolio
@@ -554,7 +520,7 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
                 <AddHoldingForm accounts={flatAccounts} />
               </>
             ) : (
-              <section className="rounded border border-dashed border-white/15 p-6 text-sm text-zinc-500">
+              <section className="rounded-md border border-dashed border-[#2c2824]/[0.18] bg-[#fffaf2] p-6 text-sm text-[#8c8273]">
                 No portfolio accounts yet. Seed the defaults to get started, or
                 add an account manually below.
               </section>
@@ -563,7 +529,6 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
             <AddAccountForm />
           </>
         )}
-      </div>
-    </main>
+    </ZachPageShell>
   );
 }

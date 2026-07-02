@@ -64,9 +64,9 @@ type FieldProps = {
   type?: string;
 };
 
-const cardClass = "rounded border border-white/10 bg-white/[0.035] p-4";
+const cardClass = "rounded-md border border-[#2c2824]/[0.13] bg-[#fffaf2] p-4";
 const inputClass =
-  "h-10 rounded border border-white/10 bg-black/20 px-3 text-sm text-zinc-100 outline-none transition placeholder:text-zinc-600 focus:border-cyan-300/70 focus:bg-white/[0.06]";
+  "h-10 rounded-md border border-[#d2c8b8] bg-white px-3 text-sm text-[#2c2824] outline-none transition placeholder:text-[#9a8d7a] focus:border-[#bb5d3a]/70 focus:ring-2 focus:ring-[#bb5d3a]/10";
 
 const currencyFormatter = new Intl.NumberFormat("en-GB", {
   currency: "GBP",
@@ -144,7 +144,7 @@ function Field({
   type = "number",
 }: FieldProps) {
   return (
-    <label className="grid gap-1.5 text-sm text-zinc-300">
+    <label className="grid gap-1.5 text-sm text-[#3a342c]">
       {label}
       <input
         className={inputClass}
@@ -172,13 +172,13 @@ function MetricCard({
 }) {
   return (
     <article className={cardClass}>
-      <p className="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-zinc-500">
+      <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.2em] text-[#9a7d5f]">
         {label}
       </p>
-      <p className="mt-3 text-2xl font-semibold tracking-tight text-white">
+      <p className="zach-display mt-3 text-3xl font-medium tracking-tight text-[#111820]">
         {value}
       </p>
-      {meta && <p className="mt-1 text-xs text-zinc-500">{meta}</p>}
+      {meta && <p className="mt-1 text-xs text-[#8c8273]">{meta}</p>}
     </article>
   );
 }
@@ -192,10 +192,12 @@ function SectionHeader({
 }) {
   return (
     <div>
-      <p className="font-mono text-[0.68rem] uppercase tracking-[0.22em] text-cyan-200/70">
+      <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
         {kicker}
       </p>
-      <h2 className="mt-1 text-lg font-semibold text-white">{title}</h2>
+      <h2 className="zach-display mt-1 text-3xl font-medium text-[#111820]">
+        {title}
+      </h2>
     </div>
   );
 }
@@ -974,43 +976,42 @@ export function DashboardShell({
   });
 
   return (
-    <main className="min-h-screen bg-[#07090d] text-zinc-100">
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(34,211,238,0.13),transparent_28%),radial-gradient(circle_at_80%_10%,rgba(16,185,129,0.1),transparent_26%)]" />
+    <main className="min-h-screen bg-[#f9f4ec] text-[#2c2824]">
       <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
-        <header className="flex flex-col gap-4 border-b border-white/10 pb-6 lg:flex-row lg:items-end lg:justify-between">
+        <header className="flex flex-col gap-4 border-b border-[#2c2824] pb-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="font-mono text-xs uppercase tracking-[0.32em] text-cyan-200/80">
+            <p className="text-xs font-semibold uppercase tracking-[0.45em] text-[#9a7d5f]">
               Personal operating system
             </p>
-            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-white">
+            <h1 className="zach-display mt-1 text-[42px] font-medium leading-none tracking-[-0.02em] text-[#111820]">
               Zach OS
             </h1>
-            <p className="mt-2 text-sm text-zinc-500">
+            <p className="mt-3 text-sm text-[#8c8273]">
               Signed in as {userEmail ?? "private user"}
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
             <Link
-              className="inline-flex h-10 items-center rounded border border-white/10 bg-white/[0.04] px-4 text-sm font-semibold text-zinc-100 transition hover:border-cyan-200/30 hover:bg-cyan-300/10"
+              className="inline-flex h-10 items-center rounded-md border border-[#d2c8b8] bg-[#fffaf2] px-4 text-sm font-semibold text-[#2c2824] transition hover:border-[#bb5d3a]/40"
               href="/ai-insights"
             >
               AI Insights
             </Link>
             <Link
-              className="inline-flex h-10 items-center rounded border border-cyan-200/20 bg-cyan-200/10 px-4 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-200/15"
+              className="inline-flex h-10 items-center rounded-md border border-[#bb5d3a] bg-[#bb5d3a] px-4 text-sm font-semibold text-[#f9f4ec] transition hover:bg-[#a94f31]"
               href="/garmin-import"
             >
               Garmin import
             </Link>
             <Link
-              className="inline-flex h-10 items-center rounded border border-white/10 bg-white/[0.04] px-4 text-sm font-semibold text-zinc-100 transition hover:border-cyan-200/30 hover:bg-cyan-300/10"
+              className="inline-flex h-10 items-center rounded-md border border-[#d2c8b8] bg-[#fffaf2] px-4 text-sm font-semibold text-[#2c2824] transition hover:border-[#bb5d3a]/40"
               href="/portfolio"
             >
               Portfolio
             </Link>
             <form action={signOut}>
               <button
-                className="h-10 rounded border border-white/10 bg-white/[0.04] px-4 text-sm font-semibold text-zinc-100 transition hover:border-rose-200/30 hover:bg-rose-300/10"
+                className="h-10 rounded-md border border-[#241f1a] bg-[#241f1a] px-4 text-sm font-semibold text-[#f9f4ec] transition hover:bg-[#3a342c]"
                 type="submit"
               >
                 Log out

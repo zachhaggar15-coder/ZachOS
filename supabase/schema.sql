@@ -47,6 +47,20 @@ create table if not exists public.garmin_sync_runs (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.ai_weekly_insights (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  insight_type text not null,
+  period_start date not null,
+  period_end date not null,
+  source text not null default 'fallback' check (source in ('fallback', 'openai')),
+  model text,
+  content text not null,
+  generated_at timestamptz not null default now(),
+  created_at timestamptz not null default now(),
+  unique (user_id, insight_type, period_start)
+);
+
 create table if not exists public.consultant_readiness_logs (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
@@ -177,6 +191,7 @@ create table if not exists public.quests (
 alter table public.activities enable row level security;
 alter table public.strava_connections enable row level security;
 alter table public.garmin_sync_runs enable row level security;
+alter table public.ai_weekly_insights enable row level security;
 alter table public.consultant_readiness_logs enable row level security;
 alter table public.daily_logs enable row level security;
 alter table public.daily_routine_logs enable row level security;
@@ -200,6 +215,10 @@ drop policy if exists "Users can read their own Garmin sync runs" on public.garm
 drop policy if exists "Users can insert their own Garmin sync runs" on public.garmin_sync_runs;
 drop policy if exists "Users can update their own Garmin sync runs" on public.garmin_sync_runs;
 drop policy if exists "Users can delete their own Garmin sync runs" on public.garmin_sync_runs;
+drop policy if exists "Users can read their own AI weekly insights" on public.ai_weekly_insights;
+drop policy if exists "Users can insert their own AI weekly insights" on public.ai_weekly_insights;
+drop policy if exists "Users can update their own AI weekly insights" on public.ai_weekly_insights;
+drop policy if exists "Users can delete their own AI weekly insights" on public.ai_weekly_insights;
 drop policy if exists "Users can read their own consultant readiness logs" on public.consultant_readiness_logs;
 drop policy if exists "Users can insert their own consultant readiness logs" on public.consultant_readiness_logs;
 drop policy if exists "Users can update their own consultant readiness logs" on public.consultant_readiness_logs;
@@ -300,6 +319,27 @@ create policy "Users can update their own Garmin sync runs"
 
 create policy "Users can delete their own Garmin sync runs"
   on public.garmin_sync_runs
+  for delete
+  using (auth.uid() = user_id);
+
+create policy "Users can read their own AI weekly insights"
+  on public.ai_weekly_insights
+  for select
+  using (auth.uid() = user_id);
+
+create policy "Users can insert their own AI weekly insights"
+  on public.ai_weekly_insights
+  for insert
+  with check (auth.uid() = user_id);
+
+create policy "Users can update their own AI weekly insights"
+  on public.ai_weekly_insights
+  for update
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+create policy "Users can delete their own AI weekly insights"
+  on public.ai_weekly_insights
   for delete
   using (auth.uid() = user_id);
 
@@ -554,6 +594,9 @@ create index if not exists strava_connections_user_id_idx
 
 create index if not exists garmin_sync_runs_user_started_idx
   on public.garmin_sync_runs (user_id, started_at desc);
+
+create index if not exists ai_weekly_insights_user_type_period_idx
+  on public.ai_weekly_insights (user_id, insight_type, period_start desc);
 
 create index if not exists consultant_readiness_logs_user_date_idx
   on public.consultant_readiness_logs (user_id, date desc);

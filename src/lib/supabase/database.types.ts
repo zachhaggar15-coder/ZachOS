@@ -136,6 +136,45 @@ export type Database = {
         };
         Relationships: [];
       };
+      ai_weekly_insights: {
+        Row: {
+          content: string;
+          created_at: string;
+          generated_at: string;
+          id: string;
+          insight_type: string;
+          model: string | null;
+          period_end: string;
+          period_start: string;
+          source: string;
+          user_id: string;
+        };
+        Insert: {
+          content: string;
+          created_at?: string;
+          generated_at?: string;
+          id?: string;
+          insight_type: string;
+          model?: string | null;
+          period_end: string;
+          period_start: string;
+          source?: string;
+          user_id: string;
+        };
+        Update: {
+          content?: string;
+          created_at?: string;
+          generated_at?: string;
+          id?: string;
+          insight_type?: string;
+          model?: string | null;
+          period_end?: string;
+          period_start?: string;
+          source?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       consultant_readiness_logs: {
         Row: {
           communication_practice_minutes: number | null;
@@ -496,6 +535,8 @@ export type StravaConnection =
   Database["public"]["Tables"]["strava_connections"]["Row"];
 export type GarminSyncRun =
   Database["public"]["Tables"]["garmin_sync_runs"]["Row"];
+export type AiWeeklyInsight =
+  Database["public"]["Tables"]["ai_weekly_insights"]["Row"];
 export type ConsultantReadinessLog =
   Database["public"]["Tables"]["consultant_readiness_logs"]["Row"];
 export type FinanceSnapshot =
