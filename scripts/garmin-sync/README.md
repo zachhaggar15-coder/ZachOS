@@ -2,9 +2,9 @@
 
 This is the optional local automation path for daily Garmin updates.
 
-It runs on your Windows machine, logs into Garmin Connect through the
-`garminconnect` Python package, stores Garmin tokens locally, then writes recent
-activity and recovery data into Supabase.
+It runs on your Windows machine, creates Garmin tokens through a real Chromium
+browser login, stores those tokens locally, then writes recent activity and
+recovery data into Supabase. It does not store your Garmin password.
 
 Use this for automation. Keep the browser ZIP importer for one-off historical
 exports.
@@ -36,17 +36,36 @@ If PowerShell says Python was not found, install Python 3.12+ from
 
 Then edit `.env.garmin-sync`.
 
+`SUPABASE_URL` must be your real Supabase Project URL from **Project Settings >
+API**. It should look like `https://abc123.supabase.co`; do not use the Supabase
+dashboard URL and do not leave the `your-real-project-ref` placeholder in place.
+
+`SUPABASE_SERVICE_ROLE_KEY` must be the service-role key from the same Supabase
+API settings page. Keep it private and do not put it in Vercel or GitHub unless
+you intentionally need a server-only secret there.
+
 ## First Run
 
-Run this manually once so Garmin can ask for MFA if needed and create the local
-token file:
+Run this manually once so Garmin can open a real browser login and create the
+local token file:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\garmin-sync\login.ps1
+```
+
+Log in to Garmin in the Chromium window. When Zach OS captures the Garmin login
+ticket, the window closes and `.garmin-tokens/garmin_tokens.json` is saved.
+
+Then run the sync:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\garmin-sync\run.ps1 -Days 14
 ```
 
-After that, the daily Codex automation can run the same command without asking
-for a Garmin password again unless Garmin revokes or expires the refresh token.
+After that, the daily Codex automation can run the same sync command without
+touching Garmin's blocked SSO login unless Garmin revokes or expires the refresh
+token. If you see a Garmin `429` error, rerun `login.ps1` and then rerun
+`run.ps1`.
 
 ## Useful Commands
 

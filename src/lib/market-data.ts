@@ -36,9 +36,11 @@ const MARKET_ALIASES: Record<string, string[]> = {
   AMUNDI_PRIME_ACWI: ["WEBN.DE", "WEBN.MI", "WEBG.DE"],
   WEBN: ["WEBN.DE", "WEBN.MI"],
   WEBG: ["WEBG.DE", "WEBG.SW"],
-  WEXU: ["WEXU.L", "WEXU"],
-  VUAG: ["VUAG.L", "VUAG"],
+  WEXU: ["WEXU.L"],
+  VUAG: ["VUAG.L"],
 };
+
+const LONDON_SUFFIX = ".L";
 
 function numeric(value: unknown) {
   if (typeof value === "number" && Number.isFinite(value)) {
@@ -57,6 +59,10 @@ function normaliseTicker(ticker: string) {
   return ticker.trim().toUpperCase();
 }
 
+function isLondonSymbol(symbol: string) {
+  return symbol.toUpperCase().endsWith(LONDON_SUFFIX);
+}
+
 export function marketLookupSymbols(ticker: string, exchange: string | null) {
   const normalised = normaliseTicker(ticker);
   if (!normalised) {
@@ -73,10 +79,9 @@ export function marketLookupSymbols(ticker: string, exchange: string | null) {
     exchangeName.includes("london") ||
     ["WEXU", "VUAG"].includes(normalised);
 
-  const symbols =
-    looksLikeLse && !normalised.endsWith(".L")
-      ? [`${normalised}.L`, normalised]
-      : [normalised];
+  const symbols = looksLikeLse && !isLondonSymbol(normalised)
+    ? [`${normalised}${LONDON_SUFFIX}`]
+    : [normalised];
 
   return Array.from(new Set(symbols));
 }
@@ -108,7 +113,7 @@ async function fetchFmpPrice(symbol: string, currency: string) {
     ? null
     : ({
         currency,
-        price,
+        price: normaliseApiQuotePrice(price, symbol, currency),
         provider: "fmp",
         symbol: quote?.symbol ?? symbol,
       } satisfies MarketDataResult);
@@ -133,10 +138,28 @@ async function fetchAlphaVantagePrice(symbol: string, currency: string) {
     ? null
     : ({
         currency,
-        price,
+        price: normaliseApiQuotePrice(price, symbol, currency),
         provider: "alpha_vantage",
         symbol: quote?.["01. symbol"] ?? symbol,
       } satisfies MarketDataResult);
+}
+
+function normaliseApiQuotePrice(
+  price: number,
+  symbol: string,
+  fallbackCurrency: string,
+) {
+  // London ETF quotes are often returned in GBp/pence by generic APIs even
+  // when the holding is stored as GBP. Keep dashboard values in pounds.
+  if (
+    fallbackCurrency.toUpperCase() === "GBP" &&
+    isLondonSymbol(symbol) &&
+    price >= 500
+  ) {
+    return price / 100;
+  }
+
+  return price;
 }
 
 function yahooFxSymbol(fromCurrency: string, toCurrency: string) {
@@ -182,10 +205,9 @@ async function normaliseYahooQuote(
   fallbackCurrency: string,
 ) {
   const rawCurrency = quoteCurrency ?? fallbackCurrency;
-  const normalisedCurrency =
-    rawCurrency.toLowerCase() === "gbp" ? "GBP" : rawCurrency.toUpperCase();
+  const normalisedCurrency = rawCurrency.toUpperCase();
 
-  if (rawCurrency.toLowerCase() === "gbp") {
+  if (rawCurrency === "GBp" || normalisedCurrency === "GBX") {
     return { currency: "GBP", price: price / 100 };
   }
 
@@ -245,6 +267,17 @@ export async function fetchLatestMarketPrice(
   currency = "GBP",
 ) {
   for (const symbol of marketLookupSymbols(ticker, exchange)) {
+    const preferYahoo =
+      isLondonSymbol(symbol) ||
+      ["AMUNDI_PRIME_ACWI", "WEBN", "WEBG"].includes(normaliseTicker(ticker));
+
+    if (preferYahoo) {
+      const yahooPrice = await fetchYahooPrice(symbol, currency);
+      if (yahooPrice) {
+        return yahooPrice;
+      }
+    }
+
     const fmpPrice = await fetchFmpPrice(symbol, currency);
     if (fmpPrice) {
       return fmpPrice;
@@ -255,9 +288,11 @@ export async function fetchLatestMarketPrice(
       return alphaPrice;
     }
 
-    const yahooPrice = await fetchYahooPrice(symbol, currency);
-    if (yahooPrice) {
-      return yahooPrice;
+    if (!preferYahoo) {
+      const yahooPrice = await fetchYahooPrice(symbol, currency);
+      if (yahooPrice) {
+        return yahooPrice;
+      }
     }
   }
 

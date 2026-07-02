@@ -55,8 +55,10 @@ export function PortfolioRefreshButton() {
         errors?: string[];
         error?: string;
         hasProvider?: boolean;
+        priceWarnings?: string[];
         pricesUpdated?: number;
         refreshWindowId?: string;
+        skippedTickers?: string[];
         tickersChecked?: number;
         unavailableTickers?: string[];
       };
@@ -67,6 +69,8 @@ export function PortfolioRefreshButton() {
 
       const unavailable = payload.unavailableTickers ?? [];
       const providerErrors = payload.errors ?? [];
+      const priceWarnings = payload.priceWarnings ?? [];
+      const skippedTickers = payload.skippedTickers ?? [];
       const baseStatus = payload.hasProvider
         ? `Checked ${payload.tickersChecked ?? 0} tickers for the ${
             payload.refreshWindowId ?? "current"
@@ -79,8 +83,14 @@ export function PortfolioRefreshButton() {
           unavailable.length
             ? `No live quote found for ${unavailable.join(", ")}.`
             : "",
+          skippedTickers.length
+            ? `Skipped protected prices for ${skippedTickers.join(", ")}.`
+            : "",
           providerErrors.length
             ? `Provider error: ${providerErrors.slice(0, 2).join("; ")}`
+            : "",
+          priceWarnings.length
+            ? `Price guard: ${priceWarnings.slice(0, 2).join("; ")}`
             : "",
         ]
           .filter(Boolean)

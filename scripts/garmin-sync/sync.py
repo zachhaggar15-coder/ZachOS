@@ -8,11 +8,13 @@ small upsert batches into Supabase with the service-role key.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import os
 import sys
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterable
+from urllib.parse import urlparse
 
 try:
     from dotenv import load_dotenv
@@ -264,7 +266,7 @@ def call_first(client: Any, method_names: Iterable[str], *args: Any) -> Any:
     return None
 
 
-def login_to_garmin(email: str, password: str, token_dir: Path) -> Any:
+def login_to_garmin(token_dir: Path) -> Any:
     try:
         from garminconnect import Garmin
     except ImportError:
@@ -273,14 +275,51 @@ def login_to_garmin(email: str, password: str, token_dir: Path) -> Any:
             "-m pip install -r scripts\\garmin-sync\\requirements.txt"
         )
 
-    token_dir.mkdir(parents=True, exist_ok=True)
-    client = Garmin(
-        email,
-        password,
-        prompt_mfa=lambda: input("Garmin MFA code: ").strip(),
-    )
+    token_file = token_dir / "garmin_tokens.json"
+    if not token_file.exists():
+        die(
+            "No Garmin browser tokens found. Run: powershell -ExecutionPolicy "
+            "Bypass -File scripts\\garmin-sync\\login.ps1"
+        )
+
+    client = Garmin()
     client.login(str(token_dir))
+    with contextlib.suppress(Exception):
+        client.client.dump(str(token_dir))
     return client
+
+
+def validate_supabase_url(url: str | None) -> str:
+    if not url:
+        die("SUPABASE_URL is missing from .env.garmin-sync.")
+
+    if "your-" in url or "project-ref" in url:
+        die(
+            "SUPABASE_URL is still a placeholder. Open .env.garmin-sync and paste "
+            "your real Supabase Project URL, for example https://abc123.supabase.co."
+        )
+
+    parsed = urlparse(url)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        die(
+            f"SUPABASE_URL is invalid: {url!r}. It should look like "
+            "https://abc123.supabase.co, not a Supabase dashboard URL."
+        )
+
+    return url.rstrip("/")
+
+
+def validate_service_role_key(key: str | None) -> str:
+    if not key:
+        die("SUPABASE_SERVICE_ROLE_KEY is missing from .env.garmin-sync.")
+
+    if "your-" in key or key == "test":
+        die(
+            "SUPABASE_SERVICE_ROLE_KEY is still a placeholder. Paste the service_role "
+            "key from Supabase Project Settings > API."
+        )
+
+    return key
 
 
 def create_supabase_client() -> Any:
@@ -295,12 +334,7 @@ def create_supabase_client() -> Any:
     url = os.getenv("SUPABASE_URL") or os.getenv("NEXT_PUBLIC_SUPABASE_URL")
     key = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
-    if not url:
-        die("SUPABASE_URL is missing from .env.garmin-sync.")
-    if not key:
-        die("SUPABASE_SERVICE_ROLE_KEY is missing from .env.garmin-sync.")
-
-    return create_client(url, key)
+    return create_client(validate_supabase_url(url), validate_service_role_key(key))
 
 
 def activity_date(row: JsonRecord) -> str | None:
@@ -705,16 +739,10 @@ def main() -> None:
 
     load_dotenv(env_file)
 
-    email = os.getenv("GARMIN_EMAIL")
-    password = os.getenv("GARMIN_PASSWORD")
     user_id = os.getenv("ZACH_USER_ID")
     days = args.days or int(os.getenv("GARMIN_SYNC_LOOKBACK_DAYS", "14"))
     token_dir = Path(os.getenv("GARMIN_TOKEN_DIR") or str(DEFAULT_TOKEN_DIR))
 
-    if not email:
-        die("GARMIN_EMAIL is missing from .env.garmin-sync.")
-    if not password:
-        die("GARMIN_PASSWORD is missing from .env.garmin-sync.")
     if not user_id:
         die("ZACH_USER_ID is missing from .env.garmin-sync.")
     if days < 1:
@@ -723,11 +751,17 @@ def main() -> None:
     if not token_dir.is_absolute():
         token_dir = REPO_ROOT / token_dir
 
+    if not args.dry_run:
+        validate_supabase_url(
+            os.getenv("SUPABASE_URL") or os.getenv("NEXT_PUBLIC_SUPABASE_URL")
+        )
+        validate_service_role_key(os.getenv("SUPABASE_SERVICE_ROLE_KEY"))
+
     end = date.today()
     start = end - timedelta(days=days - 1)
 
     print(f"Syncing Garmin data for {start.isoformat()} to {end.isoformat()}...")
-    client = login_to_garmin(email, password, token_dir)
+    client = login_to_garmin(token_dir)
     activities = fetch_activities(client, start, end, user_id)
     fitness_metrics = fetch_fitness_metrics(client, start, end, user_id)
 

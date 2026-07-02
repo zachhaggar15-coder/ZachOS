@@ -42,6 +42,7 @@ try {
 
   & $VenvPython -m pip install --upgrade pip
   & $VenvPython -m pip install -r $Requirements
+  & $VenvPython -m playwright install chromium
 
   if (-not (Test-Path $EnvTarget)) {
     Copy-Item $EnvExample $EnvTarget
@@ -52,8 +53,8 @@ try {
   }
 
   Write-Host ""
-  Write-Host "Setup complete. Next run:"
-  Write-Host "powershell -ExecutionPolicy Bypass -File scripts\garmin-sync\run.ps1 -Days 14"
+  Write-Host "Setup complete. Next run the one-time browser login:"
+  Write-Host "powershell -ExecutionPolicy Bypass -File scripts\garmin-sync\login.ps1"
 }
 finally {
   Pop-Location

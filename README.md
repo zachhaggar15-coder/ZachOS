@@ -99,9 +99,9 @@ For smaller/manual imports:
 The deployed Vercel app does **not** store Garmin account credentials and does
 not scrape Garmin Connect login. For automation, Zach OS now includes an
 optional local-only sync script in [`scripts/garmin-sync`](./scripts/garmin-sync)
-that uses the unofficial `garminconnect` Python package on your own computer.
-That route stores Garmin tokens locally in `.garmin-tokens/`, keeps credentials
-out of GitHub and Vercel, and writes small daily batches into Supabase.
+that creates Garmin tokens through a real local Chromium login, stores those
+tokens in `.garmin-tokens/`, keeps credentials out of GitHub and Vercel, and
+writes small daily batches into Supabase.
 
 Supported import fields:
 
@@ -190,25 +190,35 @@ If PowerShell says Python was not found, install Python 3.12+ from
 Fill in `.env.garmin-sync`:
 
 ```bash
-GARMIN_EMAIL=zach.haggar15@gmail.com
-GARMIN_PASSWORD=your-garmin-password
 GARMIN_TOKEN_DIR=.garmin-tokens
 
-SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_URL=https://your-real-project-ref.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
 ZACH_USER_ID=your-supabase-auth-user-id
 
 GARMIN_SYNC_LOOKBACK_DAYS=14
 ```
 
-Run it manually once:
+For `SUPABASE_URL`, use the **Project URL** from Supabase **Project Settings >
+API**. It should start with `https://` and end with `.supabase.co`; do not use a
+Supabase dashboard URL or the placeholder value.
+
+Run the one-time browser login:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\garmin-sync\login.ps1
+```
+
+Log in to Garmin in the Chromium window and wait for it to close itself. Then
+run the sync:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\garmin-sync\run.ps1 -Days 14
 ```
 
-If Garmin asks for MFA, enter the one-time code in the terminal. After the first
-successful run, the script should reuse local tokens automatically.
+After the first successful browser login, the script should reuse local tokens
+automatically. If Garmin later returns a `429` login error or the token expires,
+rerun `login.ps1`, then rerun `run.ps1`.
 
 For the daily Codex automation, enable **Zach OS Garmin Sync** after the first
 manual run. It runs this command every morning:
@@ -217,8 +227,8 @@ manual run. It runs this command every morning:
 powershell -ExecutionPolicy Bypass -File scripts\garmin-sync\run.ps1 -Days 14
 ```
 
-If Garmin revokes the token later, run the same command manually once to refresh
-the login.
+If Garmin revokes the token later, run `login.ps1` once to refresh the browser
+token, then run the sync command again.
 
 ## Strava OAuth
 

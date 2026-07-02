@@ -19,6 +19,15 @@ export const dynamic = "force-dynamic";
 type MarketPriceInsert =
   Database["public"]["Tables"]["market_prices"]["Insert"];
 
+type MarketPrice = Database["public"]["Tables"]["market_prices"]["Row"];
+
+const MAX_AUTO_REFRESH_MOVE = 0.35;
+const EXPECTED_PRICE_RANGES: Record<string, { max: number; min: number }> = {
+  AMUNDI_PRIME_ACWI: { max: 40, min: 10 },
+  VUAG: { max: 180, min: 70 },
+  WEXU: { max: 18, min: 8 },
+};
+
 function jsonError(message: string, status = 400) {
   return NextResponse.json({ error: message }, { status });
 }
@@ -35,6 +44,118 @@ function shouldAutoPriceHolding(holding: PortfolioAccountWithHoldings["holdings"
     holding.auto_price_updates ||
     marketPriceKey(holding.ticker) === "AMUNDI_PRIME_ACWI"
   );
+}
+
+function formatPrice(value: number) {
+  return value.toFixed(value >= 20 ? 2 : 4);
+}
+
+function isWithinExpectedRange(ticker: string, price: number) {
+  const range = EXPECTED_PRICE_RANGES[ticker];
+  return !range || (price >= range.min && price <= range.max);
+}
+
+function priceMoveLooksReasonable(previousPrice: number, nextPrice: number) {
+  if (previousPrice <= 0 || nextPrice <= 0) {
+    return false;
+  }
+
+  const ratio = nextPrice / previousPrice;
+  return (
+    ratio >= 1 - MAX_AUTO_REFRESH_MOVE &&
+    ratio <= 1 + MAX_AUTO_REFRESH_MOVE
+  );
+}
+
+function guardRefreshedPrice({
+  existingPrice,
+  nextPrice,
+  ticker,
+}: {
+  existingPrice: MarketPrice | null;
+  nextPrice: number;
+  ticker: string;
+}) {
+  const existingValue = existingPrice?.price ?? null;
+  const currentIsPlausible =
+    existingValue === null || isWithinExpectedRange(ticker, existingValue);
+  const candidateIsPlausible = isWithinExpectedRange(ticker, nextPrice);
+  const penceToPounds = nextPrice / 100;
+  const poundsToPence = nextPrice * 100;
+  const penceToPoundsIsPlausible = isWithinExpectedRange(ticker, penceToPounds);
+  const poundsToPenceIsPlausible = isWithinExpectedRange(ticker, poundsToPence);
+
+  if (existingValue !== null) {
+    if (!currentIsPlausible && candidateIsPlausible) {
+      return {
+        price: nextPrice,
+        warning: `${ticker}: repaired an implausible stored price of ${formatPrice(
+          existingValue,
+        )} with ${formatPrice(nextPrice)}.`,
+      };
+    }
+
+    if (
+      currentIsPlausible &&
+      candidateIsPlausible &&
+      priceMoveLooksReasonable(existingValue, nextPrice)
+    ) {
+      return { price: nextPrice, warning: null };
+    }
+
+    if (
+      penceToPoundsIsPlausible &&
+      (priceMoveLooksReasonable(existingValue, penceToPounds) ||
+        !currentIsPlausible)
+    ) {
+      return {
+        price: penceToPounds,
+        warning: `${ticker}: converted a pence-style quote from ${formatPrice(
+          nextPrice,
+        )} to ${formatPrice(penceToPounds)}.`,
+      };
+    }
+
+    if (
+      poundsToPenceIsPlausible &&
+      currentIsPlausible &&
+      priceMoveLooksReasonable(existingValue, poundsToPence)
+    ) {
+      return {
+        price: poundsToPence,
+        warning: `${ticker}: converted an under-scaled quote from ${formatPrice(
+          nextPrice,
+        )} to ${formatPrice(poundsToPence)}.`,
+      };
+    }
+
+    return {
+      price: null,
+      warning: `${ticker}: skipped suspicious quote ${formatPrice(
+        nextPrice,
+      )}; previous stored price is ${formatPrice(existingValue)}.`,
+    };
+  }
+
+  if (!candidateIsPlausible && penceToPoundsIsPlausible) {
+    return {
+      price: penceToPounds,
+      warning: `${ticker}: converted first pence-style quote from ${formatPrice(
+        nextPrice,
+      )} to ${formatPrice(penceToPounds)}.`,
+    };
+  }
+
+  if (!candidateIsPlausible) {
+    return {
+      price: null,
+      warning: `${ticker}: skipped implausible first quote ${formatPrice(
+        nextPrice,
+      )}. Enter a manual price once, then auto-refresh can sanity-check future moves.`,
+    };
+  }
+
+  return { price: nextPrice, warning: null };
 }
 
 export async function POST(request: Request) {
@@ -101,6 +222,8 @@ export async function POST(request: Request) {
   );
   const rowsToUpsert: MarketPriceInsert[] = [];
   const errors: string[] = [];
+  const priceWarnings: string[] = [];
+  const skippedTickers: string[] = [];
   const unavailableTickers: string[] = [];
 
   if (hasMarketDataProvider()) {
@@ -128,9 +251,24 @@ export async function POST(request: Request) {
         );
 
         if (price) {
+          const guarded = guardRefreshedPrice({
+            existingPrice: pricesByTicker.get(ticker) ?? null,
+            nextPrice: price.price,
+            ticker,
+          });
+
+          if (guarded.warning) {
+            priceWarnings.push(guarded.warning);
+          }
+
+          if (guarded.price === null) {
+            skippedTickers.push(ticker);
+            continue;
+          }
+
           rowsToUpsert.push({
             currency: price.currency,
-            price: price.price,
+            price: guarded.price,
             ticker,
             updated_at: new Date().toISOString(),
           });
@@ -214,8 +352,10 @@ export async function POST(request: Request) {
     errors,
     forceRefresh,
     hasProvider: hasMarketDataProvider(),
+    priceWarnings,
     pricesUpdated: rowsToUpsert.length,
     refreshWindowId: refreshWindow,
+    skippedTickers,
     tickersChecked: tickers.length,
     totalInvested: summary.totalInvested,
     unavailableTickers,
