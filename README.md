@@ -15,6 +15,7 @@ It tracks fitness, finance and intellectual habits with a dark analytics dashboa
 - One-click import for the historical net worth snapshot from February 2024 to June 2026.
 - Strava OAuth automatic activity import at `/integrations`.
 - One-upload Garmin account-export ZIP import at `/garmin-import`.
+- Optional local Garmin Connect daily sync using the `garminconnect` Python package.
 - Manual Garmin CSV import with preview and column mapping.
 - Imported activity data saved into `activities`; mapped health metrics saved into `fitness_metrics`.
 - Clickable dashboard graphs that open table drilldowns under `/charts/...`.
@@ -95,7 +96,12 @@ For smaller/manual imports:
 - Map CSV columns to Zach OS fields.
 - Save the import.
 
-This app does **not** use unofficial Garmin credentials, does **not** scrape Garmin Connect login, and does **not** store Garmin account credentials. This keeps the integration deployable on Vercel and avoids putting Garmin passwords into Zach OS.
+The deployed Vercel app does **not** store Garmin account credentials and does
+not scrape Garmin Connect login. For automation, Zach OS now includes an
+optional local-only sync script in [`scripts/garmin-sync`](./scripts/garmin-sync)
+that uses the unofficial `garminconnect` Python package on your own computer.
+That route stores Garmin tokens locally in `.garmin-tokens/`, keeps credentials
+out of GitHub and Vercel, and writes small daily batches into Supabase.
 
 Supported import fields:
 
@@ -110,6 +116,109 @@ too large for a direct Vercel upload, Zach OS extracts the useful Garmin JSON
 files in the browser and saves them in smaller batches. Keep the tab open while
 that import runs. A local `npm run dev` import is still fine, but it is no
 longer required for large ZIPs.
+
+### Optional Local Garmin Automation
+
+This is the recommended automation path because it avoids Vercel upload limits
+and does not need Strava.
+
+First, run the database migration in Supabase:
+
+```sql
+create table if not exists public.garmin_sync_runs (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  started_at timestamptz not null default now(),
+  finished_at timestamptz,
+  status text not null check (status in ('running', 'success', 'error')),
+  message text,
+  activities_upserted integer not null default 0,
+  fitness_days_upserted integer not null default 0,
+  lookback_days integer,
+  created_at timestamptz not null default now()
+);
+
+alter table public.garmin_sync_runs enable row level security;
+
+drop policy if exists "Users can read their own Garmin sync runs" on public.garmin_sync_runs;
+drop policy if exists "Users can insert their own Garmin sync runs" on public.garmin_sync_runs;
+drop policy if exists "Users can update their own Garmin sync runs" on public.garmin_sync_runs;
+drop policy if exists "Users can delete their own Garmin sync runs" on public.garmin_sync_runs;
+
+create policy "Users can read their own Garmin sync runs"
+  on public.garmin_sync_runs
+  for select
+  using (auth.uid() = user_id);
+
+create policy "Users can insert their own Garmin sync runs"
+  on public.garmin_sync_runs
+  for insert
+  with check (auth.uid() = user_id);
+
+create policy "Users can update their own Garmin sync runs"
+  on public.garmin_sync_runs
+  for update
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+create policy "Users can delete their own Garmin sync runs"
+  on public.garmin_sync_runs
+  for delete
+  using (auth.uid() = user_id);
+
+create index if not exists garmin_sync_runs_user_started_idx
+  on public.garmin_sync_runs (user_id, started_at desc);
+```
+
+Then get your Supabase user id:
+
+```sql
+select id, email
+from auth.users
+where email = 'zach.haggar15@gmail.com';
+```
+
+Set up the local Python environment:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\garmin-sync\setup.ps1
+```
+
+If PowerShell says Python was not found, install Python 3.12+ from
+<https://www.python.org/downloads/windows/> and tick **Add python.exe to PATH**.
+
+Fill in `.env.garmin-sync`:
+
+```bash
+GARMIN_EMAIL=zach.haggar15@gmail.com
+GARMIN_PASSWORD=your-garmin-password
+GARMIN_TOKEN_DIR=.garmin-tokens
+
+SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+ZACH_USER_ID=your-supabase-auth-user-id
+
+GARMIN_SYNC_LOOKBACK_DAYS=14
+```
+
+Run it manually once:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\garmin-sync\run.ps1 -Days 14
+```
+
+If Garmin asks for MFA, enter the one-time code in the terminal. After the first
+successful run, the script should reuse local tokens automatically.
+
+For the daily Codex automation, enable **Zach OS Garmin Sync** after the first
+manual run. It runs this command every morning:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\garmin-sync\run.ps1 -Days 14
+```
+
+If Garmin revokes the token later, run the same command manually once to refresh
+the login.
 
 ## Strava OAuth
 
@@ -312,6 +421,18 @@ The schema creates these tables:
   - `created_at timestamptz`
   - `updated_at timestamptz`
 
+- `garmin_sync_runs`
+  - `id uuid primary key`
+  - `user_id uuid references auth.users(id)`
+  - `started_at timestamptz`
+  - `finished_at timestamptz`
+  - `status text`
+  - `message text`
+  - `activities_upserted integer`
+  - `fitness_days_upserted integer`
+  - `lookback_days integer`
+  - `created_at timestamptz`
+
 - `quests`
   - `id uuid primary key`
   - `user_id uuid references auth.users(id)`
@@ -381,6 +502,7 @@ RLS is enabled for all user-owned tables:
 - `finance_snapshots`
 - `activities`
 - `strava_connections`
+- `garmin_sync_runs`
 - `quests`
 - `consultant_readiness_logs`
 - `portfolio_accounts`

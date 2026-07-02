@@ -97,6 +97,45 @@ export type Database = {
         };
         Relationships: [];
       };
+      garmin_sync_runs: {
+        Row: {
+          activities_upserted: number;
+          created_at: string;
+          finished_at: string | null;
+          fitness_days_upserted: number;
+          id: string;
+          lookback_days: number | null;
+          message: string | null;
+          started_at: string;
+          status: string;
+          user_id: string;
+        };
+        Insert: {
+          activities_upserted?: number;
+          created_at?: string;
+          finished_at?: string | null;
+          fitness_days_upserted?: number;
+          id?: string;
+          lookback_days?: number | null;
+          message?: string | null;
+          started_at?: string;
+          status: string;
+          user_id: string;
+        };
+        Update: {
+          activities_upserted?: number;
+          created_at?: string;
+          finished_at?: string | null;
+          fitness_days_upserted?: number;
+          id?: string;
+          lookback_days?: number | null;
+          message?: string | null;
+          started_at?: string;
+          status?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       consultant_readiness_logs: {
         Row: {
           communication_practice_minutes: number | null;
@@ -455,6 +494,8 @@ export type DailyRoutineLog =
 export type Activity = Database["public"]["Tables"]["activities"]["Row"];
 export type StravaConnection =
   Database["public"]["Tables"]["strava_connections"]["Row"];
+export type GarminSyncRun =
+  Database["public"]["Tables"]["garmin_sync_runs"]["Row"];
 export type ConsultantReadinessLog =
   Database["public"]["Tables"]["consultant_readiness_logs"]["Row"];
 export type FinanceSnapshot =
