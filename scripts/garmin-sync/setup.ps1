@@ -42,7 +42,6 @@ try {
 
   & $VenvPython -m pip install --upgrade pip
   & $VenvPython -m pip install -r $Requirements
-  & $VenvPython -m playwright install chromium
 
   if (-not (Test-Path $EnvTarget)) {
     Copy-Item $EnvExample $EnvTarget

@@ -2,9 +2,9 @@
 
 This is the optional local automation path for daily Garmin updates.
 
-It runs on your Windows machine, creates Garmin tokens through a real Chromium
-browser login, stores those tokens locally, then writes recent activity and
-recovery data into Supabase. It does not store your Garmin password.
+It runs on your Windows machine, creates Garmin tokens through your normal
+Chrome/Edge browser, stores those tokens locally, then writes recent activity
+and recovery data into Supabase. It does not store your Garmin password.
 
 Use this for automation. Keep the browser ZIP importer for one-off historical
 exports.
@@ -46,15 +46,24 @@ you intentionally need a server-only secret there.
 
 ## First Run
 
-Run this manually once so Garmin can open a real browser login and create the
+Run this manually once so Garmin can open your normal browser and create the
 local token file:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\garmin-sync\login.ps1
 ```
 
-Log in to Garmin in the Chromium window. When Zach OS captures the Garmin login
-ticket, the window closes and `.garmin-tokens/garmin_tokens.json` is saved.
+Log in to Garmin in your normal browser. Zach OS starts a temporary local
+callback on `127.0.0.1`, captures Garmin's login ticket, and saves
+`.garmin-tokens/garmin_tokens.json`.
+
+If Garmin still blocks the page, close the old blocked browser tab, wait a few
+minutes, then run the command again. If Garmin logs you in but does not redirect
+back to the terminal, use the manual fallback:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\garmin-sync\login.ps1 -Manual
+```
 
 Then run the sync:
 

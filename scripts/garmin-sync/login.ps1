@@ -1,5 +1,7 @@
 param(
-  [string] $Output = ".garmin-tokens"
+  [string] $Output = ".garmin-tokens",
+  [int] $Timeout = 300,
+  [switch] $Manual
 )
 
 $ErrorActionPreference = "Stop"
@@ -14,7 +16,20 @@ if (-not (Test-Path $VenvPython)) {
 
 Push-Location $RepoRoot
 try {
-  & $VenvPython "scripts\garmin-sync\browser_login.py" --output $Output --verify
+  $arguments = @(
+    "scripts\garmin-sync\browser_login.py",
+    "--output",
+    $Output,
+    "--timeout",
+    "$Timeout",
+    "--verify"
+  )
+
+  if ($Manual) {
+    $arguments += "--manual"
+  }
+
+  & $VenvPython @arguments
   exit $LASTEXITCODE
 }
 finally {

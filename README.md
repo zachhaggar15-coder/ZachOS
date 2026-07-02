@@ -99,9 +99,9 @@ For smaller/manual imports:
 The deployed Vercel app does **not** store Garmin account credentials and does
 not scrape Garmin Connect login. For automation, Zach OS now includes an
 optional local-only sync script in [`scripts/garmin-sync`](./scripts/garmin-sync)
-that creates Garmin tokens through a real local Chromium login, stores those
-tokens in `.garmin-tokens/`, keeps credentials out of GitHub and Vercel, and
-writes small daily batches into Supabase.
+that creates Garmin tokens through your normal local Chrome/Edge browser, stores
+those tokens in `.garmin-tokens/`, keeps credentials out of GitHub and Vercel,
+and writes small daily batches into Supabase.
 
 Supported import fields:
 
@@ -209,8 +209,9 @@ Run the one-time browser login:
 powershell -ExecutionPolicy Bypass -File scripts\garmin-sync\login.ps1
 ```
 
-Log in to Garmin in the Chromium window and wait for it to close itself. Then
-run the sync:
+Log in to Garmin in your normal browser. Zach OS temporarily listens on
+`127.0.0.1`, captures Garmin's redirect ticket, and saves
+`.garmin-tokens/garmin_tokens.json`. Then run the sync:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\garmin-sync\run.ps1 -Days 14
@@ -219,6 +220,13 @@ powershell -ExecutionPolicy Bypass -File scripts\garmin-sync\run.ps1 -Days 14
 After the first successful browser login, the script should reuse local tokens
 automatically. If Garmin later returns a `429` login error or the token expires,
 rerun `login.ps1`, then rerun `run.ps1`.
+
+If Garmin logs you in but the terminal never captures the ticket, use the manual
+fallback:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\garmin-sync\login.ps1 -Manual
+```
 
 For the daily Codex automation, enable **Zach OS Garmin Sync** after the first
 manual run. It runs this command every morning:
