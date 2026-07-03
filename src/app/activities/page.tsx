@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { AuthPanel } from "@/components/auth-panel";
+import { ZachBarChart } from "@/components/zach-charts";
 import {
   ZachButtonLink,
   ZachDatabaseSetupNotice,
@@ -89,6 +90,23 @@ export default async function ActivitiesPage({
   const runningDistance = allRows
     .filter((activity) => activityGroup(activity) === "running")
     .reduce((total, activity) => total + numeric(activity.distance_km), 0);
+  const activityTrend = Array.from(
+    allRows.reduce((months, activity) => {
+      const month = activity.date.slice(0, 7);
+      const existing = months.get(month) ?? {
+        date: month,
+        gym: 0,
+        other: 0,
+        running: 0,
+      };
+      existing[activityGroup(activity)] += 1;
+      months.set(month, existing);
+      return months;
+    }, new Map<string, { date: string; gym: number; other: number; running: number }>()),
+  )
+    .map(([, value]) => value)
+    .sort((left, right) => left.date.localeCompare(right.date))
+    .slice(-12);
 
   return (
     <ZachPageShell
@@ -115,6 +133,26 @@ export default async function ActivitiesPage({
             <ZachMetric label="Other activities" value={otherCount} />
             <ZachMetric label="Total running" value={formatDistance(runningDistance)} />
           </section>
+
+          <ZachPanel>
+            <div className="mb-4">
+              <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
+                Monthly activity mix
+              </p>
+              <h2 className="zach-display mt-1 text-3xl font-medium text-[#111820]">
+                Consistency trend
+              </h2>
+            </div>
+            <ZachBarChart
+              bars={[
+                { color: "#bb5d3a", key: "running", label: "Running" },
+                { color: "#7a8c5a", key: "gym", label: "Gym" },
+                { color: "#6f7d8c", key: "other", label: "Other" },
+              ]}
+              data={activityTrend}
+              height={300}
+            />
+          </ZachPanel>
 
           <ZachPanel>
             <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

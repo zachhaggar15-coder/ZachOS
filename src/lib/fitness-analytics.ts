@@ -23,6 +23,15 @@ export type WeeklyRunningPoint = {
   trainingLoad: number | null;
 };
 
+export type WeeklyFitnessPoint = {
+  date: string;
+  hrv: number | null;
+  label: string;
+  restingHr: number | null;
+  sleepScore: number | null;
+  trainingLoad: number | null;
+};
+
 export type PaceBandComparison = {
   band: string;
   currentAvgHr: number | null;
@@ -420,10 +429,35 @@ function weeklyFitnessAverages(fitnessMetrics: FitnessMetric[]) {
       week,
       {
         hrv: average(rows.map((row) => numeric(row.hrv))),
+        restingHr: average(rows.map((row) => numeric(row.resting_hr))),
+        sleepScore: average(rows.map((row) => numeric(row.sleep_score))),
         trainingLoad: average(rows.map((row) => numeric(row.training_load))),
       },
     ]),
   );
+}
+
+export function weeklyFitnessTrendSeries(
+  fitnessMetrics: FitnessMetric[],
+  today: string,
+  weeks = 12,
+): WeeklyFitnessPoint[] {
+  const fitnessByWeek = weeklyFitnessAverages(fitnessMetrics);
+  const currentWeekStart = weekStart(today);
+
+  return Array.from({ length: weeks }, (_, index) => {
+    const date = offsetDate(currentWeekStart, (index - weeks + 1) * 7);
+    const fitness = fitnessByWeek.get(date);
+
+    return {
+      date,
+      hrv: fitness?.hrv ?? null,
+      label: `W/c ${date.slice(5)}`,
+      restingHr: fitness?.restingHr ?? null,
+      sleepScore: fitness?.sleepScore ?? null,
+      trainingLoad: fitness?.trainingLoad ?? null,
+    };
+  });
 }
 
 export function weeklyRunningSeries(

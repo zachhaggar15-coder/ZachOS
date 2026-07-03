@@ -1,5 +1,5 @@
 import { AuthPanel } from "@/components/auth-panel";
-import { ZachBarChart, ZachDualAxisChart, ZachScatterChart } from "@/components/zach-charts";
+import { ZachBarChart, ZachDualAxisChart, ZachLineChart, ZachScatterChart } from "@/components/zach-charts";
 import {
   ZachButtonLink,
   ZachDatabaseSetupNotice,
@@ -15,7 +15,7 @@ import {
   getDatabaseSetupIssue,
 } from "@/lib/database-setup";
 import { formatShortDate } from "@/lib/dates";
-import { weeklyRunningSeries } from "@/lib/fitness-analytics";
+import { weeklyFitnessTrendSeries, weeklyRunningSeries } from "@/lib/fitness-analytics";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { numeric } from "@/lib/utils";
@@ -105,6 +105,15 @@ export default async function RecoveryPage({ searchParams }: RecoveryPageProps) 
       hrv: row.hrv,
       sleepScore: row.sleep_score,
     }));
+  const weeklyRecoveryChart = weeklyFitnessTrendSeries(fitnessRows, today, 16).map(
+    (row) => ({
+      date: row.label,
+      hrv: row.hrv,
+      restingHr: row.restingHr,
+      sleepScore: row.sleepScore,
+      trainingLoad: row.trainingLoad,
+    }),
+  );
   const weekly = weeklyRunningSeries(activityRows, fitnessRows, today, 12);
   const loadChart = weekly.map((row) => ({
     date: row.label,
@@ -164,6 +173,39 @@ export default async function RecoveryPage({ searchParams }: RecoveryPageProps) 
             </p>
           </ZachPanel>
 
+          <section className="grid gap-4 xl:grid-cols-[1fr_1fr]">
+            <ZachPanel>
+              <div className="mb-4">
+                <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
+                  Weekly average
+                </p>
+                <h2 className="zach-display mt-1 text-3xl font-medium text-[#111820]">
+                  Sleep score over time
+                </h2>
+              </div>
+              <ZachLineChart
+                data={weeklyRecoveryChart.filter((row) => row.sleepScore !== null)}
+                height={300}
+                lines={[{ color: "#2c2824", key: "sleepScore", label: "Sleep score" }]}
+              />
+            </ZachPanel>
+            <ZachPanel>
+              <div className="mb-4">
+                <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
+                  Weekly average
+                </p>
+                <h2 className="zach-display mt-1 text-3xl font-medium text-[#111820]">
+                  HRV over time
+                </h2>
+              </div>
+              <ZachLineChart
+                data={weeklyRecoveryChart.filter((row) => row.hrv !== null)}
+                height={300}
+                lines={[{ color: "#6f7d8c", key: "hrv", label: "HRV" }]}
+              />
+            </ZachPanel>
+          </section>
+
           <section className="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
             <ZachPanel>
               <div className="mb-4">
@@ -192,6 +234,32 @@ export default async function RecoveryPage({ searchParams }: RecoveryPageProps) 
               />
             </ZachPanel>
           </section>
+
+          <ZachPanel>
+            <div className="mb-4">
+              <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
+                Weekly balance
+              </p>
+              <h2 className="zach-display mt-1 text-3xl font-medium text-[#111820]">
+                Resting HR and training load
+              </h2>
+            </div>
+            <ZachDualAxisChart
+              data={weeklyRecoveryChart.filter(
+                (row) => row.restingHr !== null || row.trainingLoad !== null,
+              )}
+              height={300}
+              lines={[
+                { color: "#2c2824", key: "restingHr", label: "Resting HR", yAxisId: "left" },
+                {
+                  color: "#bb5d3a",
+                  key: "trainingLoad",
+                  label: "Training load",
+                  yAxisId: "right",
+                },
+              ]}
+            />
+          </ZachPanel>
 
           <ZachPanel>
             <div className="mb-4">

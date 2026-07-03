@@ -807,9 +807,9 @@ export function ControlRoomDashboard({
   }
 
   return (
-    <main className="zach-ui min-h-screen overflow-y-auto bg-[#f9f4ec] text-[#2c2824] lg:h-screen lg:overflow-hidden">
+    <main className="zach-ui min-h-screen bg-[#f9f4ec] text-[#2c2824]">
       <PortfolioPriceRefresher />
-      <div className="mx-auto flex min-h-screen w-full max-w-[1514px] flex-col px-6 py-7 lg:h-full lg:min-h-0 lg:px-10 lg:py-9">
+      <div className="mx-auto flex min-h-screen w-full max-w-[1514px] flex-col px-6 py-7 lg:px-10 lg:py-9">
         <header className="flex shrink-0 flex-col gap-5 border-b border-[#2c2824] pb-5 lg:h-[84px] lg:flex-row lg:items-start lg:justify-between lg:gap-6">
           <div className="min-w-[220px]">
             <div className="text-xs font-semibold uppercase tracking-[0.45em] text-[#9a7d5f]">
@@ -903,7 +903,7 @@ export function ControlRoomDashboard({
           </div>
         )}
 
-        <section className="grid min-h-0 flex-1 grid-cols-1 gap-7 pt-6 lg:grid-cols-[360px_minmax(0,1fr)_344px] lg:gap-0">
+        <section className="grid flex-1 grid-cols-1 gap-7 pt-6 lg:grid-cols-[360px_minmax(0,1fr)_344px] lg:gap-0">
           <aside className="min-h-0 pr-8 lg:border-r lg:border-[#2c2824]/[0.13]">
             <SectionKicker>Today</SectionKicker>
             <div className="mt-4">

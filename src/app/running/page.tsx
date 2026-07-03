@@ -320,6 +320,26 @@ export default async function RunningPage({ searchParams }: RunningPageProps) {
             </ZachPanel>
           </section>
 
+          <ZachPanel>
+            <div className="mb-4">
+              <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
+                Weekly pace
+              </p>
+              <h2 className="zach-display mt-1 text-3xl font-medium text-[#111820]">
+                Average pace trend
+              </h2>
+              <p className="mt-2 text-sm text-[#8c8273]">
+                Lower is better here. This uses weekly distance-weighted pace, so
+                a short fast run does not dominate the whole week.
+              </p>
+            </div>
+            <ZachLineChart
+              data={weeklyChart.filter((week) => week.pace !== null)}
+              height={300}
+              lines={[{ color: "#bb5d3a", key: "pace", label: "Min/km" }]}
+            />
+          </ZachPanel>
+
           <section className="grid gap-4 xl:grid-cols-[0.8fr_1.2fr]">
             <ZachPanel>
               <div className="mb-4">
