@@ -874,6 +874,7 @@ export function ControlRoomDashboard({
                 </form>
               </details>
               <NavButton href="/manage">Update data</NavButton>
+              <NavButton href="/learning-zone">Learning</NavButton>
               <NavButton href="/portfolio">Portfolio</NavButton>
               <NavButton href="/integrations">Integrations</NavButton>
               <form action={signOut}>

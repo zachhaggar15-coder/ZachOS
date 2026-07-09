@@ -1,6 +1,74 @@
+export type Json =
+  | boolean
+  | null
+  | number
+  | string
+  | { [key: string]: Json | undefined }
+  | Json[];
+
 export type Database = {
   public: {
     Tables: {
+      learning_sessions: {
+        Row: {
+          answer_payload: Json;
+          application_points: number;
+          breadth_points: number;
+          completed_at: string;
+          correct_count: number;
+          created_at: string;
+          id: string;
+          knowledge_points: number;
+          lesson_slug: string;
+          reading_seconds: number;
+          reasoning_points: number;
+          retention_points: number;
+          score_points: number;
+          started_at: string;
+          topic: string;
+          total_questions: number;
+          user_id: string;
+        };
+        Insert: {
+          answer_payload?: Json;
+          application_points?: number;
+          breadth_points?: number;
+          completed_at?: string;
+          correct_count?: number;
+          created_at?: string;
+          id?: string;
+          knowledge_points?: number;
+          lesson_slug: string;
+          reading_seconds?: number;
+          reasoning_points?: number;
+          retention_points?: number;
+          score_points?: number;
+          started_at?: string;
+          topic: string;
+          total_questions: number;
+          user_id: string;
+        };
+        Update: {
+          answer_payload?: Json;
+          application_points?: number;
+          breadth_points?: number;
+          completed_at?: string;
+          correct_count?: number;
+          created_at?: string;
+          id?: string;
+          knowledge_points?: number;
+          lesson_slug?: string;
+          reading_seconds?: number;
+          reasoning_points?: number;
+          retention_points?: number;
+          score_points?: number;
+          started_at?: string;
+          topic?: string;
+          total_questions?: number;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       activities: {
         Row: {
           activity_type: string | null;
@@ -528,6 +596,8 @@ export type Database = {
 };
 
 export type DailyLog = Database["public"]["Tables"]["daily_logs"]["Row"];
+export type LearningSession =
+  Database["public"]["Tables"]["learning_sessions"]["Row"];
 export type DailyRoutineLog =
   Database["public"]["Tables"]["daily_routine_logs"]["Row"];
 export type Activity = Database["public"]["Tables"]["activities"]["Row"];

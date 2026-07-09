@@ -27,6 +27,9 @@ It tracks fitness, finance and intellectual habits with a dark analytics dashboa
 - Active quest board with progress bars and a next suggested action.
 - AI Insights page for optional daily and weekly summaries, plus stored weekly
   running coach insights on `/running`.
+- Learning Zone at `/learning-zone` with a topic spin wheel, source-backed
+  3-5 minute lessons, multiple-choice recall checks and a cumulative intellect
+  score split into Knowledge, Reasoning, Application, Breadth and Retention.
 - Dashboard card: **Today's move** with a practical next action, bottleneck and consultant rep.
 - Running detail pages with weekly distance, monthly distance, average HR trend,
   pace-band HR comparison, recent run rows and clickable run dossiers.
@@ -75,6 +78,32 @@ Weekly reports include:
 The local fallback also compares the latest 7-day period with the previous
 7-day period where enough data exists, so the app remains useful without
 `OPENAI_API_KEY`.
+
+## Learning Zone
+
+Open `/learning-zone` after logging in.
+
+The wheel selects one registered topic: philosophy, marketing, economics or
+science. Zach OS then picks the best next lesson inside that topic based on
+your prior attempts. Each lesson is an original concise reading with references
+shown beside the text. The seed library uses open textbook sources, including
+OpenStax, CORE Econ, University of Minnesota Libraries and Rebus Community
+philosophy texts, plus selected primary/reference sources where useful.
+
+Each quiz has three multiple-choice questions:
+
+- Knowledge: core concept recall.
+- Reasoning: selecting the best inference or distinction.
+- Application: using the idea in a practical scenario.
+
+Completed quizzes are stored in `learning_sessions`. The headline intellect
+score is the cumulative total of:
+
+- Knowledge points from correct concept questions.
+- Reasoning points from correct inference questions.
+- Application points from correct scenario questions.
+- Breadth points for covering and rotating topics.
+- Retention points for revisiting older lessons.
 
 ## Garmin Import
 
@@ -347,6 +376,7 @@ Open [http://localhost:3000](http://localhost:3000).
 5. Copy the project URL and anon key into `.env.local`.
 6. For a fresh database, run [`supabase/schema.sql`](./supabase/schema.sql) in the Supabase SQL Editor.
 7. For an existing Zach OS database, run the migration files in [`supabase/migrations`](./supabase/migrations), including `20260623_add_sleep_score_simplify_manual_input.sql`, `20260623_add_garmin_training_load.sql`, `20260623_add_portfolio_module.sql`, `20260626_add_daily_routine_logs.sql`, `20260702_add_garmin_sync_runs.sql` and `20260702_add_ai_weekly_insights.sql`.
+   Also run `20260709_add_learning_zone.sql` for Learning Zone scoring.
 8. Start the app, create an account, then log in.
 
 ### Easier Login Flow
@@ -467,6 +497,25 @@ The schema creates these tables:
   - `generated_at timestamptz`
   - `created_at timestamptz`
 
+- `learning_sessions`
+  - `id uuid primary key`
+  - `user_id uuid references auth.users(id)`
+  - `lesson_slug text`
+  - `topic text`
+  - `started_at timestamptz`
+  - `completed_at timestamptz`
+  - `reading_seconds integer`
+  - `correct_count integer`
+  - `total_questions integer`
+  - `knowledge_points integer`
+  - `reasoning_points integer`
+  - `application_points integer`
+  - `breadth_points integer`
+  - `retention_points integer`
+  - `score_points integer`
+  - `answer_payload jsonb`
+  - `created_at timestamptz`
+
 - `quests`
   - `id uuid primary key`
   - `user_id uuid references auth.users(id)`
@@ -538,6 +587,7 @@ RLS is enabled for all user-owned tables:
 - `strava_connections`
 - `garmin_sync_runs`
 - `ai_weekly_insights`
+- `learning_sessions`
 - `quests`
 - `consultant_readiness_logs`
 - `portfolio_accounts`

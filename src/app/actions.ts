@@ -8,6 +8,11 @@ import { sortByDateAscending } from "@/lib/data-shaping";
 import { friendlyDatabaseError } from "@/lib/database-setup";
 import { todayInLondon } from "@/lib/dates";
 import {
+  answerLabel,
+  getLearningLesson,
+  scoreLearningAttempt,
+} from "@/lib/learning-zone";
+import {
   fetchStravaActivities,
   getStravaConfig,
   getValidStravaAccessToken,
@@ -23,6 +28,8 @@ type FitnessMetricInsert =
   Database["public"]["Tables"]["fitness_metrics"]["Insert"];
 type FinanceSnapshotInsert =
   Database["public"]["Tables"]["finance_snapshots"]["Insert"];
+type LearningSessionInsert =
+  Database["public"]["Tables"]["learning_sessions"]["Insert"];
 type MarketPriceInsert = Database["public"]["Tables"]["market_prices"]["Insert"];
 type PortfolioAccountInsert =
   Database["public"]["Tables"]["portfolio_accounts"]["Insert"];
@@ -150,6 +157,19 @@ function redirectToPortfolioWithMessage(message: string): never {
 
 function redirectToPortfolioWithError(message: string): never {
   redirect(`/portfolio?error=${encodeURIComponent(message)}`);
+}
+
+function redirectToLearningWithError(message: string): never {
+  redirect(`/learning-zone?error=${encodeURIComponent(message)}`);
+}
+
+function redirectToLearningLessonWithError(
+  lessonSlug: string,
+  message: string,
+): never {
+  redirect(
+    `/learning-zone/lesson/${lessonSlug}?error=${encodeURIComponent(message)}`,
+  );
 }
 
 async function requireAuthenticatedUser() {
@@ -1375,4 +1395,106 @@ export async function generateAiInsightAction(
       status: "error",
     };
   }
+}
+
+export async function submitLearningQuiz(formData: FormData) {
+  const { supabase, user } = await requireAuthenticatedUser();
+  const lessonSlug = formString(formData, "lesson_slug");
+  const lesson = getLearningLesson(lessonSlug);
+
+  if (!lesson) {
+    redirectToLearningWithError("That lesson is not registered in Learning Zone.");
+  }
+
+  const selectedAnswers = Object.fromEntries(
+    lesson.questions.map((question) => [
+      question.id,
+      formString(formData, `question_${question.id}`),
+    ]),
+  );
+  const missingAnswer = lesson.questions.find(
+    (question) => !selectedAnswers[question.id],
+  );
+
+  if (missingAnswer) {
+    redirectToLearningLessonWithError(lesson.slug, "Answer every question before submitting.");
+  }
+
+  const priorSessions = await supabase
+    .from("learning_sessions")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("completed_at", { ascending: false })
+    .limit(200);
+
+  if (priorSessions.error) {
+    redirectToLearningLessonWithError(
+      lesson.slug,
+      friendlyDatabaseError(priorSessions.error),
+    );
+  }
+
+  const scored = scoreLearningAttempt(
+    lesson,
+    selectedAnswers,
+    priorSessions.data ?? [],
+  );
+  const startedAtRaw = formString(formData, "started_at");
+  const startedAt = Number.isNaN(Date.parse(startedAtRaw))
+    ? new Date().toISOString()
+    : new Date(startedAtRaw).toISOString();
+  const readingSeconds = Math.max(
+    0,
+    nullableInteger(formData, "reading_seconds") ?? 0,
+  );
+  const payload: LearningSessionInsert = {
+    answer_payload: scored.answers.map((answer) => {
+      const question = lesson.questions.find(
+        (item) => item.id === answer.questionId,
+      );
+
+      return {
+        correct: answer.correct,
+        correctAnswer: question
+          ? answerLabel(question, answer.correctChoiceId)
+          : answer.correctChoiceId,
+        dimension: answer.dimension,
+        explanation: answer.explanation,
+        prompt: answer.prompt,
+        selectedAnswer: question
+          ? answerLabel(question, answer.selectedChoiceId)
+          : answer.selectedChoiceId,
+      };
+    }),
+    application_points: scored.applicationPoints,
+    breadth_points: scored.breadthPoints,
+    completed_at: new Date().toISOString(),
+    correct_count: scored.correctCount,
+    knowledge_points: scored.knowledgePoints,
+    lesson_slug: lesson.slug,
+    reading_seconds: readingSeconds,
+    reasoning_points: scored.reasoningPoints,
+    retention_points: scored.retentionPoints,
+    score_points: scored.scorePoints,
+    started_at: startedAt,
+    topic: lesson.topic,
+    total_questions: scored.totalQuestions,
+    user_id: user.id,
+  };
+  const inserted = await supabase
+    .from("learning_sessions")
+    .insert(payload)
+    .select("id")
+    .single();
+
+  if (inserted.error || !inserted.data) {
+    redirectToLearningLessonWithError(
+      lesson.slug,
+      friendlyDatabaseError(inserted.error),
+    );
+  }
+
+  revalidatePath("/learning-zone");
+  revalidatePath(`/learning-zone/lesson/${lesson.slug}`);
+  redirect(`/learning-zone/result/${inserted.data.id}`);
 }

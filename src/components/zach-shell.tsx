@@ -9,6 +9,7 @@ type ZachNavKey =
   | "dashboard"
   | "garmin"
   | "hrv"
+  | "learning"
   | "manage"
   | "mood"
   | "portfolio"
@@ -32,6 +33,7 @@ const navItems: Array<{ href: string; key: ZachNavKey; label: string }> = [
   { href: "/running", key: "running", label: "Running" },
   { href: "/recovery", key: "recovery", label: "Recovery" },
   { href: "/hrv", key: "hrv", label: "HRV" },
+  { href: "/learning-zone", key: "learning", label: "Learning" },
   { href: "/activities", key: "activities", label: "Activities" },
   { href: "/portfolio", key: "portfolio", label: "Portfolio" },
   { href: "/manage", key: "manage", label: "Update" },
