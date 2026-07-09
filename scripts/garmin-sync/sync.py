@@ -205,17 +205,11 @@ def normalise_duration_minutes(value: Any) -> float | None:
 
 
 def normalise_distance_km(value: Any) -> float | None:
-    distance = number(value)
-    if distance is None:
+    distance_meters = number(value)
+    if distance_meters is None:
         return None
 
-    if distance > 10_000:
-        return round_number(distance / 100_000, 3)
-
-    if distance > 1_000:
-        return round_number(distance / 1_000, 3)
-
-    return round_number(distance, 3)
+    return round_number(distance_meters / 1_000, 3)
 
 
 def normalise_sleep_hours(value: Any) -> float | None:
