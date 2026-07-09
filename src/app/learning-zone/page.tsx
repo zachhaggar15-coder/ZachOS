@@ -101,7 +101,7 @@ export default async function LearningZonePage({
     <ZachPageShell
       active="learning"
       actions={<ZachButtonLink href="/manage">Update data</ZachButtonLink>}
-      subtitle="A private study loop with source-backed readings, multiple-choice recall and an intellect score split into knowledge, reasoning, application, breadth and retention."
+      subtitle="A private study loop with a topic wheel, randomised concepts, source-backed readings, multiple-choice recall and an intellect score split into knowledge, reasoning, application, breadth and retention."
       title="Learning Zone"
       userEmail={user.email}
     >
@@ -138,7 +138,7 @@ export default async function LearningZonePage({
             />
             <ZachMetric
               label="Library"
-              meta={`${sourceCount} referenced sources`}
+              meta={`${sourceCount} referenced textbook/reference sources`}
               value={`${LEARNING_LESSONS.length} lessons`}
             />
             <ZachMetric

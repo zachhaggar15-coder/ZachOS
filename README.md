@@ -83,12 +83,18 @@ The local fallback also compares the latest 7-day period with the previous
 
 Open `/learning-zone` after logging in.
 
-The wheel selects one registered topic: philosophy, marketing, economics or
-science. Zach OS then picks the best next lesson inside that topic based on
-your prior attempts. Each lesson is an original concise reading with references
-shown beside the text. The seed library uses open textbook sources, including
-OpenStax, CORE Econ, University of Minnesota Libraries and Rebus Community
-philosophy texts, plus selected primary/reference sources where useful.
+The wheel selects one registered broad topic, then Zach OS randomises the
+specific lesson inside that topic. The current library covers philosophy,
+marketing, economics, science, linguistics and etymology, art history,
+literature, anthropology, politics, sociology, artificial intelligence, social
+engineering, business and pharmaceutical businesses. Each topic has at least 10
+lessons, and each concept is ranked as GCSE, A-level or University level.
+
+Each lesson is an original reading with references shown beside the text. The
+seed library uses open textbook sources, including OpenStax, CORE Econ,
+University of Minnesota Libraries, Rebus Community philosophy texts, open
+linguistics, anthropology, art history and literature textbooks, plus selected
+primary/reference sources where useful.
 
 Each quiz has three multiple-choice questions:
 

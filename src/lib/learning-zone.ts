@@ -1,6 +1,24 @@
-import type { LearningSession } from "@/lib/supabase/database.types";
+import type { Database } from "@/lib/supabase/database.types";
 
-export type LearningTopicId = "philosophy" | "marketing" | "economics" | "science";
+type LearningSession = Database["public"]["Tables"]["learning_sessions"]["Row"];
+
+export type LearningTopicId =
+  | "philosophy"
+  | "marketing"
+  | "economics"
+  | "science"
+  | "linguistics-etymology"
+  | "art-history"
+  | "literature"
+  | "anthropology"
+  | "politics"
+  | "sociology"
+  | "artificial-intelligence"
+  | "social-engineering"
+  | "business"
+  | "pharmaceutical-businesses";
+
+export type LearningConceptLevel = "GCSE" | "A-level" | "University";
 
 export type LearningDimension =
   | "application"
@@ -12,7 +30,7 @@ export type LearningDimension =
 export type LearningSource = {
   label: string;
   note: string;
-  type: "textbook" | "primary" | "reference";
+  type: "Primary" | "Reference" | "Textbook";
   url: string;
 };
 
@@ -29,8 +47,13 @@ export type LearningQuestion = {
 };
 
 export type LearningLesson = {
+  concept: {
+    label: string;
+    level: LearningConceptLevel;
+    summary: string;
+  };
   deck: string;
-  difficulty: 1 | 2 | 3;
+  difficulty: number;
   estimatedMinutes: number;
   keyTerms: Array<{
     label: string;
@@ -70,797 +93,410 @@ export type LearningScoreResult = {
   totalQuestions: number;
 };
 
-export const LEARNING_TOPICS = [
-  {
-    accent: "#8f6f48",
-    id: "philosophy",
-    label: "Philosophy",
-    shortLabel: "Phil",
-  },
-  {
-    accent: "#bb5d3a",
-    id: "marketing",
-    label: "Marketing",
-    shortLabel: "Mkt",
-  },
-  {
-    accent: "#6f7d8c",
-    id: "economics",
-    label: "Economics",
-    shortLabel: "Econ",
-  },
-  {
-    accent: "#6d8658",
-    id: "science",
-    label: "Science",
-    shortLabel: "Sci",
-  },
-] as const satisfies ReadonlyArray<{
+type LearningTopic = {
   accent: string;
   id: LearningTopicId;
   label: string;
   shortLabel: string;
-}>;
+};
 
-const topicIds = new Set<string>(LEARNING_TOPICS.map((topic) => topic.id));
+type TopicProfile = {
+  fieldFrame: string;
+  method: string;
+  practicalContext: string;
+  sourceKeys: Array<keyof typeof sourcePack>;
+  stakes: string;
+  topic: LearningTopic;
+};
+
+type LessonSeed = {
+  concept: string;
+  focus: string;
+  level: LearningConceptLevel;
+  practice: string;
+};
 
 const sourcePack = {
-  coreEconomy: {
-    label: "CORE Econ, The Economy 1.0",
-    note: "Open-access economics textbook used for opportunity cost, institutions and markets.",
-    type: "textbook",
-    url: "https://www.core-econ.org/project/core-the-economy/",
+  aiTextbook: {
+    label: "Artificial Intelligence: A Modern Approach",
+    note: "Standard university AI textbook site by Russell and Norvig.",
+    type: "Textbook",
+    url: "https://aima.cs.berkeley.edu/",
   },
-  kantGroundwork: {
-    label: "Immanuel Kant, Groundwork of the Metaphysics of Morals",
-    note: "Primary source for duty-based ethics and universalisation.",
-    type: "primary",
-    url: "https://www.gutenberg.org/ebooks/5682",
+  anthropologyTextbook: {
+    label: "Perspectives: An Open Introduction to Cultural Anthropology",
+    note: "Open anthropology textbook built around core field concepts.",
+    type: "Textbook",
+    url: "https://perspectives.americananthro.org/",
   },
-  millUtilitarianism: {
-    label: "John Stuart Mill, Utilitarianism",
-    note: "Primary source for classical utilitarian moral reasoning.",
-    type: "primary",
-    url: "https://www.gutenberg.org/ebooks/11224",
+  artHistoryTextbook: {
+    label: "Introduction to Art: Design, Context, and Meaning",
+    note: "Open art history and visual analysis textbook.",
+    type: "Textbook",
+    url: "https://oer.galileo.usg.edu/arts-textbooks/3/",
+  },
+  businessTextbook: {
+    label: "OpenStax Principles of Management",
+    note: "Open textbook on management, strategy, organisations and operations.",
+    type: "Textbook",
+    url: "https://openstax.org/details/books/principles-management",
+  },
+  consumerTextbook: {
+    label: "Consumer Behaviour",
+    note: "Open textbook-style resource on consumer decision making.",
+    type: "Textbook",
+    url: "https://opentextbc.ca/introconsumerbehaviour/",
+  },
+  coreEcon: {
+    label: "CORE Econ: The Economy",
+    note: "Open economics textbook with models, institutions and evidence.",
+    type: "Textbook",
+    url: "https://www.core-econ.org/the-economy/",
+  },
+  d2l: {
+    label: "Dive into Deep Learning",
+    note: "Open textbook for machine learning and neural networks.",
+    type: "Textbook",
+    url: "https://d2l.ai/",
+  },
+  ethicsTextbook: {
+    label: "Introduction to Philosophy: Ethics",
+    note: "Open ethics textbook from the Rebus Community philosophy series.",
+    type: "Textbook",
+    url: "https://press.rebus.community/intro-to-phil-ethics/",
+  },
+  fdaDevelopment: {
+    label: "FDA Drug Development Process",
+    note: "Official reference for clinical research and approval stages.",
+    type: "Reference",
+    url: "https://www.fda.gov/patients/drug-development-process",
+  },
+  literatureTextbook: {
+    label: "Writing and Critical Thinking Through Literature",
+    note: "Open textbook on literary reading, interpretation and evidence.",
+    type: "Textbook",
+    url: "https://human.libretexts.org/Bookshelves/Literature_and_Literacy/Writing_and_Critical_Thinking_Through_Literature_(Ringo_and_Kashyap)",
+  },
+  linguisticsTextbook: {
+    label: "Essentials of Linguistics",
+    note: "Open textbook covering morphology, syntax, semantics and language change.",
+    type: "Textbook",
+    url: "https://ecampusontario.pressbooks.pub/essentialsoflinguistics2/",
+  },
+  marketingTextbook: {
+    label: "Principles of Marketing",
+    note: "Open textbook on segmentation, positioning and marketing systems.",
+    type: "Textbook",
+    url: "https://open.umn.edu/opentextbooks/textbooks/50",
+  },
+  nistSecurity: {
+    label: "NIST Cybersecurity and Human Factors Resources",
+    note: "Reference material for recognising and reducing manipulation risk.",
+    type: "Reference",
+    url: "https://www.nist.gov/cybersecurity",
   },
   openStaxBiology: {
-    label: "OpenStax, Biology 2e",
-    note: "Open textbook used for scientific method, systems, cells and energy.",
-    type: "textbook",
+    label: "OpenStax Biology 2e",
+    note: "Open textbook for scientific explanation, evidence and life sciences.",
+    type: "Textbook",
     url: "https://openstax.org/details/books/biology-2e",
   },
   openStaxEconomics: {
-    label: "OpenStax, Principles of Economics 3e",
-    note: "Open textbook used for incentives, markets, tradeoffs and externalities.",
-    type: "textbook",
+    label: "OpenStax Principles of Economics 3e",
+    note: "Open textbook on economic reasoning and policy trade-offs.",
+    type: "Textbook",
     url: "https://openstax.org/details/books/principles-economics-3e",
   },
-  openTextMarketing: {
-    label: "University of Minnesota Libraries, Principles of Marketing",
-    note: "Open textbook used for customer value, segmentation, positioning and marketing planning.",
-    type: "textbook",
-    url: "https://open.umn.edu/opentextbooks/textbooks/principles-of-marketing",
+  openStaxPolitics: {
+    label: "OpenStax American Government 3e",
+    note: "Open textbook on institutions, representation and political behaviour.",
+    type: "Textbook",
+    url: "https://openstax.org/details/books/american-government-3e",
   },
-  rebusEthics: {
-    label: "Rebus Community, Introduction to Philosophy: Ethics",
-    note: "Open textbook used for ethical theory, argument structure and applied moral reasoning.",
-    type: "textbook",
-    url: "https://press.rebus.community/intro-to-phil-ethics/",
+  openStaxSociology: {
+    label: "OpenStax Introduction to Sociology 3e",
+    note: "Open textbook on social structure, institutions and research methods.",
+    type: "Textbook",
+    url: "https://openstax.org/details/books/introduction-sociology-3e",
   },
-  sepScientificMethod: {
-    label: "Stanford Encyclopedia of Philosophy, Scientific Method",
-    note: "Reference source used for philosophy of science and theory testing.",
-    type: "reference",
-    url: "https://plato.stanford.edu/entries/scientific-method/",
+  pharmaAccess: {
+    label: "WHO Medicines Pricing and Financing",
+    note: "Reference material on pricing, access and health-system affordability.",
+    type: "Reference",
+    url: "https://www.who.int/teams/health-product-policy-and-standards/medicines-selection-ip-and-affordability/affordability-pricing-and-financing",
+  },
+  philosophyTextbook: {
+    label: "Introduction to Philosophy: Logic",
+    note: "Open textbook for argument, validity and philosophical method.",
+    type: "Textbook",
+    url: "https://press.rebus.community/intro-to-phil-logic/",
+  },
+  projectGutenberg: {
+    label: "Project Gutenberg",
+    note: "Primary literary texts used for interpretation and close reading.",
+    type: "Primary",
+    url: "https://www.gutenberg.org/",
+  },
+  sep: {
+    label: "Stanford Encyclopedia of Philosophy",
+    note: "Peer-reviewed reference for advanced concepts and primary debates.",
+    type: "Reference",
+    url: "https://plato.stanford.edu/",
+  },
+  smarthistory: {
+    label: "Smarthistory",
+    note: "Museum-grade art history reference with images and essays.",
+    type: "Reference",
+    url: "https://smarthistory.org/",
   },
 } as const satisfies Record<string, LearningSource>;
 
-export const LEARNING_LESSONS: LearningLesson[] = [
-  {
-    deck: "Good thinking begins by separating a claim, its reasons and the hidden bridge between them.",
-    difficulty: 1,
-    estimatedMinutes: 4,
-    keyTerms: [
-      {
-        label: "Claim",
-        value: "The conclusion someone wants you to accept.",
-      },
-      {
-        label: "Premise",
-        value: "A reason offered in support of the claim.",
-      },
-      {
-        label: "Warrant",
-        value: "The often unstated link that makes a premise relevant.",
-      },
-    ],
-    questions: [
-      {
-        choices: [
-          { id: "a", label: "Whether the conclusion is popular" },
-          { id: "b", label: "Whether the premises support the conclusion" },
-          { id: "c", label: "Whether the speaker sounds confident" },
-          { id: "d", label: "Whether the argument is short" },
-        ],
-        correctChoiceId: "b",
-        dimension: "knowledge",
-        explanation: "Argument quality depends on support: the reasons must make the conclusion more credible.",
-        id: "philosophy-argument-q1",
-        prompt: "What is the central test of a philosophical argument?",
-      },
-      {
-        choices: [
-          { id: "a", label: "The conclusion" },
-          { id: "b", label: "The rhetorical style" },
-          { id: "c", label: "The warrant" },
-          { id: "d", label: "The topic label" },
-        ],
-        correctChoiceId: "c",
-        dimension: "reasoning",
-        explanation: "The warrant is the bridge between evidence and conclusion, and it is often where weak arguments hide.",
-        id: "philosophy-argument-q2",
-        prompt: "If someone says, 'This habit is old, so it is good,' what should you inspect first?",
-      },
-      {
-        choices: [
-          { id: "a", label: "Reject the idea immediately" },
-          { id: "b", label: "Ask what evidence would make the claim stronger or weaker" },
-          { id: "c", label: "Search for a more impressive synonym" },
-          { id: "d", label: "Convert it into a personal anecdote" },
-        ],
-        correctChoiceId: "b",
-        dimension: "application",
-        explanation: "A practical philosopher treats claims as testable commitments rather than decorations.",
-        id: "philosophy-argument-q3",
-        prompt: "You hear a bold claim in a meeting. What is the best next move?",
-      },
-    ],
-    sections: [
-      {
-        body: [
-          "Philosophy is sometimes mistaken for the activity of having grand opinions. Its more useful discipline is smaller and sharper: it asks what follows from what. A philosophical argument is not merely a statement of belief. It is a structure in which a conclusion is supported by reasons, and those reasons rely on assumptions that can be examined.",
-          "The first move is to identify the claim. If someone says, 'Technology makes us less free,' the claim is not yet an argument. The argument begins when reasons appear: perhaps technology collects data, shapes attention or makes dependence invisible. Each reason can then be tested. Is it true? Is it relevant? Does it support the exact conclusion, or only a weaker one?",
-        ],
-        heading: "Arguments have anatomy",
-      },
-      {
-        body: [
-          "The most interesting part is often the warrant. A warrant is the bridge between a premise and a conclusion. If the premise is 'this practice is traditional' and the conclusion is 'this practice is right,' the hidden warrant is that tradition is a reliable guide to value. That may be true in some cases and false in others. Philosophy improves thought by bringing such bridges into view.",
-          "This is why a calm objection can be more useful than a loud counterclaim. The question is not, 'Can I defeat this?' It is, 'What must be true for this reasoning to work?' Once you ask that, arguments become inspectable objects. You can agree with some premises, reject others, or accept the conclusion for different reasons.",
-        ],
-        heading: "Hidden bridges matter",
-      },
-      {
-        body: [
-          "A strong argument also avoids changing its target midway. Suppose someone argues that reading difficult books is valuable because it develops patience. That does not prove that every difficult book is worth reading. The conclusion must match the support. Good reasoning has proportion: the claim should be only as large as the evidence allows.",
-          "In daily life, this habit is powerful. Before accepting a claim about work, health, money or politics, separate the conclusion from the reasons. Then ask whether the reasons are true, whether the warrant is defensible, and whether the conclusion is modest enough. This does not make you cynical. It makes you harder to manipulate and easier to teach.",
-        ],
-        heading: "Use proportion",
-      },
-    ],
-    slug: "philosophy-good-argument",
-    sources: [sourcePack.rebusEthics],
-    subtitle: "A compact model for claims, premises and hidden assumptions.",
-    title: "The Shape of a Good Argument",
-    topic: "philosophy",
+const topicProfiles: Record<LearningTopicId, TopicProfile> = {
+  anthropology: {
+    fieldFrame:
+      "anthropology studies human life comparatively, using culture, material evidence and fieldwork to understand what people do and why it makes sense inside a social world",
+    method:
+      "compare cases, separate insider and outsider perspectives, and treat everyday practices as evidence",
+    practicalContext:
+      "reading unfamiliar behaviour without flattening it into stereotypes or treating your own habits as the default",
+    sourceKeys: ["anthropologyTextbook", "openStaxSociology"],
+    stakes:
+      "it builds intellectual humility: the same human problem can be solved through very different customs, meanings and institutions",
+    topic: {
+      accent: "#9a6b4d",
+      id: "anthropology",
+      label: "Anthropology",
+      shortLabel: "Anthro",
+    },
   },
-  {
-    deck: "Utilitarian and duty-based ethics ask different questions, so they often notice different moral facts.",
-    difficulty: 2,
-    estimatedMinutes: 5,
-    keyTerms: [
-      {
-        label: "Consequentialism",
-        value: "Judging actions by their outcomes.",
-      },
-      {
-        label: "Deontology",
-        value: "Judging actions by duties, rights or rules.",
-      },
-      {
-        label: "Universalise",
-        value: "Ask whether a rule could be willed for everyone.",
-      },
-    ],
-    questions: [
-      {
-        choices: [
-          { id: "a", label: "Which action produces the best consequences?" },
-          { id: "b", label: "Which action follows tradition most closely?" },
-          { id: "c", label: "Which action is easiest to explain?" },
-          { id: "d", label: "Which action protects my reputation?" },
-        ],
-        correctChoiceId: "a",
-        dimension: "knowledge",
-        explanation: "Utilitarian reasoning judges actions by their effects on overall welfare.",
-        id: "philosophy-ethics-q1",
-        prompt: "What question is most central to utilitarian ethics?",
-      },
-      {
-        choices: [
-          { id: "a", label: "Because outcomes are never relevant" },
-          { id: "b", label: "Because some actions may violate duties or rights even when useful" },
-          { id: "c", label: "Because rules remove all uncertainty" },
-          { id: "d", label: "Because intention is always measurable" },
-        ],
-        correctChoiceId: "b",
-        dimension: "reasoning",
-        explanation: "Duty-based ethics worries that outcome calculations can excuse actions that treat people unfairly.",
-        id: "philosophy-ethics-q2",
-        prompt: "Why might a deontologist reject a purely outcome-based decision?",
-      },
-      {
-        choices: [
-          { id: "a", label: "Estimate consequences and inspect duties or rights at stake" },
-          { id: "b", label: "Choose whichever option feels least awkward" },
-          { id: "c", label: "Ignore consequences if a rule exists" },
-          { id: "d", label: "Avoid deciding until everyone agrees" },
-        ],
-        correctChoiceId: "a",
-        dimension: "application",
-        explanation: "A mature ethical analysis can use both lenses: outcomes show impact, duties show limits.",
-        id: "philosophy-ethics-q3",
-        prompt: "How should you analyse a hard workplace tradeoff?",
-      },
-    ],
-    sections: [
-      {
-        body: [
-          "Two of the most durable moral lenses are utilitarianism and deontology. They do not simply offer different answers. They begin with different questions. Utilitarian reasoning asks what action would produce the greatest overall good, often understood as welfare, happiness or reduced suffering. Duty-based reasoning asks whether an action respects obligations, rights and principles that should not be traded away too casually.",
-          "The utilitarian lens is powerful because it forces attention onto consequences. Good intentions are not enough if the predictable result is harm. In policy, management and personal life, this matters. A decision that feels noble but wastes resources or worsens outcomes deserves criticism. Utilitarianism trains the mind to ask, 'Who is affected, how much, and compared with what alternative?'",
-        ],
-        heading: "Consequences count",
-      },
-      {
-        body: [
-          "The duty-based lens pushes back against a danger in that calculation. If only outcomes matter, an individual can be treated as a convenient instrument for a larger total. Kantian ethics, in simplified form, asks whether the rule behind an action could be universalised and whether people are being respected as ends in themselves. Lying, coercion and betrayal are not wrong merely because they sometimes end badly. They can be wrong because they damage the conditions of trust and agency.",
-          "This does not mean rules are simple machines. Duties can conflict. Telling the truth, protecting someone from harm and keeping a promise can pull in different directions. Duty-based ethics gives you a grammar for describing the conflict rather than pretending that a spreadsheet can settle it alone.",
-        ],
-        heading: "Duties set limits",
-      },
-      {
-        body: [
-          "In practice, the strongest moral reasoning often uses both lenses. Imagine a company considering a persuasive pricing tactic. The utilitarian asks whether it creates real value or merely extracts from confused customers. The deontologist asks whether it respects the customer's ability to make an informed choice. If the tactic increases revenue by exploiting misunderstanding, both lenses may condemn it, but for different reasons.",
-          "The point is not to memorise labels. The point is to improve moral perception. Utilitarianism helps you see impact. Deontology helps you see boundaries. Together they make your judgement less impulsive: you ask what good will be produced, what duties apply, who might be used, and whether the rule behind your action could survive being made public.",
-        ],
-        heading: "Use both lenses",
-      },
-    ],
-    slug: "philosophy-ethical-lenses",
-    sources: [sourcePack.rebusEthics, sourcePack.millUtilitarianism, sourcePack.kantGroundwork],
-    subtitle: "How consequence-based and duty-based reasoning complement each other.",
-    title: "Two Ethical Lenses",
-    topic: "philosophy",
+  "art-history": {
+    fieldFrame:
+      "art history reads visual objects as evidence of skill, patronage, belief, technology, politics and taste",
+    method:
+      "look first, describe precisely, then connect form, context, maker, audience and historical conditions",
+    practicalContext:
+      "seeing paintings, buildings, images and interfaces with more disciplined attention",
+    sourceKeys: ["artHistoryTextbook", "smarthistory"],
+    stakes:
+      "images shape memory and power; learning to read them makes visual culture less passive and more legible",
+    topic: {
+      accent: "#6e5aa7",
+      id: "art-history",
+      label: "Art History",
+      shortLabel: "Art",
+    },
   },
-  {
-    deck: "Marketing starts with value: what the customer gets, what they give up and why they should believe you.",
-    difficulty: 1,
-    estimatedMinutes: 4,
-    keyTerms: [
-      {
-        label: "Customer value",
-        value: "Perceived benefits minus perceived costs.",
-      },
-      {
-        label: "Exchange",
-        value: "A voluntary trade in which each side expects to gain.",
-      },
-      {
-        label: "Positioning",
-        value: "The place an offering occupies in a customer's mind.",
-      },
-    ],
-    questions: [
-      {
-        choices: [
-          { id: "a", label: "A slogan before a product exists" },
-          { id: "b", label: "Benefits customers perceive relative to what they give up" },
-          { id: "c", label: "The amount spent on promotion" },
-          { id: "d", label: "A list of product features only" },
-        ],
-        correctChoiceId: "b",
-        dimension: "knowledge",
-        explanation: "Customer value compares perceived benefits with money, time, effort and risk.",
-        id: "marketing-value-q1",
-        prompt: "What does customer value mean in marketing?",
-      },
-      {
-        choices: [
-          { id: "a", label: "It may be irrelevant if customers do not see a benefit" },
-          { id: "b", label: "It automatically creates demand" },
-          { id: "c", label: "It removes the need for segmentation" },
-          { id: "d", label: "It proves the brand is differentiated" },
-        ],
-        correctChoiceId: "a",
-        dimension: "reasoning",
-        explanation: "A feature only matters commercially when it connects to a customer job, pain or desired gain.",
-        id: "marketing-value-q2",
-        prompt: "Why can a technically impressive feature fail as marketing?",
-      },
-      {
-        choices: [
-          { id: "a", label: "Start with the customer's problem and the promised change" },
-          { id: "b", label: "Start with every internal capability" },
-          { id: "c", label: "Start with discounting" },
-          { id: "d", label: "Start with a vague prestige claim" },
-        ],
-        correctChoiceId: "a",
-        dimension: "application",
-        explanation: "A useful message begins with the customer situation and the value created.",
-        id: "marketing-value-q3",
-        prompt: "You need to write a landing-page headline. What should guide the first draft?",
-      },
-    ],
-    sections: [
-      {
-        body: [
-          "Marketing is often reduced to promotion, but introductory textbooks usually begin somewhere more fundamental: exchange and value. A market exists because people have needs, wants, constraints and alternatives. Marketing work becomes serious when it asks what a customer receives, what they must give up, and why this exchange is better than doing nothing or choosing someone else.",
-          "Customer value is not the same as product quality. A well-made product can still be a poor value if it solves the wrong problem, asks too much effort, feels risky or arrives through the wrong channel. Conversely, a simple product can be valuable if it removes friction at the moment a customer most cares about it.",
-        ],
-        heading: "Value before noise",
-      },
-      {
-        body: [
-          "This is why a feature list is rarely enough. Customers do not buy features in the abstract. They buy a change in their situation: less uncertainty, higher status, saved time, lower risk, better taste, improved performance or emotional reassurance. The marketer's job is to connect what the organisation can deliver with what the customer recognises as useful.",
-          "The University of Minnesota Principles of Marketing text frames marketing around creating, communicating, delivering and exchanging value. That sequence is helpful. Communication cannot rescue a weak value proposition for long. Promotion may create awareness, but repeat demand depends on whether the customer experiences the promised benefit.",
-        ],
-        heading: "The promise must cash out",
-      },
-      {
-        body: [
-          "A practical value statement can be built with four checks. First, define the customer precisely. Second, name the problem or desire in the customer's language. Third, state the specific change the offering creates. Fourth, explain why the customer should believe it. This last step is where proof enters: demonstrations, reviews, guarantees, data, credentials or visible product evidence.",
-          "Good marketing therefore has an ethical edge. If the message exaggerates value, it may win attention while destroying trust. If it underexplains value, it may leave a useful product invisible. The craft is to make the value obvious without making claims the product cannot sustain.",
-        ],
-        heading: "Make value legible",
-      },
-    ],
-    slug: "marketing-customer-value",
-    sources: [sourcePack.openTextMarketing],
-    subtitle: "Why marketing begins with exchange, not noise.",
-    title: "Customer Value Before Tactics",
-    topic: "marketing",
+  "artificial-intelligence": {
+    fieldFrame:
+      "artificial intelligence studies systems that perceive, predict, reason, generate or act under uncertainty",
+    method:
+      "define the task, identify the data and objective, then test whether the system generalises beyond the examples it learned from",
+    practicalContext:
+      "judging models, automations and AI products without being dazzled by fluent output",
+    sourceKeys: ["aiTextbook", "d2l"],
+    stakes:
+      "AI changes what can be automated, but it also changes what has to be evaluated by humans",
+    topic: {
+      accent: "#4f83a6",
+      id: "artificial-intelligence",
+      label: "Artificial Intelligence",
+      shortLabel: "AI",
+    },
   },
-  {
-    deck: "Segmentation, targeting and positioning turn a broad market into a clear choice for a specific customer.",
-    difficulty: 2,
-    estimatedMinutes: 5,
-    keyTerms: [
-      {
-        label: "Segmentation",
-        value: "Dividing a market into meaningful groups.",
-      },
-      {
-        label: "Targeting",
-        value: "Choosing which segment to serve.",
-      },
-      {
-        label: "Positioning",
-        value: "Designing the offer and message to occupy a distinct place.",
-      },
-    ],
-    questions: [
-      {
-        choices: [
-          { id: "a", label: "To avoid choosing a customer" },
-          { id: "b", label: "To identify groups with different needs or behaviours" },
-          { id: "c", label: "To make the market look larger" },
-          { id: "d", label: "To replace product strategy" },
-        ],
-        correctChoiceId: "b",
-        dimension: "knowledge",
-        explanation: "Segmentation matters because customers differ in needs, behaviour, willingness to pay and buying context.",
-        id: "marketing-stp-q1",
-        prompt: "Why do marketers segment a market?",
-      },
-      {
-        choices: [
-          { id: "a", label: "A position is strongest when it is credible to a chosen segment" },
-          { id: "b", label: "A position should be equally persuasive to everyone" },
-          { id: "c", label: "Positioning is only a graphic design decision" },
-          { id: "d", label: "Targeting comes after promotion" },
-        ],
-        correctChoiceId: "a",
-        dimension: "reasoning",
-        explanation: "Positioning works when a specific customer group believes the offer owns a relevant difference.",
-        id: "marketing-stp-q2",
-        prompt: "Which statement best connects targeting and positioning?",
-      },
-      {
-        choices: [
-          { id: "a", label: "Busy new managers who need credible client-ready summaries quickly" },
-          { id: "b", label: "Everyone who reads" },
-          { id: "c", label: "People aged 18 to 65" },
-          { id: "d", label: "Any professional with a phone" },
-        ],
-        correctChoiceId: "a",
-        dimension: "application",
-        explanation: "The best segment is behaviourally and situationally specific enough to guide the offer.",
-        id: "marketing-stp-q3",
-        prompt: "Which is the clearest target segment for a professional learning app?",
-      },
-    ],
-    sections: [
-      {
-        body: [
-          "A common beginner mistake is to describe the target market as 'everyone who might buy'. That sounds ambitious, but it gives no guidance. Segmentation exists because customers differ. They have different jobs to be done, budgets, anxieties, habits, identities and decision processes. Treating them as one mass creates average messages for people who do not think of themselves as average.",
-          "Segmentation divides the market into groups that matter commercially. A useful segment is not just a demographic label. 'Men aged 25 to 40' may be measurable, but it does not automatically explain behaviour. 'First-time marathon runners worried about injury' is more useful because it suggests needs, channels, objections and product features.",
-        ],
-        heading: "Markets are not blobs",
-      },
-      {
-        body: [
-          "Targeting is the disciplined act of choosing. A firm asks which segment is attractive, reachable and compatible with its capabilities. This choice creates tradeoffs. Serving beginners may require education and reassurance. Serving experts may require depth, speed and customisation. A brand that tries to satisfy both with the same message can become forgettable.",
-          "Positioning then answers the customer's mental question: why this, for me, instead of the alternatives? It is not only a tagline. It is the relationship between product design, proof, price, channel and message. If a premium product is sold through a chaotic experience, the position weakens. If a low-cost product uses luxury cues, customers may feel confused.",
-        ],
-        heading: "Choice creates clarity",
-      },
-      {
-        body: [
-          "A practical positioning statement can be written as: for this target customer, our offering is the frame of reference that provides this key benefit because this proof makes it believable. For example, 'For time-poor analysts, this daily lesson system is a study habit that builds recall because every session ends with scored application questions.'",
-          "The strength of the statement is that each part can be tested. Is the target real? Is the category clear? Is the benefit important? Is the proof credible? Marketing improves when these questions are answered before money is spent on promotion. The goal is not to sound clever to everyone. The goal is to become the obvious choice for someone specific.",
-        ],
-        heading: "Own a useful difference",
-      },
-    ],
-    slug: "marketing-stp-positioning",
-    sources: [sourcePack.openTextMarketing],
-    subtitle: "How segmentation, targeting and positioning create strategic focus.",
-    title: "Segmentation Makes Strategy Real",
-    topic: "marketing",
+  business: {
+    fieldFrame:
+      "business studies how organisations create, deliver and capture value while coordinating people, capital and operations",
+    method:
+      "connect strategy to incentives, resources, execution and measurable customer outcomes",
+    practicalContext:
+      "understanding why some companies compound advantages while others waste motion",
+    sourceKeys: ["businessTextbook", "marketingTextbook"],
+    stakes:
+      "good business judgement links ambition to constraints: cash, talent, time, trust and operational capacity",
+    topic: {
+      accent: "#607b4f",
+      id: "business",
+      label: "Business",
+      shortLabel: "Biz",
+    },
   },
-  {
-    deck: "Opportunity cost is the value of the best alternative you give up when you choose.",
-    difficulty: 1,
-    estimatedMinutes: 4,
-    keyTerms: [
-      {
-        label: "Scarcity",
-        value: "The condition that resources and time are limited.",
-      },
-      {
-        label: "Opportunity cost",
-        value: "The value of the best forgone alternative.",
-      },
-      {
-        label: "Tradeoff",
-        value: "A choice between competing uses of scarce resources.",
-      },
-    ],
-    questions: [
-      {
-        choices: [
-          { id: "a", label: "The money price only" },
-          { id: "b", label: "The value of the best alternative forgone" },
-          { id: "c", label: "Every possible alternative added together" },
-          { id: "d", label: "The emotional discomfort of choosing" },
-        ],
-        correctChoiceId: "b",
-        dimension: "knowledge",
-        explanation: "Opportunity cost is the next-best alternative, not every alternative and not only cash.",
-        id: "economics-opportunity-q1",
-        prompt: "What is opportunity cost?",
-      },
-      {
-        choices: [
-          { id: "a", label: "Because time, attention and capital are scarce" },
-          { id: "b", label: "Because all choices are financial" },
-          { id: "c", label: "Because markets remove scarcity" },
-          { id: "d", label: "Because preferences never change" },
-        ],
-        correctChoiceId: "a",
-        dimension: "reasoning",
-        explanation: "Scarcity means choosing one use of a resource prevents another use.",
-        id: "economics-opportunity-q2",
-        prompt: "Why does opportunity cost apply even when no money changes hands?",
-      },
-      {
-        choices: [
-          { id: "a", label: "Compare it with the best specific alternative use of that time" },
-          { id: "b", label: "Ignore the alternative because learning is always good" },
-          { id: "c", label: "Count only the subscription price" },
-          { id: "d", label: "Choose whatever feels productive" },
-        ],
-        correctChoiceId: "a",
-        dimension: "application",
-        explanation: "The economic question is what the same scarce time could otherwise produce.",
-        id: "economics-opportunity-q3",
-        prompt: "How should you judge whether a three-hour course is worth it?",
-      },
-    ],
-    sections: [
-      {
-        body: [
-          "Economics begins with scarcity. Not scarcity as a mood of anxiety, but as a structural fact: time, attention, labour, land, capital and energy have alternative uses. Because you cannot use the same hour for every purpose, choosing one thing means giving up another. Opportunity cost names the value of the best alternative forgone.",
-          "This definition is deceptively simple. The cost of a free lecture is not zero if attending means missing a client call, sleep or focused work. The cost of investing in one project includes the return and learning that might have come from the best project you did not choose. Economics trains you to see the invisible side of choice.",
-        ],
-        heading: "The real cost is the alternative",
-      },
-      {
-        body: [
-          "A useful opportunity cost is specific. Saying 'I could have done anything else' is too vague to guide action. The comparison should be with the best realistic alternative. If you spend Saturday studying statistics, the opportunity cost might be a long run, a family visit or a paid shift, depending on your actual options and priorities.",
-          "This is also why sunk costs should not dominate decisions. Money or effort already spent cannot be recovered. The question is what future choice has the best expected value from now. If a course is poor after two hours, the fact that you paid for it does not make the next ten hours free. Those hours still have alternatives.",
-        ],
-        heading: "Be specific and forward-looking",
-      },
-      {
-        body: [
-          "Opportunity cost does not tell you to maximise money. It tells you to be honest about tradeoffs. You may rationally choose rest over income, friendship over speed or mastery over entertainment. The point is to know what you are giving up and choose deliberately.",
-          "This makes the concept useful outside formal markets. A personal operating system, a training plan or a learning habit is partly an allocation mechanism. It decides where scarce energy goes. If you want a richer life, do not only ask whether an activity is good. Ask whether it is better than the best alternative use of the same scarce resource.",
-        ],
-        heading: "Use it beyond money",
-      },
-    ],
-    slug: "economics-opportunity-cost",
-    sources: [sourcePack.openStaxEconomics, sourcePack.coreEconomy],
-    subtitle: "The economic habit of seeing what a choice displaces.",
-    title: "Opportunity Cost Is the Shadow Price of Choice",
-    topic: "economics",
+  economics: {
+    fieldFrame:
+      "economics studies scarcity, incentives, coordination and trade-offs across households, firms, markets and governments",
+    method:
+      "name the constraint, model the incentive, and ask who gains, who pays and what changes at the margin",
+    practicalContext:
+      "making sharper decisions about prices, work, policy, investment and time",
+    sourceKeys: ["openStaxEconomics", "coreEcon"],
+    stakes:
+      "economic thinking helps you see hidden costs and second-order effects rather than only visible intentions",
+    topic: {
+      accent: "#7a8c5a",
+      id: "economics",
+      label: "Economics",
+      shortLabel: "Econ",
+    },
   },
-  {
-    deck: "Markets coordinate plans through prices, but externalities reveal where private incentives miss social costs.",
-    difficulty: 2,
-    estimatedMinutes: 5,
-    keyTerms: [
-      {
-        label: "Incentive",
-        value: "A reward or penalty that changes behaviour.",
-      },
-      {
-        label: "Market",
-        value: "An institution for exchange and price formation.",
-      },
-      {
-        label: "Externality",
-        value: "A cost or benefit affecting someone outside the exchange.",
-      },
-    ],
-    questions: [
-      {
-        choices: [
-          { id: "a", label: "They transmit information about scarcity and willingness to pay" },
-          { id: "b", label: "They guarantee fairness" },
-          { id: "c", label: "They remove all need for institutions" },
-          { id: "d", label: "They make every cost visible" },
-        ],
-        correctChoiceId: "a",
-        dimension: "knowledge",
-        explanation: "Prices help coordinate decentralised choices by conveying information and incentives.",
-        id: "economics-markets-q1",
-        prompt: "What is one key coordinating role of prices?",
-      },
-      {
-        choices: [
-          { id: "a", label: "A private decision affects third parties outside the transaction" },
-          { id: "b", label: "A price changes quickly" },
-          { id: "c", label: "A buyer dislikes a product" },
-          { id: "d", label: "A market has many sellers" },
-        ],
-        correctChoiceId: "a",
-        dimension: "reasoning",
-        explanation: "Externalities occur when not all costs or benefits are borne by the buyer and seller.",
-        id: "economics-markets-q2",
-        prompt: "When does an externality exist?",
-      },
-      {
-        choices: [
-          { id: "a", label: "Identify the private incentive and the social cost it excludes" },
-          { id: "b", label: "Assume the market price already includes all costs" },
-          { id: "c", label: "Ban every activity with any side effect" },
-          { id: "d", label: "Ignore the transaction because it is voluntary" },
-        ],
-        correctChoiceId: "a",
-        dimension: "application",
-        explanation: "Policy analysis starts by locating the gap between private and social incentives.",
-        id: "economics-markets-q3",
-        prompt: "How should you analyse pollution from a factory?",
-      },
-    ],
-    sections: [
-      {
-        body: [
-          "Markets are not magic. They are institutions that allow buyers and sellers to exchange, compare alternatives and respond to prices. A price is more than a number. It carries information about scarcity, demand, costs and alternatives. When coffee beans become harder to source, higher prices encourage buyers to economise and sellers to bring more supply if they can.",
-          "This coordinating power is impressive because no single person needs to understand the whole system. Each participant responds to local information. A cafe owner, importer, farmer and customer all make decisions in relation to prices and constraints. The result can be a pattern of coordination that would be impossible to plan manually at the same level of detail.",
-        ],
-        heading: "Prices coordinate",
-      },
-      {
-        body: [
-          "But markets work through incentives, and incentives depend on what decision makers bear. If a factory pays for labour, materials and machinery but not the health cost of pollution, the market price of its product is missing part of the true social cost. That missing cost is an externality. It falls on people outside the transaction.",
-          "Externalities explain why voluntary exchange is not always enough. The buyer and seller may both benefit while others are harmed. This does not mean markets are useless. It means the institutional frame matters. Taxes, regulation, property rights, liability rules or tradable permits can sometimes bring private incentives closer to social costs.",
-        ],
-        heading: "Externalities reveal the frame",
-      },
-      {
-        body: [
-          "The same logic applies to positive externalities. Education, vaccination, research and attractive public spaces can create benefits beyond the person who pays. If the decision maker captures only part of the benefit, society may get too little of the activity without support or coordination.",
-          "A good economic analysis therefore resists two lazy positions. It does not say markets always solve everything. It also does not say market failure proves markets are bad. It asks where incentives align with social value, where they do not, and which institution is likely to improve the tradeoff with the least collateral damage.",
-        ],
-        heading: "Ask what incentives miss",
-      },
-    ],
-    slug: "economics-incentives-externalities",
-    sources: [sourcePack.openStaxEconomics, sourcePack.coreEconomy],
-    subtitle: "How prices coordinate choices and where they can fail.",
-    title: "Markets, Incentives and Externalities",
-    topic: "economics",
+  "linguistics-etymology": {
+    fieldFrame:
+      "linguistics studies language as a system, while etymology traces how words change form and meaning through history",
+    method:
+      "separate sound, structure, meaning and social use before explaining how a word or sentence works",
+    practicalContext:
+      "reading words, accents, grammar and persuasion with more precision",
+    sourceKeys: ["linguisticsTextbook", "literatureTextbook"],
+    stakes:
+      "language is not just vocabulary; it is an operating system for thought, identity and social coordination",
+    topic: {
+      accent: "#3f8c7a",
+      id: "linguistics-etymology",
+      label: "Linguistics & Etymology",
+      shortLabel: "Words",
+    },
   },
-  {
-    deck: "Scientific claims become stronger when they survive risky tests, independent checks and better explanations.",
-    difficulty: 1,
-    estimatedMinutes: 4,
-    keyTerms: [
-      {
-        label: "Hypothesis",
-        value: "A proposed explanation that can be tested.",
-      },
-      {
-        label: "Prediction",
-        value: "What should be observed if the hypothesis is right.",
-      },
-      {
-        label: "Replication",
-        value: "Independent repetition that checks whether a result holds.",
-      },
-    ],
-    questions: [
-      {
-        choices: [
-          { id: "a", label: "It makes risky predictions that can be checked" },
-          { id: "b", label: "It is impossible to question" },
-          { id: "c", label: "It uses technical vocabulary" },
-          { id: "d", label: "It confirms what people already believe" },
-        ],
-        correctChoiceId: "a",
-        dimension: "knowledge",
-        explanation: "Scientific hypotheses gain value by exposing themselves to possible correction.",
-        id: "science-claims-q1",
-        prompt: "What makes a hypothesis scientifically useful?",
-      },
-      {
-        choices: [
-          { id: "a", label: "It reduces the chance that the first result was noise, bias or error" },
-          { id: "b", label: "It proves the theory can never change" },
-          { id: "c", label: "It removes the need for measurement" },
-          { id: "d", label: "It makes every claim equally strong" },
-        ],
-        correctChoiceId: "a",
-        dimension: "reasoning",
-        explanation: "Replication strengthens confidence because independent checks can expose fragile findings.",
-        id: "science-claims-q2",
-        prompt: "Why does replication matter?",
-      },
-      {
-        choices: [
-          { id: "a", label: "Ask about study design, sample size, measurement and independent confirmation" },
-          { id: "b", label: "Accept it if the headline is exciting" },
-          { id: "c", label: "Reject it because science is always uncertain" },
-          { id: "d", label: "Trust it only if it matches your experience" },
-        ],
-        correctChoiceId: "a",
-        dimension: "application",
-        explanation: "Scientific literacy means inspecting evidence quality, not just the conclusion.",
-        id: "science-claims-q3",
-        prompt: "How should you assess a surprising health claim?",
-      },
-    ],
-    sections: [
-      {
-        body: [
-          "Science is not a collection of facts handed down with laboratory authority. It is a disciplined way of making claims answerable to evidence. A hypothesis proposes an explanation. A prediction says what should be observed if the explanation is right. A test then gives the world a chance to push back.",
-          "This matters because many explanations can fit what is already known. The stronger test is whether an idea risks being wrong in advance. If a plant-growth hypothesis predicts that plants given more light will grow faster under controlled conditions, the observation can support, complicate or weaken the hypothesis. If the claim adapts to every possible outcome, it explains too much and tests too little.",
-        ],
-        heading: "Claims need risk",
-      },
-      {
-        body: [
-          "Measurement quality matters as much as enthusiasm. A study can be undermined by a biased sample, weak controls, noisy instruments, selective reporting or a result so small that it may not matter in practice. Scientific thinking therefore asks how the evidence was produced, not only what it says.",
-          "Replication is one answer to human fallibility. If independent researchers can repeat a result under similar conditions, confidence grows. If results fail to replicate, that does not automatically mean fraud or incompetence. It may reveal that the effect depends on context, that the first measurement was fragile, or that the original theory needs refinement.",
-        ],
-        heading: "Methods carry the weight",
-      },
-      {
-        body: [
-          "Good scientific judgement is neither gullible nor cynical. Gullibility treats a published result as finished truth. Cynicism treats uncertainty as failure. The better stance is calibrated confidence. A claim supported by converging evidence from multiple methods deserves more trust than a single dramatic result. A claim that survives attempts to disconfirm it deserves more trust than one protected from criticism.",
-          "For daily reading, use a simple filter. What is the claim? What mechanism is proposed? What evidence would have counted against it? How large is the effect? Has anyone checked it independently? These questions turn science news from spectacle into usable knowledge.",
-        ],
-        heading: "Confidence should be calibrated",
-      },
-    ],
-    slug: "science-claims-evidence",
-    sources: [sourcePack.openStaxBiology, sourcePack.sepScientificMethod],
-    subtitle: "A practical model for evidence, replication and calibrated belief.",
-    title: "How Scientific Claims Get Stronger",
-    topic: "science",
+  literature: {
+    fieldFrame:
+      "literature studies how language, form, voice and narrative create meaning across poems, plays, novels and essays",
+    method:
+      "read closely, track patterns, test interpretations against textual evidence and historical context",
+    practicalContext:
+      "getting more from serious reading and becoming harder to fool by shallow summaries",
+    sourceKeys: ["literatureTextbook", "projectGutenberg"],
+    stakes:
+      "literature trains attention to ambiguity, motive, irony, rhythm and the inner lives of other people",
+    topic: {
+      accent: "#8f4f63",
+      id: "literature",
+      label: "Literature",
+      shortLabel: "Lit",
+    },
   },
-  {
-    deck: "Living systems depend on flows of energy and feedback loops that keep change within workable limits.",
-    difficulty: 2,
-    estimatedMinutes: 5,
-    keyTerms: [
-      {
-        label: "System",
-        value: "A set of interacting parts whose behaviour depends on relationships.",
-      },
-      {
-        label: "Feedback",
-        value: "Information from outputs that changes future behaviour.",
-      },
-      {
-        label: "Homeostasis",
-        value: "Regulation that keeps internal conditions within a viable range.",
-      },
-    ],
-    questions: [
-      {
-        choices: [
-          { id: "a", label: "A set of interacting parts where relationships shape outcomes" },
-          { id: "b", label: "Any object with a label" },
-          { id: "c", label: "A list of separate facts" },
-          { id: "d", label: "A process with no boundaries" },
-        ],
-        correctChoiceId: "a",
-        dimension: "knowledge",
-        explanation: "Systems thinking focuses on interactions, flows and relationships among parts.",
-        id: "science-systems-q1",
-        prompt: "What is the best definition of a system?",
-      },
-      {
-        choices: [
-          { id: "a", label: "It counteracts deviation and helps keep a variable near a set range" },
-          { id: "b", label: "It amplifies every change without limit" },
-          { id: "c", label: "It removes the need for energy" },
-          { id: "d", label: "It prevents all adaptation" },
-        ],
-        correctChoiceId: "a",
-        dimension: "reasoning",
-        explanation: "Negative feedback stabilises systems by pushing against departures from a range.",
-        id: "science-systems-q2",
-        prompt: "What does negative feedback usually do in a biological system?",
-      },
-      {
-        choices: [
-          { id: "a", label: "Look for inputs, outputs, constraints and feedback loops" },
-          { id: "b", label: "List facts without relationships" },
-          { id: "c", label: "Focus only on the largest visible part" },
-          { id: "d", label: "Assume every change has one cause" },
-        ],
-        correctChoiceId: "a",
-        dimension: "application",
-        explanation: "Systems analysis begins by mapping flows, constraints and feedback rather than isolated parts.",
-        id: "science-systems-q3",
-        prompt: "How should you analyse why sleep, training and mood interact?",
-      },
-    ],
-    sections: [
-      {
-        body: [
-          "A system is not just a pile of parts. It is a set of parts whose relationships shape behaviour. A cell, an ecosystem, a training plan and a company can all be studied as systems because inputs, outputs, boundaries and feedback loops matter. Changing one part can produce effects elsewhere, sometimes after a delay.",
-          "Biology makes this visible through energy. Living organisms must take in energy, transform it and use it to maintain structure, move materials, repair damage and reproduce. Energy flow is not optional background. It is one reason living systems have limits. A body cannot train hard, recover poorly and adapt indefinitely. The energy and repair budget has to come from somewhere.",
-        ],
-        heading: "Relationships create behaviour",
-      },
-      {
-        body: [
-          "Feedback is another central systems idea. In negative feedback, a change triggers responses that counteract the change. Body temperature regulation is a classic example: when temperature rises, sweating and blood-flow changes help cool the body; when it falls, shivering and other responses help restore warmth. The system does not hold a perfect number. It keeps conditions within a workable range.",
-          "Positive feedback works differently. It amplifies change. Blood clotting and childbirth contractions are common textbook examples. Positive feedback can be useful, but because it intensifies movement in one direction, it usually needs a stopping condition or boundary. Otherwise it can become destabilising.",
-        ],
-        heading: "Feedback shapes stability",
-      },
-      {
-        body: [
-          "Systems thinking improves everyday reasoning because it resists single-cause stories. If mood drops after hard training, the cause may not be training alone. Sleep, nutrition, stress, workload and expectations interact. The useful question becomes: what inputs changed, what feedback signals appeared, and where is the bottleneck?",
-          "This is the scientific habit behind good self-tracking. Metrics are not trophies. They are signals from a system. HRV, sleep score, deep work and mood become more useful when interpreted together. A single data point can be noise. A pattern across connected variables can reveal the system's current constraints.",
-        ],
-        heading: "Use signals, not superstition",
-      },
-    ],
-    slug: "science-systems-feedback",
-    sources: [sourcePack.openStaxBiology],
-    subtitle: "Energy, feedback and homeostasis as tools for thinking.",
-    title: "Living Systems Think in Loops",
-    topic: "science",
+  marketing: {
+    fieldFrame:
+      "marketing studies how value is understood, positioned, communicated and exchanged in a specific market",
+    method:
+      "start with the customer, segment the market, define the promise, and test whether behaviour changes",
+    practicalContext:
+      "spotting why a message, product, offer or brand either earns attention or disappears",
+    sourceKeys: ["marketingTextbook", "consumerTextbook"],
+    stakes:
+      "marketing is not decoration; it is applied psychology, economics and strategy meeting the customer",
+    topic: {
+      accent: "#bb5d3a",
+      id: "marketing",
+      label: "Marketing",
+      shortLabel: "Mktg",
+    },
   },
-];
+  "pharmaceutical-businesses": {
+    fieldFrame:
+      "pharmaceutical business studies how medicines move from scientific discovery through trials, regulation, market access, commercial launch and patient use",
+    method:
+      "track the asset, evidence package, regulator, payer, prescriber, patient and commercial model together",
+    practicalContext:
+      "understanding drug development, life-sciences sales systems, pricing, compliance and market access",
+    sourceKeys: ["fdaDevelopment", "pharmaAccess", "businessTextbook"],
+    stakes:
+      "pharma sits where science, ethics, regulation and profit collide, so shallow business thinking is dangerous",
+    topic: {
+      accent: "#4f7790",
+      id: "pharmaceutical-businesses",
+      label: "Pharmaceutical Businesses",
+      shortLabel: "Pharma",
+    },
+  },
+  philosophy: {
+    fieldFrame:
+      "philosophy tests concepts, arguments and values when ordinary answers become too loose or too inherited",
+    method:
+      "define terms, reconstruct the argument charitably, test objections and separate what follows from what merely feels persuasive",
+    practicalContext:
+      "thinking clearly about belief, ethics, identity, knowledge and the good life",
+    sourceKeys: ["philosophyTextbook", "ethicsTextbook", "sep"],
+    stakes:
+      "philosophy sharpens the mental tools used by every other subject: logic, clarity, doubt and judgement",
+    topic: {
+      accent: "#8a6f4d",
+      id: "philosophy",
+      label: "Philosophy",
+      shortLabel: "Phil",
+    },
+  },
+  politics: {
+    fieldFrame:
+      "politics studies power, institutions, legitimacy, conflict and collective decision making",
+    method:
+      "ask who has authority, how rules are made, whose interests count, and what incentives the institution creates",
+    practicalContext:
+      "reading campaigns, governments, media arguments and policy disputes with less tribal fog",
+    sourceKeys: ["openStaxPolitics", "openStaxSociology"],
+    stakes:
+      "political ideas become budgets, laws, borders, rights and obligations, so definitions matter",
+    topic: {
+      accent: "#8f6644",
+      id: "politics",
+      label: "Politics",
+      shortLabel: "Pol",
+    },
+  },
+  science: {
+    fieldFrame:
+      "science builds reliable explanations by combining observation, theory, measurement, prediction and revision",
+    method:
+      "ask what would count as evidence, what would change the claim, and whether the result can survive independent scrutiny",
+    practicalContext:
+      "judging health claims, technology claims and research headlines without either cynicism or gullibility",
+    sourceKeys: ["openStaxBiology", "coreEcon"],
+    stakes:
+      "scientific literacy is a defence against both overconfidence and vague scepticism",
+    topic: {
+      accent: "#4f7f8f",
+      id: "science",
+      label: "Science",
+      shortLabel: "Sci",
+    },
+  },
+  "social-engineering": {
+    fieldFrame:
+      "social engineering studies how people are influenced, deceived, pressured or guided through trust, emotion, authority and context",
+    method:
+      "identify the claimed identity, emotional lever, requested action, missing verification and ethical boundary",
+    practicalContext:
+      "recognising manipulation in scams, sales pressure, dark patterns, office politics and everyday persuasion",
+    sourceKeys: ["consumerTextbook", "nistSecurity", "ethicsTextbook"],
+    stakes:
+      "learning manipulation is intellectually useful when it is framed as recognition, defence and ethical influence rather than exploitation",
+    topic: {
+      accent: "#85506e",
+      id: "social-engineering",
+      label: "Social Engineering",
+      shortLabel: "SocEng",
+    },
+  },
+  sociology: {
+    fieldFrame:
+      "sociology studies patterned social life: groups, norms, inequality, institutions, identity and social change",
+    method:
+      "link personal experience to social structure and test claims with evidence rather than anecdote alone",
+    practicalContext:
+      "understanding why individual choices often reflect wider systems of status, class, roles and institutions",
+    sourceKeys: ["openStaxSociology", "anthropologyTextbook"],
+    stakes:
+      "sociology turns private troubles into public questions without erasing personal agency",
+    topic: {
+      accent: "#6c778d",
+      id: "sociology",
+      label: "Sociology",
+      shortLabel: "Soc",
+    },
+  },
+};
+
+export const LEARNING_TOPICS: LearningTopic[] = Object.values(topicProfiles).map(
+  (profile) => profile.topic,
+);
+
+const topicIds = new Set<string>(LEARNING_TOPICS.map((topic) => topic.id));
 
 export const LEARNING_DIMENSION_LABELS: Record<LearningDimension, string> = {
   application: "Application",
@@ -869,6 +505,362 @@ export const LEARNING_DIMENSION_LABELS: Record<LearningDimension, string> = {
   reasoning: "Reasoning",
   retention: "Retention",
 };
+
+export const LEARNING_CONCEPT_LEVEL_LABELS: Record<LearningConceptLevel, string> = {
+  "A-level": "A-level",
+  GCSE: "GCSE",
+  University: "University",
+};
+
+const topicLessonSeeds: Record<LearningTopicId, LessonSeed[]> = {
+  anthropology: [
+    { concept: "Culture", focus: "shared meanings, learned practices and symbolic systems", level: "GCSE", practice: "explaining why a habit feels natural inside one group but strange to another" },
+    { concept: "Ethnography", focus: "long-form fieldwork that studies life from inside a community", level: "A-level", practice: "reading a setting before judging it from outside categories" },
+    { concept: "Participant Observation", focus: "learning by watching, asking and taking part responsibly", level: "A-level", practice: "balancing closeness with analytical distance" },
+    { concept: "Kinship", focus: "how societies organise family, descent, care and obligation", level: "GCSE", practice: "not assuming one household model explains every society" },
+    { concept: "Ritual", focus: "repeated symbolic action that marks status, belief and transition", level: "A-level", practice: "seeing ceremonies as social technology rather than empty tradition" },
+    { concept: "Cultural Relativism", focus: "understanding practices within context before evaluating them", level: "University", practice: "holding empathy and ethical judgement in tension" },
+    { concept: "Material Culture", focus: "objects as evidence of work, identity, exchange and value", level: "GCSE", practice: "reading tools, clothes and homes as social evidence" },
+    { concept: "Liminality", focus: "threshold states where ordinary roles are suspended or remade", level: "University", practice: "spotting transitions in education, status and identity" },
+    { concept: "Gift Exchange", focus: "reciprocity, obligation and status beyond simple market trade", level: "University", practice: "understanding why gifts can create power" },
+    { concept: "Emic and Etic", focus: "insider and outsider explanations of the same behaviour", level: "A-level", practice: "separating what participants say from what analysts infer" },
+  ],
+  "art-history": [
+    { concept: "Formal Analysis", focus: "line, colour, composition, scale and texture as visual evidence", level: "GCSE", practice: "describing what is visible before interpreting meaning" },
+    { concept: "Iconography", focus: "symbols, attributes and motifs that carry shared meaning", level: "A-level", practice: "reading images through signs rather than vibes" },
+    { concept: "Patronage", focus: "the role of funders, institutions and commissions in shaping art", level: "A-level", practice: "asking who paid for the work and what they wanted" },
+    { concept: "Perspective", focus: "techniques for representing depth and viewpoint", level: "GCSE", practice: "connecting visual space to power and realism" },
+    { concept: "The Renaissance", focus: "humanism, classical revival and changing artist status", level: "A-level", practice: "linking style to intellectual and social change" },
+    { concept: "Modernism", focus: "experimentation after industrialisation, photography and social rupture", level: "University", practice: "reading abstraction as argument rather than failure to depict" },
+    { concept: "Provenance", focus: "ownership history, authenticity, collecting and restitution", level: "University", practice: "checking the social life of an artwork after creation" },
+    { concept: "Medium Specificity", focus: "how material and technique shape meaning", level: "A-level", practice: "asking what paint, stone, film or pixels make possible" },
+    { concept: "Museums and Power", focus: "display, classification and authority in public collections", level: "University", practice: "reading exhibitions as arguments" },
+    { concept: "Portraiture", focus: "likeness, status, identity and performance in images of people", level: "GCSE", practice: "seeing portraits as constructed claims" },
+  ],
+  "artificial-intelligence": [
+    { concept: "Search", focus: "exploring possible states to reach a goal", level: "GCSE", practice: "breaking a problem into states, actions and costs" },
+    { concept: "Machine Learning", focus: "systems improving performance from data rather than explicit rules alone", level: "A-level", practice: "distinguishing training from deployment" },
+    { concept: "Classification", focus: "assigning inputs to categories using learned patterns", level: "GCSE", practice: "asking what labels and errors define the task" },
+    { concept: "Neural Networks", focus: "layered models that transform inputs into predictions", level: "A-level", practice: "judging them as statistical systems, not magic brains" },
+    { concept: "Overfitting", focus: "performing well on training data but poorly on new cases", level: "A-level", practice: "checking whether a model generalises" },
+    { concept: "Embeddings", focus: "representing meaning as positions in a learned vector space", level: "University", practice: "understanding semantic search and recommendation systems" },
+    { concept: "Reinforcement Learning", focus: "learning action policies from rewards and environments", level: "University", practice: "separating reward design from desired behaviour" },
+    { concept: "Prompting", focus: "shaping model behaviour through task framing and context", level: "GCSE", practice: "writing instructions that expose assumptions and constraints" },
+    { concept: "Alignment", focus: "making model behaviour match human goals and norms", level: "University", practice: "asking whose goals, whose risks and what evidence counts" },
+    { concept: "Evaluation", focus: "measuring whether AI output is useful, accurate and robust", level: "A-level", practice: "testing beyond impressive examples" },
+  ],
+  business: [
+    { concept: "Value Proposition", focus: "the promise of useful value to a specific customer", level: "GCSE", practice: "stating why anyone should care in one testable sentence" },
+    { concept: "Business Model", focus: "how an organisation creates, delivers and captures value", level: "A-level", practice: "linking customer value to revenue and cost structure" },
+    { concept: "Competitive Advantage", focus: "why a firm can outperform rivals over time", level: "A-level", practice: "separating temporary wins from durable advantages" },
+    { concept: "Unit Economics", focus: "profitability at the level of one customer, order or product", level: "University", practice: "checking whether growth improves or worsens the model" },
+    { concept: "Operations", focus: "the repeatable system that turns inputs into outputs", level: "GCSE", practice: "finding bottlenecks, handoffs and failure points" },
+    { concept: "Strategy", focus: "choosing where to compete and what not to do", level: "A-level", practice: "turning ambition into trade-offs" },
+    { concept: "Organisational Culture", focus: "shared norms that shape behaviour when nobody is watching", level: "A-level", practice: "reading incentives from repeated behaviour" },
+    { concept: "Cash Flow", focus: "timing and movement of cash through the organisation", level: "GCSE", practice: "seeing why profit and survival are not the same" },
+    { concept: "Network Effects", focus: "value increasing as more users join", level: "University", practice: "distinguishing real networks from ordinary scale" },
+    { concept: "Principal-Agent Problem", focus: "misaligned incentives between owners, managers and workers", level: "University", practice: "spotting when metrics invite gaming" },
+  ],
+  economics: [
+    { concept: "Scarcity", focus: "limited resources forcing choice and prioritisation", level: "GCSE", practice: "asking what is being given up" },
+    { concept: "Opportunity Cost", focus: "the best alternative sacrificed by a decision", level: "GCSE", practice: "comparing choices against the next best use of time or money" },
+    { concept: "Supply and Demand", focus: "price formation through buyers, sellers and quantity", level: "GCSE", practice: "predicting pressure on prices and quantities" },
+    { concept: "Marginal Analysis", focus: "deciding by comparing one more unit of benefit and cost", level: "A-level", practice: "avoiding all-or-nothing thinking" },
+    { concept: "Externalities", focus: "costs or benefits falling on people outside a transaction", level: "A-level", practice: "looking beyond private incentives" },
+    { concept: "Elasticity", focus: "how strongly quantity responds to price or income changes", level: "A-level", practice: "judging whether a tax or discount will move behaviour" },
+    { concept: "Comparative Advantage", focus: "gains from specialisation even when one side is better at everything", level: "University", practice: "thinking in relative opportunity costs" },
+    { concept: "Game Theory", focus: "strategic choices when outcomes depend on others", level: "University", practice: "mapping incentives before predicting behaviour" },
+    { concept: "Public Goods", focus: "non-excludable and non-rival goods that markets underprovide", level: "A-level", practice: "understanding free-rider problems" },
+    { concept: "Inflation", focus: "a sustained rise in the general price level", level: "GCSE", practice: "separating price shocks from broad purchasing-power change" },
+  ],
+  "linguistics-etymology": [
+    { concept: "Morphemes", focus: "the smallest meaningful units in words", level: "GCSE", practice: "breaking words into roots, prefixes and suffixes" },
+    { concept: "Phonemes", focus: "contrastive sound units that change meaning", level: "GCSE", practice: "hearing language as a system rather than a stream" },
+    { concept: "Syntax", focus: "rules and patterns for combining words into sentences", level: "A-level", practice: "diagnosing why a sentence means what it means" },
+    { concept: "Semantics", focus: "literal meaning in words, phrases and sentences", level: "A-level", practice: "separating meaning from tone and implication" },
+    { concept: "Pragmatics", focus: "meaning shaped by context, inference and social use", level: "University", practice: "spotting what is meant but not said" },
+    { concept: "Semantic Shift", focus: "words changing meaning across time", level: "A-level", practice: "tracking how culture changes vocabulary" },
+    { concept: "Cognates", focus: "words in different languages with a common ancestor", level: "GCSE", practice: "using word history without inventing false links" },
+    { concept: "Loanwords", focus: "words borrowed across languages through contact", level: "GCSE", practice: "seeing trade, conquest and prestige inside vocabulary" },
+    { concept: "Grammaticalisation", focus: "lexical words turning into grammatical markers", level: "University", practice: "understanding language change as gradual reuse" },
+    { concept: "Register", focus: "language choices shaped by situation, audience and status", level: "A-level", practice: "adjusting communication without losing precision" },
+  ],
+  literature: [
+    { concept: "Close Reading", focus: "slow attention to words, patterns, images and form", level: "GCSE", practice: "supporting interpretation with exact textual evidence" },
+    { concept: "Narrative Voice", focus: "who speaks, what they know and how they shape the story", level: "GCSE", practice: "separating author, narrator and character" },
+    { concept: "Symbolism", focus: "objects, images or actions carrying layered meaning", level: "GCSE", practice: "testing symbols against recurring textual evidence" },
+    { concept: "Irony", focus: "gaps between appearance, intention, knowledge and outcome", level: "A-level", practice: "noticing when text means more than it says" },
+    { concept: "Genre", focus: "shared conventions that guide expectations and meaning", level: "A-level", practice: "seeing how texts obey and break rules" },
+    { concept: "Intertextuality", focus: "texts echoing, revising or answering other texts", level: "University", practice: "reading literature as a conversation across time" },
+    { concept: "Tragedy", focus: "serious drama of conflict, error, fate, power and loss", level: "A-level", practice: "looking for pressure between character and structure" },
+    { concept: "Modernist Fragmentation", focus: "broken form as a response to modern experience", level: "University", practice: "treating difficulty as meaningful design" },
+    { concept: "Postcolonial Reading", focus: "literature shaped by empire, language and resistance", level: "University", practice: "asking whose voice is centred and whose is muted" },
+    { concept: "Poetic Meter", focus: "rhythmic pattern as part of poetic meaning", level: "A-level", practice: "hearing form as argument, not decoration" },
+  ],
+  marketing: [
+    { concept: "Segmentation", focus: "dividing a market into meaningfully different customer groups", level: "GCSE", practice: "avoiding one-message-fits-everyone thinking" },
+    { concept: "Positioning", focus: "owning a clear place in the customer's mind", level: "A-level", practice: "choosing the comparison you want buyers to make" },
+    { concept: "Customer Insight", focus: "a useful truth about motivation, friction or context", level: "A-level", practice: "turning observation into a testable marketing idea" },
+    { concept: "Brand Equity", focus: "the value created by memory, trust and associations", level: "University", practice: "distinguishing logo recognition from durable brand value" },
+    { concept: "Marketing Funnel", focus: "the path from awareness to action and repeat behaviour", level: "GCSE", practice: "finding where attention, trust or conversion breaks" },
+    { concept: "Pricing Psychology", focus: "how framing and reference points affect willingness to pay", level: "A-level", practice: "seeing price as signal, not just number" },
+    { concept: "Jobs to Be Done", focus: "the progress a customer is trying to make in context", level: "University", practice: "asking what the product is being hired to do" },
+    { concept: "Social Proof", focus: "people using others' behaviour as evidence", level: "GCSE", practice: "spotting when popularity substitutes for evaluation" },
+    { concept: "Retention", focus: "keeping customers through repeated value and reduced friction", level: "A-level", practice: "optimising beyond acquisition" },
+    { concept: "Category Design", focus: "framing a new problem so a new solution makes sense", level: "University", practice: "creating context before pitching features" },
+  ],
+  "pharmaceutical-businesses": [
+    { concept: "Drug Discovery", focus: "identifying promising biological targets and candidate molecules", level: "GCSE", practice: "linking scientific hypothesis to commercial risk" },
+    { concept: "Preclinical Development", focus: "testing safety and biological activity before human trials", level: "A-level", practice: "understanding why early promise often fails" },
+    { concept: "Clinical Trial Phases", focus: "Phase I safety, Phase II dose and efficacy, Phase III confirmation", level: "GCSE", practice: "reading trial news without overclaiming" },
+    { concept: "Regulatory Affairs", focus: "evidence, compliance and submission strategy for approval", level: "A-level", practice: "seeing regulators as evidence judges, not marketing obstacles" },
+    { concept: "Market Access", focus: "payer evidence, reimbursement and affordability after approval", level: "University", practice: "asking who pays and what proof they need" },
+    { concept: "Pricing and Reimbursement", focus: "how medicines are valued, negotiated and funded", level: "University", practice: "balancing innovation incentives with patient access" },
+    { concept: "Medical Affairs", focus: "scientific exchange, evidence generation and clinician education", level: "A-level", practice: "separating medical credibility from sales messaging" },
+    { concept: "Pharmacovigilance", focus: "monitoring medicine safety after launch", level: "A-level", practice: "treating approval as the start of evidence, not the end" },
+    { concept: "Patent Cliff", focus: "revenue pressure when exclusivity expires and generics enter", level: "University", practice: "connecting intellectual property to portfolio strategy" },
+    { concept: "Life Sciences CRM", focus: "regulated customer engagement systems for pharma field teams", level: "GCSE", practice: "understanding Veeva-style workflows, compliance and account planning" },
+  ],
+  philosophy: [
+    { concept: "Argument Validity", focus: "whether a conclusion follows from its premises", level: "GCSE", practice: "separating a persuasive claim from a logically supported one" },
+    { concept: "Epistemology", focus: "knowledge, belief, justification and doubt", level: "A-level", practice: "asking what would make a belief justified" },
+    { concept: "Utilitarianism", focus: "judging actions by their consequences for wellbeing", level: "A-level", practice: "weighing outcomes without ignoring individuals" },
+    { concept: "Deontology", focus: "duties, rights and rules that constrain action", level: "A-level", practice: "asking what principle a choice would endorse" },
+    { concept: "Virtue Ethics", focus: "character, habits and human flourishing", level: "GCSE", practice: "thinking about the kind of person a habit creates" },
+    { concept: "The Mind-Body Problem", focus: "the relation between conscious experience and physical processes", level: "University", practice: "separating correlation from explanation" },
+    { concept: "Free Will", focus: "agency, responsibility and causal determination", level: "A-level", practice: "testing whether responsibility needs absolute freedom" },
+    { concept: "Social Contract", focus: "political obligation grounded in agreement or legitimacy", level: "University", practice: "asking why authority should be obeyed" },
+    { concept: "Personal Identity", focus: "what makes someone the same person over time", level: "University", practice: "questioning memory, body and continuity" },
+    { concept: "The Good Life", focus: "competing accounts of happiness, meaning and fulfilment", level: "GCSE", practice: "turning vague ambition into examined values" },
+  ],
+  politics: [
+    { concept: "Power", focus: "the ability to shape behaviour, rules and outcomes", level: "GCSE", practice: "spotting visible and hidden forms of influence" },
+    { concept: "Legitimacy", focus: "why people accept authority as rightful", level: "A-level", practice: "separating force from consent" },
+    { concept: "The State", focus: "institutions claiming authority over territory and law", level: "GCSE", practice: "distinguishing government from the wider state" },
+    { concept: "Democracy", focus: "rule by the people through participation, representation and accountability", level: "GCSE", practice: "checking whether democratic forms create real control" },
+    { concept: "Liberalism", focus: "rights, individual freedom, consent and limited power", level: "A-level", practice: "seeing the difference between liberty and licence" },
+    { concept: "Conservatism", focus: "tradition, order, gradual change and social inheritance", level: "A-level", practice: "understanding caution as a political argument" },
+    { concept: "Socialism", focus: "equality, collective ownership or control, and critique of class power", level: "A-level", practice: "separating moral aims from institutional designs" },
+    { concept: "Populism", focus: "politics framed as pure people against corrupt elites", level: "University", practice: "reading rhetoric and institutional consequences together" },
+    { concept: "Federalism", focus: "power divided between central and regional governments", level: "University", practice: "asking what level of authority should decide" },
+    { concept: "Public Policy", focus: "government action shaped by evidence, ideology and implementation", level: "University", practice: "moving from promise to delivery constraints" },
+  ],
+  science: [
+    { concept: "Hypothesis", focus: "a testable proposed explanation", level: "GCSE", practice: "turning curiosity into a claim that evidence can challenge" },
+    { concept: "Falsifiability", focus: "whether a claim could be shown wrong by possible evidence", level: "A-level", practice: "separating science from unfalsifiable assertion" },
+    { concept: "Controlled Experiment", focus: "isolating variables to test causal claims", level: "GCSE", practice: "asking what changed and what stayed constant" },
+    { concept: "Correlation and Causation", focus: "association versus one factor producing another", level: "A-level", practice: "not overreading patterns as mechanisms" },
+    { concept: "Peer Review", focus: "expert scrutiny before publication", level: "GCSE", practice: "treating publication as a filter, not a guarantee" },
+    { concept: "Replication", focus: "whether findings hold when repeated independently", level: "A-level", practice: "valuing durable evidence over single exciting results" },
+    { concept: "Statistical Significance", focus: "whether an observed result is unlikely under a null model", level: "University", practice: "separating significance from importance" },
+    { concept: "Scientific Models", focus: "simplified representations used to explain and predict", level: "A-level", practice: "asking what the model leaves out" },
+    { concept: "Evolution by Natural Selection", focus: "heritable variation changing through differential survival and reproduction", level: "GCSE", practice: "thinking in populations, not intentions" },
+    { concept: "Paradigm Shift", focus: "deep change in the assumptions guiding normal science", level: "University", practice: "seeing why evidence and frameworks interact" },
+  ],
+  "social-engineering": [
+    { concept: "Influence", focus: "changing attitudes or behaviour through social and psychological cues", level: "GCSE", practice: "recognising influence without assuming every influence is unethical" },
+    { concept: "Authority", focus: "people complying because a source appears legitimate or expert", level: "GCSE", practice: "verifying authority before acting under pressure" },
+    { concept: "Reciprocity", focus: "the pressure to return favours, gifts or concessions", level: "A-level", practice: "noticing when a small gift creates an outsized obligation" },
+    { concept: "Scarcity", focus: "limited availability increasing urgency and perceived value", level: "GCSE", practice: "slowing down when urgency replaces evidence" },
+    { concept: "Social Proof", focus: "treating others' behaviour as evidence for what to do", level: "A-level", practice: "checking whether popularity is relevant evidence" },
+    { concept: "Pretexting", focus: "using a fabricated role or story to shape trust", level: "University", practice: "spotting identity claims that bypass verification" },
+    { concept: "Phishing", focus: "deceptive messages that request action, data or access", level: "A-level", practice: "inspecting the request, channel and consequence before responding" },
+    { concept: "Elicitation", focus: "drawing out information through ordinary conversation", level: "University", practice: "noticing when friendly curiosity becomes extraction" },
+    { concept: "Dark Patterns", focus: "interface choices that steer users against their interests", level: "A-level", practice: "reading design as persuasion with ethical stakes" },
+    { concept: "Ethical Persuasion", focus: "influence that preserves truth, consent and agency", level: "University", practice: "using persuasive skill without coercion or deception" },
+  ],
+  sociology: [
+    { concept: "Social Structure", focus: "patterns and institutions that shape behaviour", level: "GCSE", practice: "linking individual action to wider conditions" },
+    { concept: "Norms", focus: "shared expectations about acceptable behaviour", level: "GCSE", practice: "seeing invisible rules when they are broken" },
+    { concept: "Socialisation", focus: "how people learn roles, values and habits", level: "GCSE", practice: "connecting family, school, media and peers" },
+    { concept: "Class", focus: "economic and social hierarchy shaping life chances", level: "A-level", practice: "looking beyond income to power and status" },
+    { concept: "Status", focus: "social honour or prestige attached to people and roles", level: "A-level", practice: "reading why some signals command respect" },
+    { concept: "Role Conflict", focus: "tension between expectations attached to different positions", level: "A-level", practice: "explaining stress without reducing it to weakness" },
+    { concept: "Bureaucracy", focus: "rule-based organisation with hierarchy and written procedures", level: "University", practice: "weighing efficiency against impersonality" },
+    { concept: "Deviance", focus: "behaviour labelled as violating norms", level: "A-level", practice: "asking who gets to define the norm" },
+    { concept: "Social Capital", focus: "resources available through networks and relationships", level: "University", practice: "understanding opportunity as partly relational" },
+    { concept: "Anomie", focus: "normlessness or dislocation when social regulation weakens", level: "University", practice: "reading instability as social as well as personal" },
+  ],
+};
+
+function slugify(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+function levelDifficulty(level: LearningConceptLevel) {
+  if (level === "University") {
+    return 3;
+  }
+
+  return level === "A-level" ? 2 : 1;
+}
+
+function neighbouringConcepts(topic: LearningTopicId, concept: string) {
+  const alternatives = topicLessonSeeds[topic]
+    .map((seed) => seed.concept)
+    .filter((item) => item !== concept);
+
+  return alternatives.slice(0, 3);
+}
+
+function buildQuestions(
+  seed: LessonSeed,
+  topic: LearningTopicId,
+  slug: string,
+  profile: TopicProfile,
+): LearningQuestion[] {
+  const [firstAlt, secondAlt, thirdAlt] = neighbouringConcepts(
+    topic,
+    seed.concept,
+  );
+
+  return [
+    {
+      choices: [
+        { id: "a", label: seed.focus },
+        { id: "b", label: firstAlt ? `mainly the same as ${firstAlt}` : "a purely decorative label" },
+        { id: "c", label: "a claim that can be memorised without context or evidence" },
+        { id: "d", label: "a personal opinion that cannot be tested against examples" },
+      ],
+      correctChoiceId: "a",
+      dimension: "knowledge",
+      explanation: `${seed.concept} is best understood as ${seed.focus}. The lesson asks you to recognise the concept before using it.`,
+      id: `${slug}-knowledge`,
+      prompt: `What does ${seed.concept} mainly mean in this lesson?`,
+    },
+    {
+      choices: [
+        {
+          id: "a",
+          label: `Define the term, use evidence, and compare it with nearby ideas such as ${firstAlt ?? "a related concept"}.`,
+        },
+        {
+          id: "b",
+          label: "Treat the term as true because it sounds academic.",
+        },
+        {
+          id: "c",
+          label: secondAlt
+            ? `Replace the idea with ${secondAlt} whenever the example is difficult.`
+            : "Ignore difficult examples so the explanation stays simple.",
+        },
+        {
+          id: "d",
+          label: "Use only personal instinct and avoid checking sources.",
+        },
+      ],
+      correctChoiceId: "a",
+      dimension: "reasoning",
+      explanation: `The strongest reasoning move is to define ${seed.concept}, test it against evidence and distinguish it from neighbouring concepts.`,
+      id: `${slug}-reasoning`,
+      prompt: `What is the best reasoning habit when using ${seed.concept}?`,
+    },
+    {
+      choices: [
+        {
+          id: "a",
+          label: `${seed.practice}, while remembering that ${profile.method}.`,
+        },
+        {
+          id: "b",
+          label: "Use the concept as a label after the conclusion has already been chosen.",
+        },
+        {
+          id: "c",
+          label: thirdAlt
+            ? `Jump immediately to ${thirdAlt} instead of examining the case.`
+            : "Avoid the evidence and rely on a familiar slogan.",
+        },
+        {
+          id: "d",
+          label: "Assume examples from one context prove the same thing everywhere.",
+        },
+      ],
+      correctChoiceId: "a",
+      dimension: "application",
+      explanation: `${seed.concept} becomes useful when it changes what you notice, verify or compare in a real case.`,
+      id: `${slug}-application`,
+      prompt: `How should you apply ${seed.concept} outside the reading?`,
+    },
+  ];
+}
+
+function buildLesson(topic: LearningTopicId, seed: LessonSeed): LearningLesson {
+  const profile = topicProfiles[topic];
+  const slug = `${topic}-${slugify(seed.concept)}`;
+  const difficulty = levelDifficulty(seed.level);
+
+  return {
+    concept: {
+      label: seed.concept,
+      level: seed.level,
+      summary: seed.focus,
+    },
+    deck: `${seed.concept} gives you a sharper handle on ${profile.topic.label.toLowerCase()}: it turns a broad subject into a usable mental model for noticing evidence, making distinctions and asking better questions.`,
+    difficulty,
+    estimatedMinutes: seed.level === "University" ? 7 : 6,
+    keyTerms: [
+      {
+        label: seed.concept,
+        value: seed.focus,
+      },
+      {
+        label: profile.topic.label,
+        value: profile.fieldFrame,
+      },
+      {
+        label: seed.level,
+        value: `This concept is classified at ${seed.level} level because of the abstraction, evidence handling and independence expected from the reader.`,
+      },
+    ],
+    questions: buildQuestions(seed, topic, slug, profile),
+    sections: [
+      {
+        heading: "The Core Idea",
+        body: [
+          `${seed.concept} is the lesson's central concept. In ${profile.topic.label.toLowerCase()}, it points to ${seed.focus}. That definition matters because a concept is not just a word to recognise in a textbook. It is a tool for sorting examples, noticing hidden assumptions and asking what evidence would make an interpretation stronger or weaker.`,
+          `${profile.fieldFrame}. So this lesson treats ${seed.concept} as a working idea rather than a trivia item. You are looking for the moment where the concept changes what you see. A good reading should leave you able to use the term carefully, explain it to someone else and recognise when it is being stretched beyond its useful limits.`,
+        ],
+      },
+      {
+        heading: "How To Think With It",
+        body: [
+          `The first move is precision. Define ${seed.concept}, then separate it from nearby ideas. A vague definition makes every example seem to fit; a disciplined definition makes the borders visible. In practice, ${profile.method}. That means the concept has to do real work. It should clarify a case, expose a trade-off or improve a judgement.`,
+          `The second move is comparison. Ask what would look different if ${seed.concept} were absent, weaker or replaced by another explanation. This prevents the classic beginner mistake: naming a concept and assuming the name is the analysis. The intellectual gain comes from testing the idea against examples and seeing which details it explains better than competing interpretations.`,
+        ],
+      },
+      {
+        heading: "Why It Matters",
+        body: [
+          `${profile.stakes}. ${seed.concept} matters because it links a concrete example to a larger pattern. Once you can make that link, you become less dependent on memorised facts. You start building a portable framework that can travel across books, arguments, work situations and news stories.`,
+          `There is also a restraint built into the concept. A strong thinker knows when a concept applies and when it does not. If ${seed.concept} becomes a catch-all label, it stops sharpening thought and starts blurring it. The better habit is to ask: what evidence supports this reading, what evidence would challenge it, and what would a more careful alternative explanation look like?`,
+        ],
+      },
+      {
+        heading: "Use It Today",
+        body: [
+          `Use ${seed.concept} by ${seed.practice}. Pick one real example from your reading, work, media feed or daily life. Write a two-sentence explanation: first define the concept, then show exactly how the example demonstrates it. If the second sentence feels forced, the example probably needs more evidence or a different concept.`,
+          `For the quiz, do not try to memorise the paragraphs. Aim to understand the structure: definition, distinction, evidence, application. That pattern is the point of Learning Zone. Each topic broadens your intellect score, but the real gain is that the concepts become available when you are thinking under pressure, not only when you are staring at the lesson page.`,
+        ],
+      },
+    ],
+    slug,
+    sources: profile.sourceKeys.map((key) => sourcePack[key]),
+    subtitle: `${seed.level} concept in ${profile.topic.label}: ${seed.focus}.`,
+    title: seed.concept,
+    topic,
+  };
+}
+
+export const LEARNING_LESSONS: LearningLesson[] = Object.entries(
+  topicLessonSeeds,
+).flatMap(([topic, seeds]) =>
+  seeds.map((seed) => buildLesson(topic as LearningTopicId, seed)),
+);
 
 export function isLearningTopicId(value: string): value is LearningTopicId {
   return topicIds.has(value);
@@ -903,51 +895,16 @@ export function chooseNextLearningLesson(
   sessions: LearningSession[],
 ) {
   const lessons = getLearningLessonsByTopic(topic);
-  const latestSession = [...sessions].sort((left, right) => completedTime(right) - completedTime(left))[0];
-  const attemptsBySlug = new Map<string, LearningSession[]>();
+  const latestSession = [...sessions].sort(
+    (left, right) => completedTime(right) - completedTime(left),
+  )[0];
+  const freshCandidates = lessons.filter(
+    (lesson) => lesson.slug !== latestSession?.lesson_slug,
+  );
+  const pool = freshCandidates.length ? freshCandidates : lessons;
+  const index = Math.floor(Math.random() * pool.length);
 
-  sessions.forEach((session) => {
-    attemptsBySlug.set(session.lesson_slug, [
-      ...(attemptsBySlug.get(session.lesson_slug) ?? []),
-      session,
-    ]);
-  });
-
-  const ranked = lessons
-    .map((lesson) => {
-      const attempts = attemptsBySlug.get(lesson.slug) ?? [];
-      const averageAccuracy = attempts.length
-        ? attempts.reduce(
-            (total, attempt) =>
-              total + attempt.correct_count / Math.max(1, attempt.total_questions),
-            0,
-          ) / attempts.length
-        : 0;
-
-      return {
-        attempts: attempts.length,
-        averageAccuracy,
-        lesson,
-        sameAsLatest: latestSession?.lesson_slug === lesson.slug,
-      };
-    })
-    .sort((left, right) => {
-      if (left.attempts !== right.attempts) {
-        return left.attempts - right.attempts;
-      }
-
-      if (left.sameAsLatest !== right.sameAsLatest) {
-        return left.sameAsLatest ? 1 : -1;
-      }
-
-      if (left.averageAccuracy !== right.averageAccuracy) {
-        return left.averageAccuracy - right.averageAccuracy;
-      }
-
-      return left.lesson.difficulty - right.lesson.difficulty;
-    });
-
-  return ranked[0]?.lesson ?? lessons[0] ?? LEARNING_LESSONS[0];
+  return pool[index] ?? lessons[0] ?? LEARNING_LESSONS[0];
 }
 
 export function scoreLearningAttempt(
@@ -971,15 +928,18 @@ export function scoreLearningAttempt(
   });
   const correctCount = answerResults.filter((answer) => answer.correct).length;
   const basePoints = 10 + lesson.difficulty * 2;
-  const knowledgePoints = answerResults
-    .filter((answer) => answer.correct && answer.dimension === "knowledge")
-    .length * basePoints;
-  const reasoningPoints = answerResults
-    .filter((answer) => answer.correct && answer.dimension === "reasoning")
-    .length * basePoints;
-  const applicationPoints = answerResults
-    .filter((answer) => answer.correct && answer.dimension === "application")
-    .length * basePoints;
+  const knowledgePoints =
+    answerResults.filter(
+      (answer) => answer.correct && answer.dimension === "knowledge",
+    ).length * basePoints;
+  const reasoningPoints =
+    answerResults.filter(
+      (answer) => answer.correct && answer.dimension === "reasoning",
+    ).length * basePoints;
+  const applicationPoints =
+    answerResults.filter(
+      (answer) => answer.correct && answer.dimension === "application",
+    ).length * basePoints;
   const previousTopicSessions = priorSessions.filter(
     (session) => session.topic === lesson.topic,
   );
@@ -991,14 +951,17 @@ export function scoreLearningAttempt(
   )[0];
   const topicIsNew = previousTopicSessions.length === 0;
   const switchedTopic =
-    latestSession && latestSession.topic !== lesson.topic && previousTopicSessions.length > 0;
+    latestSession &&
+    latestSession.topic !== lesson.topic &&
+    previousTopicSessions.length > 0;
   const breadthPoints = topicIsNew ? 8 : switchedTopic ? 3 : 1;
   const latestLessonAttempt = [...previousLessonSessions].sort(
     (left, right) => completedTime(right) - completedTime(left),
   )[0];
   const accuracy = correctCount / Math.max(1, lesson.questions.length);
   const retentionPoints =
-    latestLessonAttempt && daysBetween(now, new Date(latestLessonAttempt.completed_at)) >= 7
+    latestLessonAttempt &&
+    daysBetween(now, new Date(latestLessonAttempt.completed_at)) >= 7
       ? accuracy >= 0.67
         ? 8
         : 2
@@ -1063,8 +1026,9 @@ export function summariseLearningProgress(sessions: LearningSession[]) {
       0,
     );
     const lastCompletedAt = topicSessions.length
-      ? [...topicSessions].sort((left, right) => completedTime(right) - completedTime(left))[0]
-          .completed_at
+      ? [...topicSessions].sort(
+          (left, right) => completedTime(right) - completedTime(left),
+        )[0].completed_at
       : null;
 
     return {
@@ -1077,7 +1041,9 @@ export function summariseLearningProgress(sessions: LearningSession[]) {
   });
   const sortedDates = Array.from(
     new Set(
-      sessions.map((session) => (session.completed_at ?? session.created_at).slice(0, 10)),
+      sessions.map((session) =>
+        (session.completed_at ?? session.created_at).slice(0, 10),
+      ),
     ),
   ).sort((left, right) => right.localeCompare(left));
   let streakDays = 0;

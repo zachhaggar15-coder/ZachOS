@@ -65,7 +65,7 @@ create table if not exists public.learning_sessions (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   lesson_slug text not null,
-  topic text not null check (topic in ('philosophy', 'marketing', 'economics', 'science')),
+  topic text not null check (topic in ('philosophy', 'marketing', 'economics', 'science', 'linguistics-etymology', 'art-history', 'literature', 'anthropology', 'politics', 'sociology', 'artificial-intelligence', 'social-engineering', 'business', 'pharmaceutical-businesses')),
   started_at timestamptz not null default now(),
   completed_at timestamptz not null default now(),
   reading_seconds integer not null default 0 check (reading_seconds >= 0),

@@ -175,7 +175,7 @@ export default async function LearningResultPage({
         </ZachNotice>
       )}
 
-      <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+      <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-6">
         <ZachMetric
           label="Attempt"
           meta={`${session.correct_count}/${session.total_questions} correct`}
@@ -191,6 +191,11 @@ export default async function LearningResultPage({
           label="Reading"
           meta="Tracked in this session"
           value={`${Math.round(session.reading_seconds / 60)} min`}
+        />
+        <ZachMetric
+          label="Concept"
+          meta={lesson?.concept.label ?? "Stored lesson"}
+          value={lesson?.concept.level ?? "--"}
         />
         <ZachMetric
           label="Streak"

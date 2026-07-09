@@ -53,6 +53,14 @@ export function LearningLessonExperience({ lesson }: LearningLessonExperiencePro
             <h2 className="zach-display mt-1 max-w-3xl text-4xl font-medium leading-tight text-[#111820]">
               {lesson.title}
             </h2>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <span className="rounded-md border border-[#bb5d3a]/30 bg-[#bb5d3a]/10 px-2.5 py-1 text-xs font-semibold text-[#8f442c]">
+                {lesson.concept.level}
+              </span>
+              <span className="rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] px-2.5 py-1 text-xs font-semibold text-[#71685c]">
+                Concept: {lesson.concept.label}
+              </span>
+            </div>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-[#71685c]">
               {lesson.subtitle}
             </p>
@@ -94,6 +102,18 @@ export function LearningLessonExperience({ lesson }: LearningLessonExperiencePro
       </article>
 
       <aside className="grid content-start gap-5">
+        <section className="rounded-md border border-[#2c2824]/[0.13] bg-[#fffaf2] p-5">
+          <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
+            Concept rank
+          </p>
+          <p className="zach-display mt-2 text-3xl font-medium text-[#111820]">
+            {lesson.concept.level}
+          </p>
+          <p className="mt-2 text-sm leading-6 text-[#71685c]">
+            {lesson.concept.summary}
+          </p>
+        </section>
+
         <section className="rounded-md border border-[#2c2824]/[0.13] bg-[#fffaf2] p-5">
           <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
             Key terms

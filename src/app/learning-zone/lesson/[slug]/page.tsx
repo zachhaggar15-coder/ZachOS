@@ -134,7 +134,7 @@ export default async function LearningLessonPage({
         />
       ) : (
         <>
-          <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
             <ZachMetric
               label="Topic"
               meta="Wheel selection"
@@ -147,6 +147,11 @@ export default async function LearningLessonPage({
                   {topic.label}
                 </span>
               }
+            />
+            <ZachMetric
+              label="Concept"
+              meta={lesson.concept.label}
+              value={lesson.concept.level}
             />
             <ZachMetric
               label="Read time"
