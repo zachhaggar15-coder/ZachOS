@@ -1,15 +1,12 @@
 import Link from "next/link";
 
 import { isRunningActivity, numeric, toDate } from "@/lib/utils";
-import {
-  saveQuickDailyEntry,
-  signOut,
-  toggleDailyRoutine,
-} from "@/app/actions";
+import { saveQuickDailyEntry, signOut } from "@/app/actions";
 import { DailyRitualMetricInput } from "@/components/daily-ritual-metric-input";
+import { DailyRoutineToggle } from "@/components/daily-routine-toggle";
 import { DatabaseSetupNotice } from "@/components/database-setup-notice";
 import { PortfolioPriceRefresher } from "@/components/portfolio-price-refresher";
-import { ZachTopNav } from "@/components/zach-shell";
+import { ZachMobileBottomNav, ZachTopNav } from "@/components/zach-shell";
 import { buildOperatingRecommendation } from "@/lib/ai-insights";
 import {
   calculateAnalytics,
@@ -475,6 +472,7 @@ function DailyRitual({
   routineKey,
   target,
   unit,
+  variant = "compact",
   value,
 }: {
   date: string;
@@ -484,50 +482,29 @@ function DailyRitual({
   routineKey: RoutineKey;
   target?: number;
   unit?: string;
+  variant?: "compact" | "mobile";
   value?: number;
 }) {
+  const mobile = variant === "mobile";
+
   return (
     <div
-      className={`flex min-h-[30px] w-full items-center gap-2 rounded-md border border-transparent px-1 py-0.5 transition hover:border-[#bb5d3a]/20 hover:bg-[#bb5d3a]/[0.06] ${
+      className={`flex w-full items-center gap-2 rounded-md border border-transparent transition hover:border-[#bb5d3a]/20 hover:bg-[#bb5d3a]/[0.06] ${
+        mobile ? "min-h-[54px] px-3 py-1.5" : "min-h-[30px] px-1 py-0.5"
+      } ${
         done ? "bg-[#bb5d3a]/[0.07]" : ""
       }`}
     >
-      <form action={toggleDailyRoutine} className="min-w-0 flex-1">
-        <input name="date" type="hidden" value={date} />
-        <input name="routine_key" type="hidden" value={routineKey} />
-        <input name="completed" type="hidden" value={(!done).toString()} />
-        <button
-          aria-label={
-            done ? `Mark ${name} incomplete` : `Mark ${name} complete`
-          }
-          aria-pressed={done}
-          className="group flex w-full cursor-pointer select-none items-center gap-2.5 rounded-md py-1 text-left transition focus-visible:bg-[#bb5d3a]/[0.08] focus-visible:outline-none active:scale-[0.99]"
-          title={done ? `Mark ${name} incomplete` : `Mark ${name} complete`}
-          type="submit"
-        >
-          <span
-            className={`flex h-[17px] w-[17px] flex-none items-center justify-center rounded-full text-[10px] font-bold transition group-hover:scale-105 ${
-              done
-                ? "bg-[#bb5d3a] text-[#f9f4ec]"
-                : "border border-[#2c2824]/25 group-hover:border-[#bb5d3a]/70"
-            }`}
-          >
-            {done ? "x" : ""}
-          </span>
-          <span
-            className={`zach-ui min-w-0 flex-1 text-[12.5px] font-medium leading-tight transition group-hover:text-[#bb5d3a] ${
-              done && target === undefined
-                ? "text-[#9a8d7a] line-through"
-                : "text-[#3a342c]"
-            }`}
-          >
-            {name}
-          </span>
-          <span className="sr-only">
-            {done ? "Currently complete." : "Currently incomplete."}
-          </span>
-        </button>
-      </form>
+      <div className="min-w-0 flex-1">
+        <DailyRoutineToggle
+          comfortable={mobile}
+          date={date}
+          done={done}
+          name={name}
+          routineKey={routineKey}
+          strikeWhenDone={target === undefined}
+        />
+      </div>
       {target !== undefined && metric && (
         <DailyRitualMetricInput
           date={date}
@@ -620,6 +597,47 @@ function shortAchievementLabel(label: string) {
     .replace(" Hours ", "h ")
     .replace(" Minutes", "")
     .replace("Net Worth", "NW");
+}
+
+function MobileNotebookCard({
+  children,
+  id,
+}: {
+  children: React.ReactNode;
+  id?: string;
+}) {
+  return (
+    <section
+      className="rounded-md border border-[#2c2824]/[0.13] bg-[#fffaf2] p-4 shadow-[0_1px_0_rgba(44,40,36,0.04)]"
+      id={id}
+    >
+      {children}
+    </section>
+  );
+}
+
+function MobileField({
+  label,
+  name,
+  placeholder,
+  type = "text",
+}: {
+  label: string;
+  name: string;
+  placeholder?: string;
+  type?: string;
+}) {
+  return (
+    <label className="grid gap-1.5 text-sm font-medium text-[#3a342c]">
+      {label}
+      <input
+        className="h-11 rounded-md border border-[#d2c8b8] bg-white px-3 text-sm text-[#2c2824] outline-none transition placeholder:text-[#9a8d7a] focus:border-[#bb5d3a]/70 focus:ring-2 focus:ring-[#bb5d3a]/10"
+        name={name}
+        placeholder={placeholder}
+        type={type}
+      />
+    </label>
+  );
 }
 
 export function ControlRoomDashboard({
@@ -781,6 +799,7 @@ export function ControlRoomDashboard({
     },
   ];
   const habitDone = habitRows.filter((row) => row.done).length;
+  const remainingHabits = Math.max(0, habitRows.length - habitDone);
   const investedValue = portfolioSummary.totalInvested || currentFinance?.invested_gbp;
   const currentNetWorthValue =
     currentFinance?.net_worth_gbp ??
@@ -808,8 +827,183 @@ export function ControlRoomDashboard({
 
   return (
     <main className="zach-ui min-h-screen bg-[#f9f4ec] text-[#2c2824]">
-      <PortfolioPriceRefresher />
-      <div className="mx-auto flex min-h-screen w-full max-w-[1514px] flex-col px-6 py-7 lg:px-10 lg:py-9">
+      <div className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-4 px-4 pb-28 pt-[calc(1rem+env(safe-area-inset-top))] lg:hidden">
+        <header className="flex items-start justify-between gap-4 border-b border-[#2c2824] pb-4">
+          <div>
+            <div className="text-[10px] font-semibold uppercase tracking-[0.32em] text-[#9a7d5f]">
+              Personal OS
+            </div>
+            <h1 className="zach-display mt-1 text-4xl font-medium leading-none text-[#111820]">
+              ZachOS
+            </h1>
+            <p className="mt-2 text-sm leading-5 text-[#71685c]">
+              {formatHeaderDate(today)}
+            </p>
+          </div>
+          <form action={signOut}>
+            <button
+              className="h-10 rounded-md border border-[#d2c8b8] bg-[#fffaf2] px-3 text-sm font-semibold text-[#2c2824]"
+              type="submit"
+            >
+              Log out
+            </button>
+          </form>
+        </header>
+
+        {(error || message) && (
+          <div
+            className={`rounded border px-3 py-2 text-sm ${
+              error
+                ? "border-[#bb5d3a]/30 bg-[#bb5d3a]/10 text-[#8d3f26]"
+                : "border-[#7a8c5a]/30 bg-[#7a8c5a]/10 text-[#54683b]"
+            }`}
+          >
+            {error || message}
+          </div>
+        )}
+
+        <MobileNotebookCard>
+          <SectionKicker>Today</SectionKicker>
+          <p className="zach-display mt-3 text-3xl leading-tight text-[#111820]">
+            {operatingRecommendation.todayMove}
+          </p>
+          <div className="mt-4 grid gap-2 text-sm leading-6 text-[#71685c]">
+            <p>
+              Keep it light: check off what is done, leave enough context for
+              tonight, then move on.
+            </p>
+            <p>
+              Focus:{" "}
+              <span className="font-semibold text-[#3a342c]">
+                {operatingRecommendation.weeklyFocus}
+              </span>
+            </p>
+          </div>
+        </MobileNotebookCard>
+
+        <MobileNotebookCard id="check-in">
+          <SectionKicker>Quick check-in</SectionKicker>
+          <form action={saveQuickDailyEntry} className="mt-4 grid gap-3">
+            <input name="date" type="hidden" value={today} />
+            <input name="return_to" type="hidden" value="/" />
+            <div className="grid grid-cols-2 gap-3">
+              <MobileField label="Mood" name="mood_score" placeholder="1-10" type="number" />
+              <MobileField
+                label="Deep work"
+                name="deep_work_hours"
+                placeholder="hours"
+                type="number"
+              />
+              <MobileField
+                label="Reading"
+                name="reading_pages"
+                placeholder="pages"
+                type="number"
+              />
+              <MobileField
+                label="French"
+                name="french_minutes"
+                placeholder="minutes"
+                type="number"
+              />
+            </div>
+            <label className="grid gap-1.5 text-sm font-medium text-[#3a342c]">
+              Reflection
+              <textarea
+                className="min-h-24 rounded-md border border-[#d2c8b8] bg-white px-3 py-2 text-sm leading-6 text-[#2c2824] outline-none transition placeholder:text-[#9a8d7a] focus:border-[#bb5d3a]/70 focus:ring-2 focus:ring-[#bb5d3a]/10"
+                name="notes"
+                placeholder="What is worth remembering from today?"
+              />
+            </label>
+            <button
+              className="h-11 rounded-md border border-[#241f1a] bg-[#241f1a] px-4 text-sm font-semibold text-[#f9f4ec]"
+              type="submit"
+            >
+              Save check-in
+            </button>
+          </form>
+        </MobileNotebookCard>
+
+        <MobileNotebookCard id="habits">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <SectionKicker>Habits</SectionKicker>
+              <p className="mt-2 text-sm leading-6 text-[#71685c]">
+                Tap as you go. The tick changes immediately while ZachOS saves
+                it in the background.
+              </p>
+            </div>
+            <span className="rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] px-2.5 py-1 text-xs font-semibold text-[#71685c]">
+              {remainingHabits === 0 ? "clear" : `${remainingHabits} left`}
+            </span>
+          </div>
+          <div className="mt-4 grid gap-2">
+            {habitRows.map((habit) => (
+              <DailyRitual
+                date={today}
+                done={habit.done}
+                key={habit.name}
+                metric={habit.metric}
+                name={habit.name}
+                routineKey={habit.routineKey}
+                target={habit.target}
+                unit={habit.unit}
+                value={habit.value}
+                variant="mobile"
+              />
+            ))}
+          </div>
+        </MobileNotebookCard>
+
+        <MobileNotebookCard>
+          <SectionKicker>Learning</SectionKicker>
+          <p className="mt-3 text-sm leading-6 text-[#71685c]">
+            Use the wheel when you want a short study session. Keep it as one
+            clean tab, not the whole phone app.
+          </p>
+          <Link
+            className="mt-4 inline-flex h-11 w-full items-center justify-center rounded-md border border-[#bb5d3a] bg-[#bb5d3a] px-4 text-sm font-semibold text-[#f9f4ec]"
+            href="/learning-zone"
+          >
+            Open Learning Zone
+          </Link>
+        </MobileNotebookCard>
+
+        <MobileNotebookCard id="more">
+          <SectionKicker>Brief look</SectionKicker>
+          <div className="mt-4 grid gap-3 text-sm leading-6 text-[#71685c]">
+            <p>
+              Habits:{" "}
+              <span className="font-semibold text-[#3a342c]">
+                {remainingHabits === 0
+                  ? "today is checked off"
+                  : `${remainingHabits} action${remainingHabits === 1 ? "" : "s"} still open`}
+              </span>
+            </p>
+            <p>
+              Quests:{" "}
+              <span className="font-semibold text-[#3a342c]">
+                {activeQuests.length
+                  ? nextQuestAction(questProgress)
+                  : "no urgent quest action"}
+              </span>
+            </p>
+            <p>
+              Reflection:{" "}
+              <span className="font-semibold text-[#3a342c]">
+                {todayLog?.notes ? todayLog.notes.slice(0, 96) : "no note yet"}
+              </span>
+            </p>
+            <p>
+              Admin: portfolio edits, Garmin imports and dense tables stay out
+              of the phone flow.
+            </p>
+          </div>
+        </MobileNotebookCard>
+      </div>
+
+      <div className="mx-auto hidden min-h-screen w-full max-w-[1514px] flex-col px-6 py-7 lg:flex lg:px-10 lg:py-9">
+        <PortfolioPriceRefresher />
         <header className="flex shrink-0 flex-col gap-5 border-b border-[#2c2824] pb-5 lg:h-[84px] lg:flex-row lg:items-start lg:justify-between lg:gap-6">
           <div className="min-w-[220px]">
             <div className="text-xs font-semibold uppercase tracking-[0.45em] text-[#9a7d5f]">
@@ -1183,6 +1377,7 @@ export function ControlRoomDashboard({
           </aside>
         </section>
       </div>
+      <ZachMobileBottomNav active="dashboard" />
     </main>
   );
 }

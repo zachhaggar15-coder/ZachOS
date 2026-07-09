@@ -41,6 +41,17 @@ const navItems: Array<{ href: string; key: ZachNavKey; label: string }> = [
   { href: "/garmin-import", key: "garmin", label: "Garmin" },
 ];
 
+const mobileNavItems: Array<{
+  href: string;
+  key: ZachNavKey;
+  label: string;
+}> = [
+  { href: "/", key: "dashboard", label: "Home" },
+  { href: "/learning-zone", key: "learning", label: "Learn" },
+  { href: "/#habits", key: "dashboard", label: "Habits" },
+  { href: "/#more", key: "dashboard", label: "More" },
+];
+
 export function ZachKicker({ children }: { children: React.ReactNode }) {
   return (
     <p className="zach-ui text-[10px] font-semibold uppercase leading-none tracking-[0.24em] text-[#9a7d5f]">
@@ -65,6 +76,28 @@ export function ZachTopNav({ active }: { active?: ZachNavKey }) {
           {item.label}
         </Link>
       ))}
+    </nav>
+  );
+}
+
+export function ZachMobileBottomNav({ active }: { active?: ZachNavKey }) {
+  return (
+    <nav className="zach-ui fixed inset-x-0 bottom-0 z-40 border-t border-[#2c2824]/[0.13] bg-[#fffaf2]/95 px-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] pt-2 shadow-[0_-10px_30px_rgba(44,40,36,0.08)] backdrop-blur lg:hidden">
+      <div className="mx-auto grid max-w-md grid-cols-4 gap-1">
+        {mobileNavItems.map((item) => (
+          <Link
+            className={`flex min-h-11 items-center justify-center rounded-md px-2 text-xs font-semibold transition ${
+              active === item.key && !item.href.includes("#")
+                ? "bg-[#241f1a] text-[#f9f4ec]"
+                : "text-[#6f6254] hover:bg-[#2c2824]/[0.06] hover:text-[#2c2824]"
+            }`}
+            href={item.href}
+            key={`${item.href}-${item.label}`}
+          >
+            {item.label}
+          </Link>
+        ))}
+      </div>
     </nav>
   );
 }
@@ -104,7 +137,7 @@ export function ZachPageShell({
 }: ZachPageShellProps) {
   return (
     <main className="zach-ui min-h-screen bg-[#f9f4ec] text-[#2c2824]">
-      <div className={`mx-auto flex w-full ${maxWidth} flex-col gap-6 px-5 py-6 sm:px-8 lg:px-10 lg:py-8`}>
+      <div className={`mx-auto flex w-full ${maxWidth} flex-col gap-6 px-5 pb-28 pt-6 sm:px-8 lg:px-10 lg:py-8`}>
         <header className="grid gap-5 border-b border-[#2c2824] pb-5 lg:grid-cols-[minmax(240px,0.8fr)_minmax(0,1.2fr)_auto] lg:items-end">
           <div>
             <div className="text-xs font-semibold uppercase tracking-[0.45em] text-[#9a7d5f]">
@@ -143,6 +176,7 @@ export function ZachPageShell({
         </header>
         {children}
       </div>
+      <ZachMobileBottomNav active={active} />
     </main>
   );
 }

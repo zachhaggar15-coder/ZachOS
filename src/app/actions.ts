@@ -147,6 +147,13 @@ function redirectToManageWithMessage(message: string): never {
   redirect(`/manage?message=${encodeURIComponent(message)}`);
 }
 
+function redirectToPathWithMessage(path: string, message: string): never {
+  const safePath = path.startsWith("/") && !path.startsWith("//") ? path : "/";
+  const separator = safePath.includes("?") ? "&" : "?";
+
+  redirect(`${safePath}${separator}message=${encodeURIComponent(message)}`);
+}
+
 function redirectToManageWithError(message: string): never {
   redirect(`/manage?error=${encodeURIComponent(message)}`);
 }
@@ -537,6 +544,11 @@ export async function saveQuickDailyEntry(formData: FormData) {
 
   revalidatePath("/");
   revalidatePath("/manage");
+  const returnTo = formString(formData, "return_to");
+  if (returnTo) {
+    redirectToPathWithMessage(returnTo, "Daily check-in saved.");
+  }
+
   redirectToManageWithMessage("Daily check-in saved.");
 }
 
