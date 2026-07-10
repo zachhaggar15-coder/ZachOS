@@ -142,6 +142,14 @@ type SectionPlan = {
   opening: string;
 };
 
+type AdvancedLens = {
+  complication: string;
+  evidenceProblem: string;
+  sourceTradition: string;
+  stakes: string;
+  theoryMove: string;
+};
+
 const sourcePack = {
   aiTextbook: {
     label: "Artificial Intelligence: A Modern Approach",
@@ -616,6 +624,177 @@ const sectionPlans: Record<LearningTopicId, SectionPlan> = {
     example: "Social Example",
     mechanism: "Structure, Norm, and Institution",
     opening: "Sociological Concept",
+  },
+};
+
+const advancedLenses: Record<LearningTopicId, AdvancedLens> = {
+  anthropology: {
+    complication:
+      "Anthropological explanation becomes stronger when it keeps meaning, power, ecology and history in view at the same time.",
+    evidenceProblem:
+      "Field evidence is partial and situated: it comes from access, translation, memory, observation and the researcher's own position in the scene.",
+    sourceTradition:
+      "Open anthropology textbooks usually move from culture and fieldwork into kinship, ritual, exchange and material life, so concepts are treated as tools for comparing social worlds without reducing them to stereotypes.",
+    stakes:
+      "The intellectual gain is comparative humility: human practices become intelligible without becoming identical, and difference becomes material for explanation rather than immediate dismissal.",
+    theoryMove:
+      "The theoretical move is to treat ordinary practice as organised meaning, not as raw behaviour waiting for an outsider's label.",
+  },
+  "art-history": {
+    complication:
+      "Art-historical explanation has to hold together material technique, patronage, viewing conditions, iconography and later museum interpretation.",
+    evidenceProblem:
+      "The evidence is visual before it is textual: composition, scale, medium, surface, gesture and placement often carry claims that documents only partly confirm.",
+    sourceTradition:
+      "Art history textbooks and museum references normally begin with formal analysis, then widen into context, medium, patronage, provenance and reception.",
+    stakes:
+      "The gain is a disciplined visual intelligence: artworks become historical arguments made through materials, not illustrations of facts already known elsewhere.",
+    theoryMove:
+      "The theoretical move is to treat the artwork as an active construction of meaning, status and memory rather than as a transparent picture of its subject.",
+  },
+  "artificial-intelligence": {
+    complication:
+      "AI concepts are complicated by the gap between formal objectives and the messy environments in which systems are deployed.",
+    evidenceProblem:
+      "The evidence problem is generalisation: performance on training data, benchmarks or demonstrations may not survive distribution shift, adversarial cases or real user incentives.",
+    sourceTradition:
+      "University AI and machine-learning textbooks usually frame the field through agents, search, representation, learning, optimisation and evaluation under uncertainty.",
+    stakes:
+      "The gain is technical scepticism without cynicism: fluent or high-scoring systems can be impressive while still needing careful specification, testing and governance.",
+    theoryMove:
+      "The theoretical move is to separate the task, representation, objective function, data distribution and evaluation procedure before judging intelligence.",
+  },
+  business: {
+    complication:
+      "Business analysis becomes difficult when growth, profit, cash timing, capability and culture point in different directions.",
+    evidenceProblem:
+      "The evidence problem is attribution: revenue, market share or customer praise may come from timing, subsidy, switching costs or temporary novelty rather than durable advantage.",
+    sourceTradition:
+      "Management textbooks usually organise the subject around value creation, strategy, organisation, operations, finance, leadership and the fit between resources and markets.",
+    stakes:
+      "The gain is commercial judgement: attractive stories about a company can be tested against constraints, incentives and execution capacity.",
+    theoryMove:
+      "The theoretical move is to connect a firm's choices to its activity system, resource base and economic engine rather than judging ideas in isolation.",
+  },
+  economics: {
+    complication:
+      "Economic explanation becomes serious when individual incentives, institutional rules, distributional effects and time horizons are considered together.",
+    evidenceProblem:
+      "The evidence problem is causal identification: observed outcomes may reflect selection, confounding, market power, policy design or changing expectations.",
+    sourceTradition:
+      "Economics textbooks move between models and evidence, using simplified assumptions to clarify scarcity, incentives, markets, bargaining and policy trade-offs.",
+    stakes:
+      "The gain is second-order reasoning: visible benefits can be compared with opportunity costs, unintended effects and who bears the adjustment.",
+    theoryMove:
+      "The theoretical move is to model a constraint and then ask how behaviour changes at the margin when incentives or rules change.",
+  },
+  "linguistics-etymology": {
+    complication:
+      "Language analysis becomes richer when sound, grammar, meaning, social identity and historical change are not collapsed into one story.",
+    evidenceProblem:
+      "The evidence problem is separating intuition from pattern: speakers often know a language system implicitly while misdescribing how it works.",
+    sourceTradition:
+      "Linguistics textbooks typically separate phonetics, phonology, morphology, syntax, semantics, pragmatics, sociolinguistics and language change before recombining them in analysis.",
+    stakes:
+      "The gain is precision about language as a system: words and sentences become structured evidence rather than merely expressive habits.",
+    theoryMove:
+      "The theoretical move is to treat language as rule-governed and socially variable at the same time.",
+  },
+  literature: {
+    complication:
+      "Literary interpretation becomes demanding when form, historical context, voice, genre, ambiguity and readerly response all affect meaning.",
+    evidenceProblem:
+      "The evidence problem is textual warrant: an interpretation has to be supported by patterns in language, structure and recurrence rather than by a private reaction alone.",
+    sourceTradition:
+      "Literature textbooks generally begin with close reading, then connect imagery, narrative, character, genre and historical context to arguable interpretations.",
+    stakes:
+      "The gain is interpretive discipline: complex texts can remain ambiguous without becoming meaningless or reducible to plot summary.",
+    theoryMove:
+      "The theoretical move is to treat form as meaning-bearing, so rhythm, perspective, silence and repetition become part of the argument.",
+  },
+  marketing: {
+    complication:
+      "Marketing analysis becomes stronger when customer psychology, market structure, pricing, distribution and brand memory are considered together.",
+    evidenceProblem:
+      "The evidence problem is behaviour: attention, liking and stated preference do not always predict purchase, retention or willingness to pay.",
+    sourceTradition:
+      "Marketing and consumer behaviour textbooks usually build from customer need into segmentation, targeting, positioning, value, channels, persuasion and exchange.",
+    stakes:
+      "The gain is sharper commercial empathy: the market is not an abstract audience but a set of people making choices under constraints.",
+    theoryMove:
+      "The theoretical move is to translate a product feature into perceived value for a specific segment in a specific buying context.",
+  },
+  "pharmaceutical-businesses": {
+    complication:
+      "Pharmaceutical business analysis is unusually complex because scientific promise, clinical evidence, regulation, payer incentives and patient access can conflict.",
+    evidenceProblem:
+      "The evidence problem is translational: a biological mechanism, a clinical endpoint, a regulatory label and a commercial forecast answer different questions.",
+    sourceTradition:
+      "Drug-development and market-access references organise the field around discovery, trials, approval, pricing, reimbursement, promotion, safety and lifecycle management.",
+    stakes:
+      "The gain is ethical commercial literacy: medicine is both a public-health good and a regulated business asset.",
+    theoryMove:
+      "The theoretical move is to follow the asset from molecule to patient while tracking which institution controls each decision gate.",
+  },
+  philosophy: {
+    complication:
+      "Philosophical difficulty often lies in a concept's apparent simplicity: familiar words such as knowledge, good, self or truth become unstable under analysis.",
+    evidenceProblem:
+      "The evidence problem is argumentative rather than experimental: premises, validity, counterexamples, intuitions and conceptual distinctions have to be made explicit.",
+    sourceTradition:
+      "Philosophy textbooks and encyclopaedic references typically reconstruct arguments, define terms, test objections and locate disputes within longer traditions.",
+    stakes:
+      "The gain is intellectual hygiene: an attractive conclusion can be separated from an argument that actually supports it.",
+    theoryMove:
+      "The theoretical move is to slow down ordinary judgement until its hidden premises become visible.",
+  },
+  politics: {
+    complication:
+      "Political explanation becomes more serious when institutions, legitimacy, ideology, interests and collective action are analysed together.",
+    evidenceProblem:
+      "The evidence problem is interpretation of power: formal rules rarely show all the ways influence is exercised, resisted or normalised.",
+    sourceTradition:
+      "Government and politics textbooks usually move from power and constitutions into institutions, representation, parties, ideology, public policy and rights.",
+    stakes:
+      "The gain is institutional literacy: slogans can be translated into rules, incentives, authority and consequences.",
+    theoryMove:
+      "The theoretical move is to ask how power is authorised, limited, distributed and justified.",
+  },
+  science: {
+    complication:
+      "Scientific concepts become stronger when measurement, model assumptions, causal mechanisms, uncertainty and replication are treated together.",
+    evidenceProblem:
+      "The evidence problem is robustness: a result may be statistically visible, practically small, dependent on method or unstable under replication.",
+    sourceTradition:
+      "Science textbooks usually connect observation, hypothesis, experiment, model, theory, peer review and revision rather than presenting facts as isolated conclusions.",
+    stakes:
+      "The gain is reliable doubt: claims can be tested without reducing science to either certainty or mere opinion.",
+    theoryMove:
+      "The theoretical move is to connect a claim to the observation or experiment that could support it, weaken it or force revision.",
+  },
+  "social-engineering": {
+    complication:
+      "Social-engineering analysis is complex because the same influence mechanism can appear in ordinary persuasion, manipulative design and criminal deception.",
+    evidenceProblem:
+      "The evidence problem is intent and effect: pressure, consent, transparency and verification determine whether influence remains ethical.",
+    sourceTradition:
+      "Consumer behaviour, security-awareness and ethics references frame the subject through attention, trust, authority, reciprocity, urgency, interface design and autonomy.",
+    stakes:
+      "The gain is defensive literacy: recognising manipulation makes ethical persuasion more precise and coercive persuasion easier to resist.",
+    theoryMove:
+      "The theoretical move is to separate the cue that triggers compliance from the truth of the claim being made.",
+  },
+  sociology: {
+    complication:
+      "Sociological explanation becomes powerful when personal experience, social structure, institutions, inequality and culture are kept in the same frame.",
+    evidenceProblem:
+      "The evidence problem is scale: anecdote, survey data, institutional records and historical comparison reveal different parts of social life.",
+    sourceTradition:
+      "Sociology textbooks usually move from social structure and research methods into culture, socialisation, inequality, institutions, deviance and social change.",
+    stakes:
+      "The gain is structural imagination: private experiences can be connected to public patterns without erasing agency.",
+    theoryMove:
+      "The theoretical move is to ask how patterned conditions make some actions more likely, rewarded or visible than others.",
   },
 };
 
@@ -1348,6 +1527,7 @@ function buildArticleSections(
 ): LearningLesson["sections"] {
   const frame = articleFrames[topic];
   const detail = lessonDetailFor(topic, seedIndex);
+  const lens = advancedLenses[topic];
   const plan = sectionPlans[topic];
   const [firstAlt, secondAlt] = neighbouringConcepts(topic, seed.concept);
   const sourceNames = profile.sourceKeys
@@ -1355,12 +1535,19 @@ function buildArticleSections(
     .join(" and ");
   const relatedOne = firstAlt ?? "a neighbouring concept";
   const relatedTwo = secondAlt ?? "a second neighbouring concept";
+  const levelLens =
+    seed.level === "University"
+      ? "At university level, the concept also has to survive comparison with rival explanations, disputed evidence and the possibility that the field's own categories are historically shaped."
+      : seed.level === "A-level"
+        ? "At A-level, the concept is strongest when it is connected to a named example, a clear mechanism and at least one limitation."
+        : "At GCSE level, the concept should still be treated as an explanation rather than a word to memorise.";
 
   const openingSection = {
     heading: plan.opening,
     body: [
       `${seed.concept} means ${seed.focus}. In ${profile.topic.label.toLowerCase()}, the term belongs to ${detail.anchor}, and it is normally introduced alongside the wider claim that ${profile.fieldFrame}. ${frame.disciplinaryQuestion}`,
-      `${sourceNames} provides the source family behind this lesson. Textbook chapters usually define the term, place it in the field's explanatory problem, then show the conditions under which the concept becomes useful or misleading.`,
+      `Sources such as ${sourceNames} normally treat ${seed.concept} as part of a connected chapter, not as an isolated definition. The surrounding material matters because it supplies the problem, examples, limits and neighbouring vocabulary that give the term its academic force.`,
+      lens.sourceTradition,
     ],
   };
 
@@ -1368,7 +1555,8 @@ function buildArticleSections(
     heading: plan.mechanism,
     body: [
       `The central mechanism is this: ${detail.method}. That mechanism connects the definition of ${seed.concept} to evidence, because ${frame.evidenceStandard.toLowerCase()}`,
-      `This is why ${seed.concept} is more specific than a general impression. It selects a level of analysis, a type of evidence and a likely cause. In textbook terms, it is part definition and part explanation: the definition says what the term covers, while the explanation shows why the pattern appears.`,
+      lens.evidenceProblem,
+      `This is why ${seed.concept} is more specific than a general impression. It selects a level of analysis, a type of evidence and a likely cause. ${lens.theoryMove} In textbook terms, the definition says what the term covers, while the explanation shows why the pattern appears.`,
     ],
   };
 
@@ -1377,6 +1565,7 @@ function buildArticleSections(
     body: [
       `A standard example is ${detail.case}. In that setting, ${seed.concept} is not merely a name for the example. It explains a relationship between conditions, actions and consequences that would otherwise remain scattered across the description.`,
       `The key difficulty is to ${detail.challenge}. The example therefore works like a small model: it removes some background noise, keeps the relevant variables visible and shows why the concept has a narrower meaning than ordinary language suggests.`,
+      `${levelLens} In this sense, the example is not a decorative illustration. It is the place where definition, evidence and explanatory scope are tested against one another.`,
     ],
   };
 
@@ -1385,6 +1574,7 @@ function buildArticleSections(
     body: [
       `${frame.advancedProblem} This is the point at which the concept becomes more than an introductory definition. The important question is not whether ${seed.concept} can be named, but what the concept clarifies and what it pushes into the background.`,
       `${frame.limits} A frequent error is that ${detail.misconception}. Textbook discussions usually mark this boundary because a concept that explains too much becomes too vague to explain anything well.`,
+      `${lens.complication} ${lens.stakes}`,
     ],
   };
 
@@ -1392,7 +1582,8 @@ function buildArticleSections(
     heading: plan.comparison,
     body: [
       `${seed.concept} sits near ${relatedOne} and ${relatedTwo}, but the concepts do different work. ${seed.concept} emphasises ${seed.focus}; ${relatedOne} shifts attention to another mechanism, scale or body of evidence.`,
-      `The distinction matters in reading because textbooks often build chapters by moving from one concept to the next. A learner who collapses the terms together loses the argument of the chapter. A learner who keeps the terms separate can see why the field needs more than one concept for similar-looking cases.`,
+      `The distinction matters because textbooks often build chapters by moving from one concept to the next. If the terms collapse into one another, the argument of the chapter is lost; if they remain separate, the field's need for multiple explanations of similar-looking cases becomes clearer.`,
+      `This also gives ${seed.concept} its intellectual difficulty. It is not simply harder vocabulary; it is a more exact way of deciding what kind of explanation is being offered and what kind of evidence would make that explanation stronger or weaker.`,
     ],
   };
 
