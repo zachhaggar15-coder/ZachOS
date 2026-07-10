@@ -71,7 +71,7 @@ export function DailyRoutineToggle({
             : "border border-[#2c2824]/25 group-hover:border-[#bb5d3a]/70"
         }`}
       >
-        {optimisticDone ? "x" : ""}
+        {optimisticDone ? "✓" : ""}
       </span>
       <span
         className={`zach-ui min-w-0 flex-1 font-medium leading-tight transition group-hover:text-[#bb5d3a] ${
@@ -86,6 +86,14 @@ export function DailyRoutineToggle({
       </span>
       <span className="sr-only">
         {optimisticDone ? "Currently complete." : "Currently incomplete."}
+      </span>
+      <span
+        aria-hidden="true"
+        className={`text-[10px] font-semibold uppercase tracking-[0.14em] transition ${
+          isPending ? "text-[#bb5d3a]" : "text-[#9a8d7a]"
+        } ${comfortable ? "inline" : "hidden"}`}
+      >
+        {isPending ? "saving" : optimisticDone ? "done" : ""}
       </span>
     </button>
   );

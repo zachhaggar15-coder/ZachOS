@@ -48,6 +48,7 @@ export default async function Home({ searchParams }: HomeProps) {
     quests,
     consultantLogs,
     dailyRoutineLogs,
+    learningSessions,
     portfolioAccounts,
     marketPrices,
     netWorthSnapshots,
@@ -96,6 +97,12 @@ export default async function Home({ searchParams }: HomeProps) {
         .order("date", { ascending: false })
         .limit(1000),
       supabase
+        .from("learning_sessions")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("completed_at", { ascending: false })
+        .limit(20),
+      supabase
         .from("portfolio_accounts")
         .select("*, holdings:portfolio_holdings(*)")
         .eq("user_id", user.id)
@@ -117,6 +124,7 @@ export default async function Home({ searchParams }: HomeProps) {
     quests.error,
     consultantLogs.error,
     dailyRoutineLogs.error,
+    learningSessions.error,
     portfolioAccounts.error,
     marketPrices.error,
     netWorthSnapshots.error,
@@ -140,6 +148,7 @@ export default async function Home({ searchParams }: HomeProps) {
       }
       financeSnapshots={sortByDateAscending(financeSnapshots.data ?? [])}
       fitnessMetrics={sortByDateAscending(fitnessMetrics.data ?? [])}
+      learningSessions={learningSessions.data ?? []}
       message={params.message}
       marketPrices={marketPrices.data ?? []}
       netWorthSnapshots={sortByDateAscending(netWorthSnapshots.data ?? [])}

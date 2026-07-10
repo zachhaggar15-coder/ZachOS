@@ -29,16 +29,11 @@ type ZachPageShellProps = {
 
 const navItems: Array<{ href: string; key: ZachNavKey; label: string }> = [
   { href: "/", key: "dashboard", label: "Dashboard" },
-  { href: "/mood", key: "mood", label: "Mood" },
-  { href: "/running", key: "running", label: "Running" },
-  { href: "/recovery", key: "recovery", label: "Recovery" },
-  { href: "/hrv", key: "hrv", label: "HRV" },
   { href: "/learning-zone", key: "learning", label: "Learning" },
   { href: "/activities", key: "activities", label: "Activities" },
   { href: "/portfolio", key: "portfolio", label: "Portfolio" },
-  { href: "/manage", key: "manage", label: "Update" },
-  { href: "/ai-insights", key: "ai", label: "AI" },
-  { href: "/garmin-import", key: "garmin", label: "Garmin" },
+  { href: "/ai-insights", key: "ai", label: "Insights" },
+  { href: "/manage", key: "manage", label: "Manage" },
 ];
 
 const mobileNavItems: Array<{
@@ -47,9 +42,9 @@ const mobileNavItems: Array<{
   label: string;
 }> = [
   { href: "/", key: "dashboard", label: "Home" },
-  { href: "/learning-zone", key: "learning", label: "Learn" },
   { href: "/#habits", key: "dashboard", label: "Habits" },
-  { href: "/#more", key: "dashboard", label: "More" },
+  { href: "/learning-zone", key: "learning", label: "Learn" },
+  { href: "/#note", key: "dashboard", label: "Note" },
 ];
 
 export function ZachKicker({ children }: { children: React.ReactNode }) {

@@ -12,6 +12,7 @@ import {
   calculateAnalytics,
   calculateConsultantReadiness,
 } from "@/lib/analytics";
+import { getLearningLesson } from "@/lib/learning-zone";
 import type { DatabaseSetupIssue } from "@/lib/database-setup";
 import {
   calculatePortfolioSummary,
@@ -31,6 +32,7 @@ import type {
   DailyRoutineLog,
   FinanceSnapshot,
   FitnessMetric,
+  LearningSession,
   MarketPrice,
   NetWorthSnapshot,
   Quest,
@@ -45,6 +47,7 @@ type ControlRoomDashboardProps = {
   error?: string;
   financeSnapshots: FinanceSnapshot[];
   fitnessMetrics: FitnessMetric[];
+  learningSessions: LearningSession[];
   marketPrices: MarketPrice[];
   message?: string;
   netWorthSnapshots: NetWorthSnapshot[];
@@ -216,6 +219,10 @@ function trend(values: number[]) {
   const last = values[values.length - 1];
   const previous = values[values.length - 2];
   return last >= previous ? "up" : "down";
+}
+
+function learningSessionTime(session: LearningSession) {
+  return new Date(session.completed_at ?? session.created_at).getTime();
 }
 
 function makeSparkPath(values: number[], min?: number, max?: number) {
@@ -648,6 +655,7 @@ export function ControlRoomDashboard({
   error,
   financeSnapshots,
   fitnessMetrics,
+  learningSessions,
   marketPrices,
   message,
   netWorthSnapshots,
@@ -800,6 +808,29 @@ export function ControlRoomDashboard({
   ];
   const habitDone = habitRows.filter((row) => row.done).length;
   const remainingHabits = Math.max(0, habitRows.length - habitDone);
+  const latestLearningSession = [...learningSessions].sort(
+    (left, right) => learningSessionTime(right) - learningSessionTime(left),
+  )[0];
+  const latestLearningLesson = latestLearningSession
+    ? getLearningLesson(latestLearningSession.lesson_slug)
+    : null;
+  const learningActionHref = latestLearningLesson
+    ? `/learning-zone/lesson/${latestLearningLesson.slug}`
+    : "/learning-zone";
+  const learningActionLabel = latestLearningLesson
+    ? "Revisit latest lesson"
+    : "Spin a topic";
+  const learningSummary = latestLearningLesson
+    ? `${latestLearningLesson.title} - ${latestLearningLesson.concept.level} ${latestLearningLesson.topic.replace(/-/g, " ")}`
+    : "No completed lesson yet";
+  const desktopActionHref =
+    remainingHabits > 0 ? "#desktop-rituals" : learningActionHref;
+  const desktopActionLabel =
+    remainingHabits > 0 ? "Finish daily rituals" : learningActionLabel;
+  const desktopActionReason =
+    remainingHabits > 0
+      ? `${remainingHabits} routine action${remainingHabits === 1 ? "" : "s"} still open`
+      : learningSummary;
   const investedValue = portfolioSummary.totalInvested || currentFinance?.invested_gbp;
   const currentNetWorthValue =
     currentFinance?.net_worth_gbp ??
@@ -863,7 +894,7 @@ export function ControlRoomDashboard({
         )}
 
         <MobileNotebookCard>
-          <SectionKicker>Today</SectionKicker>
+          <SectionKicker>Now</SectionKicker>
           <p className="zach-display mt-3 text-3xl leading-tight text-[#111820]">
             {operatingRecommendation.todayMove}
           </p>
@@ -881,8 +912,39 @@ export function ControlRoomDashboard({
           </div>
         </MobileNotebookCard>
 
-        <MobileNotebookCard id="check-in">
-          <SectionKicker>Quick check-in</SectionKicker>
+        <MobileNotebookCard id="habits">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <SectionKicker>Today</SectionKicker>
+              <p className="mt-2 text-sm leading-6 text-[#71685c]">
+                Tap as you go. The tick changes immediately while ZachOS saves
+                it in the background.
+              </p>
+            </div>
+            <span className="rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] px-2.5 py-1 text-xs font-semibold text-[#71685c]">
+              {remainingHabits === 0 ? "clear" : `${remainingHabits} left`}
+            </span>
+          </div>
+          <div className="mt-4 grid gap-2">
+            {habitRows.map((habit) => (
+              <DailyRitual
+                date={today}
+                done={habit.done}
+                key={habit.name}
+                metric={habit.metric}
+                name={habit.name}
+                routineKey={habit.routineKey}
+                target={habit.target}
+                unit={habit.unit}
+                value={habit.value}
+                variant="mobile"
+              />
+            ))}
+          </div>
+        </MobileNotebookCard>
+
+        <MobileNotebookCard id="note">
+          <SectionKicker>Note</SectionKicker>
           <form action={saveQuickDailyEntry} className="mt-4 grid gap-3">
             <input name="date" type="hidden" value={today} />
             <input name="return_to" type="hidden" value="/" />
@@ -919,54 +981,35 @@ export function ControlRoomDashboard({
               className="h-11 rounded-md border border-[#241f1a] bg-[#241f1a] px-4 text-sm font-semibold text-[#f9f4ec]"
               type="submit"
             >
-              Save check-in
+              Save note
             </button>
           </form>
         </MobileNotebookCard>
 
-        <MobileNotebookCard id="habits">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <SectionKicker>Habits</SectionKicker>
-              <p className="mt-2 text-sm leading-6 text-[#71685c]">
-                Tap as you go. The tick changes immediately while ZachOS saves
-                it in the background.
-              </p>
-            </div>
-            <span className="rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] px-2.5 py-1 text-xs font-semibold text-[#71685c]">
-              {remainingHabits === 0 ? "clear" : `${remainingHabits} left`}
-            </span>
-          </div>
-          <div className="mt-4 grid gap-2">
-            {habitRows.map((habit) => (
-              <DailyRitual
-                date={today}
-                done={habit.done}
-                key={habit.name}
-                metric={habit.metric}
-                name={habit.name}
-                routineKey={habit.routineKey}
-                target={habit.target}
-                unit={habit.unit}
-                value={habit.value}
-                variant="mobile"
-              />
-            ))}
-          </div>
-        </MobileNotebookCard>
-
         <MobileNotebookCard>
           <SectionKicker>Learning</SectionKicker>
-          <p className="mt-3 text-sm leading-6 text-[#71685c]">
-            Use the wheel when you want a short study session. Keep it as one
-            clean tab, not the whole phone app.
-          </p>
-          <Link
-            className="mt-4 inline-flex h-11 w-full items-center justify-center rounded-md border border-[#bb5d3a] bg-[#bb5d3a] px-4 text-sm font-semibold text-[#f9f4ec]"
-            href="/learning-zone"
-          >
-            Open Learning Zone
-          </Link>
+          <div className="mt-3 rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] p-3">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9a7d5f]">
+              Next study action
+            </div>
+            <p className="mt-2 text-sm font-semibold leading-5 text-[#3a342c]">
+              {learningSummary}
+            </p>
+          </div>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            <Link
+              className="inline-flex h-11 items-center justify-center rounded-md border border-[#bb5d3a] bg-[#bb5d3a] px-3 text-sm font-semibold text-[#f9f4ec]"
+              href={learningActionHref}
+            >
+              {learningActionLabel}
+            </Link>
+            <Link
+              className="inline-flex h-11 items-center justify-center rounded-md border border-[#d2c8b8] bg-white px-3 text-sm font-semibold text-[#2c2824]"
+              href="/learning-zone"
+            >
+              Open zone
+            </Link>
+          </div>
         </MobileNotebookCard>
 
         <MobileNotebookCard id="more">
@@ -1032,9 +1075,10 @@ export function ControlRoomDashboard({
                 </summary>
                 <form
                   action={saveQuickDailyEntry}
-                  className="absolute right-0 z-20 mt-2 grid w-64 gap-2 rounded-lg border border-[#d2c8b8] bg-[#fffaf2] p-3 shadow-xl"
+                  className="absolute right-0 z-20 mt-2 grid w-80 gap-2 rounded-lg border border-[#d2c8b8] bg-[#fffaf2] p-3 shadow-xl"
                 >
                   <input name="date" type="hidden" value={today} />
+                  <input name="return_to" type="hidden" value="/" />
                   <input
                     className="h-9 rounded border border-[#d2c8b8] bg-white px-2 text-sm"
                     max={10}
@@ -1059,18 +1103,68 @@ export function ControlRoomDashboard({
                     step="0.25"
                     type="number"
                   />
+                  <div className="grid grid-cols-2 gap-2">
+                    <input
+                      className="h-9 rounded border border-[#d2c8b8] bg-white px-2 text-sm"
+                      min={0}
+                      name="reading_pages"
+                      placeholder="Reading pages"
+                      type="number"
+                    />
+                    <input
+                      className="h-9 rounded border border-[#d2c8b8] bg-white px-2 text-sm"
+                      min={0}
+                      name="french_minutes"
+                      placeholder="French minutes"
+                      type="number"
+                    />
+                  </div>
+                  <textarea
+                    className="min-h-20 rounded border border-[#d2c8b8] bg-white px-2 py-2 text-sm"
+                    name="notes"
+                    placeholder="Reflection or context"
+                  />
                   <button
                     className="h-9 rounded bg-[#1f2422] text-sm font-semibold text-[#f9f4ec]"
                     type="submit"
                   >
                     Save
                   </button>
+                  <div className="grid grid-cols-3 gap-2 border-t border-[#2c2824]/[0.1] pt-2">
+                    <Link className="rounded border border-[#d2c8b8] px-2 py-1.5 text-center text-xs font-semibold text-[#6f6254]" href="#desktop-rituals">
+                      Habits
+                    </Link>
+                    <Link className="rounded border border-[#d2c8b8] px-2 py-1.5 text-center text-xs font-semibold text-[#6f6254]" href="/learning-zone">
+                      Learning
+                    </Link>
+                    <Link className="rounded border border-[#d2c8b8] px-2 py-1.5 text-center text-xs font-semibold text-[#6f6254]" href="/portfolio">
+                      Portfolio
+                    </Link>
+                  </div>
                 </form>
               </details>
-              <NavButton href="/manage">Update data</NavButton>
               <NavButton href="/learning-zone">Learning</NavButton>
               <NavButton href="/portfolio">Portfolio</NavButton>
-              <NavButton href="/integrations">Integrations</NavButton>
+              <details className="group relative">
+                <summary className="zach-ui inline-flex h-9 cursor-pointer list-none items-center rounded-md border border-[#d2c8b8] bg-[#f9f4ec] px-3 text-sm font-medium text-[#2c2824] transition hover:border-[#b9aa95] [&::-webkit-details-marker]:hidden">
+                  Data tools
+                  <span className="ml-2 text-[10px]">v</span>
+                </summary>
+                <div className="absolute right-0 z-20 mt-2 grid w-48 gap-1 rounded-lg border border-[#d2c8b8] bg-[#fffaf2] p-2 text-sm shadow-xl">
+                  <Link className="rounded px-3 py-2 font-medium text-[#3a342c] hover:bg-[#2c2824]/[0.06]" href="/manage">
+                    Update data
+                  </Link>
+                  <Link className="rounded px-3 py-2 font-medium text-[#3a342c] hover:bg-[#2c2824]/[0.06]" href="/integrations">
+                    Integrations
+                  </Link>
+                  <Link className="rounded px-3 py-2 font-medium text-[#3a342c] hover:bg-[#2c2824]/[0.06]" href="/garmin-import">
+                    Garmin import
+                  </Link>
+                  <Link className="rounded px-3 py-2 font-medium text-[#3a342c] hover:bg-[#2c2824]/[0.06]" href="/recovery">
+                    Recovery detail
+                  </Link>
+                </div>
+              </details>
               <form action={signOut}>
                 <button
                   className="zach-ui h-9 rounded-md border border-[#241f1a] bg-[#241f1a] px-4 text-sm font-semibold text-[#f9f4ec] transition hover:bg-[#3a342c]"
@@ -1130,12 +1224,31 @@ export function ControlRoomDashboard({
                 sub="/ 100"
                 value={consultantReadiness.score.toString()}
               />
-              <VitalRow
-                href="/hrv"
-                label="HRV"
-                sub="ms"
-                value={formatNumber(currentFitness?.hrv, { dash: "--", digits: 0 })}
-              />
+              <details className="mt-3 rounded-md border border-[#2c2824]/[0.12] bg-[#fffaf2] px-3 py-2">
+                <summary className="zach-ui cursor-pointer list-none text-xs font-semibold uppercase tracking-[0.16em] text-[#9a7d5f] [&::-webkit-details-marker]:hidden">
+                  Recovery detail
+                </summary>
+                <div className="mt-2 grid gap-1 border-t border-[#2c2824]/[0.08] pt-2">
+                  <VitalRow
+                    href="/recovery"
+                    label="Sleep"
+                    sub="score"
+                    value={formatNumber(currentFitness?.sleep_score, { dash: "--", digits: 0 })}
+                  />
+                  <VitalRow
+                    href="/running"
+                    label="Running"
+                    sub="weekly km"
+                    value={formatNumber(weekKm, { dash: "--", digits: 0 })}
+                  />
+                  <VitalRow
+                    href="/hrv"
+                    label="HRV"
+                    sub="ms"
+                    value={formatNumber(currentFitness?.hrv, { dash: "--", digits: 0 })}
+                  />
+                </div>
+              </details>
             </div>
 
             <div className="mt-5">
@@ -1231,13 +1344,25 @@ export function ControlRoomDashboard({
           </section>
 
           <aside className="min-h-0 pl-8 lg:border-l lg:border-[#2c2824]/[0.13]">
-            <section>
-              <SectionKicker>Today&apos;s move</SectionKicker>
-              <p className="zach-display mt-2 text-[23px] font-normal leading-[1.35] text-[#2c2824]">
+            <section className="rounded-md border border-[#bb5d3a]/25 bg-[#fffaf2] p-4 shadow-[0_1px_0_rgba(44,40,36,0.04)]">
+              <SectionKicker>Command centre</SectionKicker>
+              <p className="zach-display mt-2 text-[25px] font-normal leading-[1.25] text-[#2c2824]">
                 {operatingRecommendation.todayMove}
               </p>
-              <div className="mt-3 flex gap-6 border-b border-[#2c2824]/[0.13] pb-4">
-                <div>
+              <p className="mt-3 text-sm leading-6 text-[#71685c]">
+                Next action:{" "}
+                <span className="font-semibold text-[#3a342c]">
+                  {desktopActionReason}
+                </span>
+              </p>
+              <Link
+                className="mt-4 inline-flex h-10 w-full items-center justify-center rounded-md border border-[#241f1a] bg-[#241f1a] px-4 text-sm font-semibold text-[#f9f4ec] transition hover:bg-[#3a342c]"
+                href={desktopActionHref}
+              >
+                {desktopActionLabel}
+              </Link>
+              <div className="mt-4 grid grid-cols-2 gap-3 border-t border-[#2c2824]/[0.13] pt-3">
+                <div className="min-w-0">
                   <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#9a8d7a]">
                     Bottleneck
                   </div>
@@ -1245,7 +1370,7 @@ export function ControlRoomDashboard({
                     {operatingRecommendation.bottleneck}
                   </div>
                 </div>
-                <div>
+                <div className="min-w-0">
                   <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#9a8d7a]">
                     Weekly focus
                   </div>
@@ -1299,7 +1424,10 @@ export function ControlRoomDashboard({
               )}
             </section>
 
-            <section className="border-b border-[#2c2824]/[0.13] py-3.5">
+            <section
+              className="scroll-mt-6 border-b border-[#2c2824]/[0.13] py-3.5"
+              id="desktop-rituals"
+            >
               <div className="mb-3 flex items-center justify-between">
                 <SectionKicker>Daily rituals</SectionKicker>
                 <span className="zach-display text-[16px] text-[#574e44]">
