@@ -116,6 +116,16 @@ type LessonSeed = {
   practice: string;
 };
 
+type ArticleFrame = {
+  advancedProblem: string;
+  caseWorld: string;
+  disciplinaryQuestion: string;
+  evidenceStandard: string;
+  limits: string;
+  sourceMode: string;
+  studyPractice: string;
+};
+
 const sourcePack = {
   aiTextbook: {
     label: "Artificial Intelligence: A Modern Approach",
@@ -492,6 +502,233 @@ const topicProfiles: Record<LearningTopicId, TopicProfile> = {
   },
 };
 
+const articleFrames: Record<LearningTopicId, ArticleFrame> = {
+  anthropology: {
+    advancedProblem:
+      "The university-level problem is to avoid two opposite errors: treating culture as a prison that determines everything, and treating culture as a thin surface over supposedly universal behaviour.",
+    caseWorld:
+      "Use a fieldwork case: a household rule, a funeral practice, a market exchange, a healing ritual or a naming custom. Ask what participants say it does before asking what an outsider might infer.",
+    disciplinaryQuestion:
+      "Anthropology asks how human practices become meaningful inside shared worlds of kinship, economy, ritual, language and material life.",
+    evidenceStandard:
+      "Good anthropological evidence is comparative and contextual: observation, interviews, material traces, historical setting and the emic account have to be held together.",
+    limits:
+      "The limit is ethnocentrism in one direction and lazy relativism in the other. Understanding a practice in context does not automatically settle the ethical judgement of that practice.",
+    sourceMode:
+      "Open anthropology textbooks normally introduce concepts through ethnographic cases, then use those cases to unsettle assumptions about what is natural, rational or modern.",
+    studyPractice:
+      "Write a fieldnote-style paragraph: describe the practice, name the concept, give the insider meaning, then add one cautious outsider interpretation.",
+  },
+  "art-history": {
+    advancedProblem:
+      "The university-level problem is to make visual evidence argumentative without reducing the artwork to a caption about politics, biography or style.",
+    caseWorld:
+      "Use a work of art as the case: a painting, sculpture, building, photograph, installation or designed object. Begin with what is visible before moving to patronage, iconography and reception.",
+    disciplinaryQuestion:
+      "Art history asks how objects make meaning through form, material, technique, display, patronage and historical context.",
+    evidenceStandard:
+      "The evidence standard is visual precision. Claims should be anchored in composition, medium, scale, iconographic detail, site, audience and documented historical conditions.",
+    limits:
+      "The limit is over-reading. A sophisticated interpretation can still be weak if it ignores the object itself or treats every visible feature as a secret symbol.",
+    sourceMode:
+      "Art history textbooks tend to move from formal description to contextual interpretation: what the object looks like, how it was made, where it circulated and why that mattered.",
+    studyPractice:
+      "Write a visual analysis paragraph: describe three visible details, then explain how they support one historical interpretation.",
+  },
+  "artificial-intelligence": {
+    advancedProblem:
+      "The university-level problem is to separate task performance from understanding, and to distinguish optimisation against a metric from reliable behaviour in the world.",
+    caseWorld:
+      "Use an AI system as the case: a classifier, search engine, recommendation model, chatbot, forecasting tool or agent. Identify inputs, outputs, objective and failure modes.",
+    disciplinaryQuestion:
+      "Artificial intelligence asks how machines can represent problems, learn from data, search through possibilities and act under uncertainty.",
+    evidenceStandard:
+      "The evidence standard is empirical and formal: define the task, specify the data distribution, measure performance, inspect errors and ask whether the model generalises.",
+    limits:
+      "The limit is anthropomorphism. A fluent or accurate system may still be brittle, biased, mis-specified or aligned with the wrong objective.",
+    sourceMode:
+      "AI textbooks usually introduce concepts by formalising a problem, naming the representation, and then studying the algorithmic trade-offs that follow.",
+    studyPractice:
+      "Write a model card fragment: task, data, objective, intended use, likely failure case and one evaluation you would trust.",
+  },
+  business: {
+    advancedProblem:
+      "The university-level problem is to connect strategic language to an operating model: resources, incentives, customer behaviour, cash timing and execution capacity.",
+    caseWorld:
+      "Use a firm as the case: a local service business, SaaS company, retailer, marketplace, consultancy or manufacturer. Ask where value is created and where it leaks away.",
+    disciplinaryQuestion:
+      "Business studies how organisations coordinate people, capital and operations to create, deliver and capture value.",
+    evidenceStandard:
+      "Good business evidence joins qualitative insight to numbers: customer behaviour, unit economics, process constraints, competitive position and cash flow all matter.",
+    limits:
+      "The limit is slogan strategy. A phrase like innovation, culture or growth is not analysis until it explains a decision and its opportunity cost.",
+    sourceMode:
+      "Management textbooks tend to move from definitions to organisational cases, showing how apparently abstract ideas become choices about structure, leadership and control.",
+    studyPractice:
+      "Write a one-page business diagnosis: customer, value promise, revenue logic, cost driver, bottleneck and one decision that would improve the system.",
+  },
+  economics: {
+    advancedProblem:
+      "The university-level problem is to reason at the margin while also noticing institutions, distribution and feedback effects that the simplest model leaves outside the diagram.",
+    caseWorld:
+      "Use a market or policy as the case: rent, transport, labour, subscriptions, taxes, energy, education or healthcare. Identify incentives before judging outcomes.",
+    disciplinaryQuestion:
+      "Economics asks how scarce resources are allocated when people, firms and governments respond to constraints and incentives.",
+    evidenceStandard:
+      "Good economic evidence specifies the mechanism, the counterfactual and the margin of adjustment. Prices, quantities and welfare effects should not be blurred together.",
+    limits:
+      "The limit is model worship. A model is useful because it simplifies; it becomes dangerous when the simplification is forgotten.",
+    sourceMode:
+      "Economics textbooks normally introduce a model, state its assumptions, show the predicted comparative statics and then test where the model clarifies or fails.",
+    studyPractice:
+      "Write a short economic analysis: decision-maker, constraint, incentive, likely response, external effect and one missing variable.",
+  },
+  "linguistics-etymology": {
+    advancedProblem:
+      "The university-level problem is to stop treating language as a list of correct forms and instead analyse it as a rule-governed, historically changing social system.",
+    caseWorld:
+      "Use a word, sentence, accent feature, borrowed term or conversational exchange as the case. Ask what level of language is doing the work: sound, form, syntax, meaning or use.",
+    disciplinaryQuestion:
+      "Linguistics asks how language is structured, acquired, processed, varied and changed; etymology adds historical depth to the life of words.",
+    evidenceStandard:
+      "Good linguistic evidence distinguishes examples, intuitions, corpora, historical attestations and social context. A plausible origin story is not enough.",
+    limits:
+      "The limit is folk etymology and prescriptivism. Not every similarity is ancestry, and not every non-standard form is linguistic failure.",
+    sourceMode:
+      "Linguistics textbooks usually break language into analytic levels, then show how those levels interact in real speech and writing.",
+    studyPractice:
+      "Write a linguistic note: identify the form, classify the level of analysis, give two examples and state what evidence would confirm the explanation.",
+  },
+  literature: {
+    advancedProblem:
+      "The university-level problem is to make interpretation accountable to form: voice, structure, genre, rhythm and imagery must carry the argument, not decorate it.",
+    caseWorld:
+      "Use a passage from a poem, novel, play or essay as the case. Choose a small textual unit and read it slowly before making a claim about the whole work.",
+    disciplinaryQuestion:
+      "Literary study asks how language and form produce meaning, feeling, ambiguity, memory and critique.",
+    evidenceStandard:
+      "Good literary evidence is textual. It quotes or paraphrases precisely, notices pattern and deviation, and relates form to historical or theoretical context.",
+    limits:
+      "The limit is summary disguised as analysis. Retelling what happens is not the same as explaining how the text makes meaning.",
+    sourceMode:
+      "Literature textbooks usually teach close reading first, then build toward context, genre, theory and interpretive debate.",
+    studyPractice:
+      "Write a close-reading paragraph: claim, textual detail, formal feature, interpretation and one alternative reading you can rule out.",
+  },
+  marketing: {
+    advancedProblem:
+      "The university-level problem is to connect psychological insight, market structure and commercial execution without reducing marketing to promotion.",
+    caseWorld:
+      "Use an offer, category, brand, landing page, campaign or product launch as the case. Ask what behaviour the marketer is trying to change.",
+    disciplinaryQuestion:
+      "Marketing asks how value is understood by customers, differentiated from alternatives and exchanged through products, price, place and communication.",
+    evidenceStandard:
+      "Good marketing evidence combines customer research, segmentation logic, behavioural data and market outcomes. A clever message is not enough.",
+    limits:
+      "The limit is manipulation without value. Marketing becomes weak or unethical when persuasion outruns the product, the evidence or the customer's interest.",
+    sourceMode:
+      "Marketing textbooks tend to move from customer need to segmentation, targeting, positioning and the marketing mix, then test those choices against behaviour.",
+    studyPractice:
+      "Write a market note: segment, unmet need, competing alternative, positioning claim, proof point and one metric that would show behaviour changed.",
+  },
+  "pharmaceutical-businesses": {
+    advancedProblem:
+      "The university-level problem is to hold science, regulation, payer evidence, ethics and commercial strategy in one frame rather than treating approval as the whole business.",
+    caseWorld:
+      "Use a medicine, therapeutic area, trial readout, launch plan or market-access decision as the case. Track the patient, clinician, payer, regulator and company separately.",
+    disciplinaryQuestion:
+      "Pharmaceutical business asks how medicines move from biological hypothesis to evidence package, approval, reimbursement, clinician adoption and patient access.",
+    evidenceStandard:
+      "Good pharma evidence distinguishes biological plausibility, clinical endpoints, safety signals, comparative effectiveness, regulatory standards and payer value.",
+    limits:
+      "The limit is commercial simplification. A medicine can be scientifically impressive and still fail commercially, ethically or operationally.",
+    sourceMode:
+      "Drug-development and market-access material usually works stage by stage: discovery, preclinical evidence, clinical phases, regulatory submission, launch and post-market monitoring.",
+    studyPractice:
+      "Write an asset memo: mechanism, development stage, main evidence risk, regulator question, payer question and commercial implication.",
+  },
+  philosophy: {
+    advancedProblem:
+      "The university-level problem is to reconstruct arguments charitably while still pressing them hard enough to reveal hidden premises, counterexamples and conceptual costs.",
+    caseWorld:
+      "Use an argument, moral dilemma, thought experiment or ordinary claim as the case. Identify the conclusion before judging whether it is persuasive.",
+    disciplinaryQuestion:
+      "Philosophy asks what follows from our concepts, what justifies belief, what we owe one another and what kind of life or society is worth choosing.",
+    evidenceStandard:
+      "Good philosophical evidence is argumentative: definitions, distinctions, valid inference, counterexample, explanatory power and coherence with other commitments.",
+    limits:
+      "The limit is cleverness without discipline. A striking objection is not enough unless it actually targets a premise or inference.",
+    sourceMode:
+      "Philosophy textbooks usually teach the structure of an argument before introducing schools of thought, so students can evaluate rather than merely recite positions.",
+    studyPractice:
+      "Write an argument map: conclusion, premises, key definition, strongest objection and the reply a serious defender would make.",
+  },
+  politics: {
+    advancedProblem:
+      "The university-level problem is to connect normative ideals with institutions, incentives and enforcement. A political value means little until it meets a rule-making system.",
+    caseWorld:
+      "Use an election, law, protest, court decision, party strategy or policy dispute as the case. Ask who has authority and how accountability works.",
+    disciplinaryQuestion:
+      "Politics asks how power is organised, justified, contested and converted into collective decisions.",
+    evidenceStandard:
+      "Good political evidence combines institutions, interests, ideas and outcomes. It should distinguish rhetoric from mechanism.",
+    limits:
+      "The limit is tribal explanation. Saying one side is good or bad rarely explains how power actually moves through a system.",
+    sourceMode:
+      "Government and politics textbooks usually introduce institutions and ideologies together, showing how principles become procedures, rights, budgets and constraints.",
+    studyPractice:
+      "Write a political analysis: actor, institution, authority, incentive, legitimacy claim, affected group and likely unintended consequence.",
+  },
+  science: {
+    advancedProblem:
+      "The university-level problem is to distinguish a result, a method, a model and an explanation. Scientific literacy depends on knowing which one a claim actually provides.",
+    caseWorld:
+      "Use a study, health claim, experiment, model, graph or technology claim as the case. Ask what was measured and what was merely inferred.",
+    disciplinaryQuestion:
+      "Science asks how reliable knowledge can be built from observation, measurement, experiment, theory and revision.",
+    evidenceStandard:
+      "Good scientific evidence specifies controls, measurement, uncertainty, causal design, replication and the scope of the conclusion.",
+    limits:
+      "The limit is both scientism and vague scepticism. A scientific claim is not automatically final, but neither is doubt a substitute for better evidence.",
+    sourceMode:
+      "Science textbooks usually move from observation to mechanism, then to experimental design and limits of inference.",
+    studyPractice:
+      "Write a study appraisal: claim, method, variable, control, result, uncertainty and one conclusion the evidence does not justify.",
+  },
+  "social-engineering": {
+    advancedProblem:
+      "The university-level problem is to study influence without turning it into a manual for exploitation. The goal is recognition, defence and ethical persuasion.",
+    caseWorld:
+      "Use a scam message, sales script, interface flow, office request, rumour or negotiation as the case. Identify the pressure, identity claim and requested action.",
+    disciplinaryQuestion:
+      "Social engineering asks how trust, authority, urgency, reciprocity, attention and social context can be used to steer behaviour.",
+    evidenceStandard:
+      "Good evidence separates the psychological lever from the delivery channel. A phishing email, dark pattern and manipulative conversation may use the same underlying mechanism.",
+    limits:
+      "The limit is ethics and consent. Understanding manipulation does not justify deception, coercion or extracting information from people who have not agreed to that game.",
+    sourceMode:
+      "Human-factors and consumer-behaviour material typically treats influence as a predictable pattern of attention, motivation, friction and trust.",
+    studyPractice:
+      "Write a defensive analysis: claimed identity, emotional lever, requested action, missing verification, likely target and ethical alternative.",
+  },
+  sociology: {
+    advancedProblem:
+      "The university-level problem is to connect individual experience to patterned social structure without erasing agency or pretending anecdotes are proof.",
+    caseWorld:
+      "Use a school, workplace, family, online community, class pattern, status game or institution as the case. Ask what is patterned across people.",
+    disciplinaryQuestion:
+      "Sociology asks how norms, institutions, inequality, roles and identities shape social life.",
+    evidenceStandard:
+      "Good sociological evidence links biography to structure through data, comparison, historical context and theory.",
+    limits:
+      "The limit is reduction. Not every personal decision is only social structure, but few decisions are made outside social conditions.",
+    sourceMode:
+      "Sociology textbooks often introduce the sociological imagination: private troubles become public questions when they show patterned causes.",
+    studyPractice:
+      "Write a sociological explanation: individual case, social pattern, institution, norm, inequality or role, and one piece of evidence beyond anecdote.",
+  },
+};
+
 export const LEARNING_TOPICS: LearningTopic[] = Object.values(topicProfiles).map(
   (profile) => profile.topic,
 );
@@ -713,6 +950,7 @@ function buildQuestions(
   slug: string,
   profile: TopicProfile,
 ): LearningQuestion[] {
+  const frame = articleFrames[topic];
   const [firstAlt, secondAlt, thirdAlt] = neighbouringConcepts(
     topic,
     seed.concept,
@@ -722,52 +960,63 @@ function buildQuestions(
     {
       choices: [
         { id: "a", label: seed.focus },
-        { id: "b", label: firstAlt ? `mainly the same as ${firstAlt}` : "a purely decorative label" },
-        { id: "c", label: "a claim that can be memorised without context or evidence" },
-        { id: "d", label: "a personal opinion that cannot be tested against examples" },
+        {
+          id: "b",
+          label: firstAlt
+            ? `mainly the same as ${firstAlt}`
+            : "a label for any difficult example",
+        },
+        {
+          id: "c",
+          label: `a shortcut for avoiding ${frame.evidenceStandard.toLowerCase()}`,
+        },
+        {
+          id: "d",
+          label: "a personal reaction that does not need source-based support",
+        },
       ],
       correctChoiceId: "a",
       dimension: "knowledge",
-      explanation: `${seed.concept} is best understood as ${seed.focus}. The lesson asks you to recognise the concept before using it.`,
+      explanation: `${seed.concept} is best understood as ${seed.focus}. The article asks you to connect the definition to evidence and disciplinary method, not just recognise the word.`,
       id: `${slug}-knowledge`,
-      prompt: `What does ${seed.concept} mainly mean in this lesson?`,
+      prompt: `Which definition best captures ${seed.concept} as used in the article?`,
     },
     {
       choices: [
         {
           id: "a",
-          label: `Define the term, use evidence, and compare it with nearby ideas such as ${firstAlt ?? "a related concept"}.`,
+          label: `Use the relevant evidence standard, then compare ${seed.concept} with nearby ideas such as ${firstAlt ?? "a related concept"}.`,
         },
         {
           id: "b",
-          label: "Treat the term as true because it sounds academic.",
+          label: "Treat the term as correct because it sounds like a university concept.",
         },
         {
           id: "c",
           label: secondAlt
-            ? `Replace the idea with ${secondAlt} whenever the example is difficult.`
+            ? `Replace the idea with ${secondAlt} whenever the example becomes complicated.`
             : "Ignore difficult examples so the explanation stays simple.",
         },
         {
           id: "d",
-          label: "Use only personal instinct and avoid checking sources.",
+          label: "Use only personal instinct and avoid the source material.",
         },
       ],
       correctChoiceId: "a",
       dimension: "reasoning",
-      explanation: `The strongest reasoning move is to define ${seed.concept}, test it against evidence and distinguish it from neighbouring concepts.`,
+      explanation: `The strongest reasoning move is to test ${seed.concept} against the kind of evidence the discipline actually accepts, then separate it from neighbouring concepts.`,
       id: `${slug}-reasoning`,
-      prompt: `What is the best reasoning habit when using ${seed.concept}?`,
+      prompt: `What is the best academic reasoning move when using ${seed.concept}?`,
     },
     {
       choices: [
         {
           id: "a",
-          label: `${seed.practice}, while remembering that ${profile.method}.`,
+          label: `${seed.practice}, while applying the discipline's method: ${profile.method}.`,
         },
         {
           id: "b",
-          label: "Use the concept as a label after the conclusion has already been chosen.",
+          label: "Use the concept after the conclusion has already been chosen.",
         },
         {
           id: "c",
@@ -782,14 +1031,94 @@ function buildQuestions(
       ],
       correctChoiceId: "a",
       dimension: "application",
-      explanation: `${seed.concept} becomes useful when it changes what you notice, verify or compare in a real case.`,
+      explanation: `${seed.concept} becomes useful when it changes what you notice, what you verify and what explanation you are willing to reject.`,
       id: `${slug}-application`,
-      prompt: `How should you apply ${seed.concept} outside the reading?`,
+      prompt: `Which application best follows the article's treatment of ${seed.concept}?`,
     },
   ];
 }
 
-function buildLesson(topic: LearningTopicId, seed: LessonSeed): LearningLesson {
+function buildArticleSections(
+  topic: LearningTopicId,
+  seed: LessonSeed,
+  profile: TopicProfile,
+  seedIndex: number,
+): LearningLesson["sections"] {
+  const frame = articleFrames[topic];
+  const [firstAlt, secondAlt] = neighbouringConcepts(topic, seed.concept);
+  const variantSeed = `${topic}:${seed.concept}`.split("").reduce(
+    (total, character) => total + character.charCodeAt(0),
+    seedIndex * 11,
+  );
+  const opening = [
+    `${seed.concept} is not a decorative term in ${profile.topic.label.toLowerCase()}; it is one way the discipline answers a central question. ${frame.disciplinaryQuestion} In this lesson, the term means ${seed.focus}.`,
+    `A textbook treatment of ${seed.concept} begins with the discipline's problem-space rather than with a dictionary definition. ${frame.disciplinaryQuestion} Here, ${seed.concept} refers to ${seed.focus}.`,
+    `To read ${seed.concept} at university level, start with the question it was built to handle. ${frame.disciplinaryQuestion} The working definition for this lesson is ${seed.focus}.`,
+    `${profile.topic.label} uses concepts like ${seed.concept} to turn a messy case into an analysable problem. ${frame.disciplinaryQuestion} In this article, ${seed.concept} names ${seed.focus}.`,
+  ][variantSeed % 4];
+  const evidenceLead = [
+    `${frame.evidenceStandard} Applied to ${seed.concept}, that means moving from the abstract definition to a concrete evidential claim.`,
+    `The evidential burden matters. ${frame.evidenceStandard} Without that standard, ${seed.concept} becomes a label rather than an explanation.`,
+    `A serious use of ${seed.concept} has to meet the discipline's evidential rules: ${frame.evidenceStandard.toLowerCase()}`,
+    `The textbook habit is to ask what would count as support. ${frame.evidenceStandard} That is the standard ${seed.concept} has to meet.`,
+  ][(variantSeed + 1) % 4];
+  const caseLead = [
+    `${frame.caseWorld} For ${seed.concept}, the practical analytic move is ${seed.practice}.`,
+    `A useful case should be concrete rather than ornamental. ${frame.caseWorld} In that setting, ${seed.concept} is applied by ${seed.practice}.`,
+    `The concept becomes clearer in a case. ${frame.caseWorld} The relevant move is ${seed.practice}.`,
+    `Do not begin with a conclusion and then attach the term. Begin with the material: ${frame.caseWorld} Then use ${seed.concept} by ${seed.practice}.`,
+  ][(variantSeed + 2) % 4];
+  const debateLead = [
+    `${frame.advancedProblem} This is the part of the lesson that should feel challenging.`,
+    `The advanced issue is not memorisation but judgement. ${frame.advancedProblem}`,
+    `At university level, ${seed.concept} has to survive objection. ${frame.advancedProblem}`,
+    `The concept is strongest when its pressure points are visible. ${frame.advancedProblem}`,
+  ][(variantSeed + 3) % 4];
+
+  return [
+    {
+      heading: "Textbook Orientation",
+      body: [
+        `${opening} That definition should be read as a starting point for analysis, not as a flashcard answer. A university-level reading asks what work the concept does, what evidence it organises and what it would fail to explain.`,
+        `${frame.sourceMode} This is why ${seed.concept} needs more than a slogan. The concept should help you read a case with greater precision: what is being classified, what mechanism is being proposed, what assumptions are being smuggled in, and what would count as a serious counterexample.`,
+      ],
+    },
+    {
+      heading: "Mechanism and Evidence",
+      body: [
+        `${evidenceLead} If the concept is being used well, it should explain why one interpretation is stronger than another, not merely rename the thing being discussed.`,
+        `A useful comparison is ${firstAlt ?? "a neighbouring concept"}. Both may sit near ${seed.concept} inside ${profile.topic.label.toLowerCase()}, but they do not ask the same question. ${seed.concept} directs attention to ${seed.focus}; ${firstAlt ?? "the neighbouring idea"} would push the analysis toward a different mechanism, scale or kind of evidence. The distinction matters because academic reading often turns on small conceptual differences.`,
+      ],
+    },
+    {
+      heading: "Case and Interpretation",
+      body: [
+        `${caseLead} That does not mean forcing the concept onto every example. It means looking for the precise moment where the concept reveals something that ordinary description would miss.`,
+        `Suppose you were writing a paragraph rather than taking a quiz. The paragraph would not begin, "${seed.concept} is important." It would begin with a case, describe the relevant detail, and then show why ${seed.concept} explains that detail better than a looser alternative. If ${secondAlt ?? "another concept"} explains the case better, the disciplined move is to change concepts rather than protect the first answer.`,
+      ],
+    },
+    {
+      heading: "Debate, Limits, and Misuse",
+      body: [
+        `${debateLead} Concepts are rarely treated as final answers. They are tools inside arguments, and arguments have opponents. A strong reader asks what the concept illuminates, what it obscures and who benefits when that framing becomes dominant.`,
+        `${frame.limits} With ${seed.concept}, misuse usually happens when the term becomes too elastic. If it can explain every case, it has stopped explaining any case in particular. Keep the concept under pressure: specify the case, state the evidence, compare the alternative and name the limit of the claim.`,
+      ],
+    },
+    {
+      heading: "Reading Task",
+      body: [
+        `${frame.studyPractice} Make the paragraph difficult enough to be useful: include one sentence defining ${seed.concept}, one sentence applying it to a concrete case, and one sentence naming a limitation or alternative interpretation.`,
+        `The purpose is not to collect terminology. It is to build a disciplined habit of reading. When ${seed.concept} appears again in a textbook, article, lecture or real-world problem, you should be able to ask: what is the author claiming, what evidence is doing the work, what concept is nearby but different, and what would make this interpretation fail?`,
+      ],
+    },
+  ];
+}
+
+function buildLesson(
+  topic: LearningTopicId,
+  seed: LessonSeed,
+  seedIndex: number,
+): LearningLesson {
   const profile = topicProfiles[topic];
   const slug = `${topic}-${slugify(seed.concept)}`;
   const difficulty = levelDifficulty(seed.level);
@@ -800,9 +1129,9 @@ function buildLesson(topic: LearningTopicId, seed: LessonSeed): LearningLesson {
       level: seed.level,
       summary: seed.focus,
     },
-    deck: `${seed.concept} gives you a sharper handle on ${profile.topic.label.toLowerCase()}: it turns a broad subject into a usable mental model for noticing evidence, making distinctions and asking better questions.`,
+    deck: `${seed.concept} is treated here as a university-level reading tool: a way to organise evidence, distinguish nearby ideas and test a case against the standards of ${profile.topic.label.toLowerCase()}.`,
     difficulty,
-    estimatedMinutes: seed.level === "University" ? 7 : 6,
+    estimatedMinutes: seed.level === "University" ? 9 : seed.level === "A-level" ? 8 : 7,
     keyTerms: [
       {
         label: seed.concept,
@@ -818,36 +1147,7 @@ function buildLesson(topic: LearningTopicId, seed: LessonSeed): LearningLesson {
       },
     ],
     questions: buildQuestions(seed, topic, slug, profile),
-    sections: [
-      {
-        heading: "The Core Idea",
-        body: [
-          `${seed.concept} is the lesson's central concept. In ${profile.topic.label.toLowerCase()}, it points to ${seed.focus}. That definition matters because a concept is not just a word to recognise in a textbook. It is a tool for sorting examples, noticing hidden assumptions and asking what evidence would make an interpretation stronger or weaker.`,
-          `${profile.fieldFrame}. So this lesson treats ${seed.concept} as a working idea rather than a trivia item. You are looking for the moment where the concept changes what you see. A good reading should leave you able to use the term carefully, explain it to someone else and recognise when it is being stretched beyond its useful limits.`,
-        ],
-      },
-      {
-        heading: "How To Think With It",
-        body: [
-          `The first move is precision. Define ${seed.concept}, then separate it from nearby ideas. A vague definition makes every example seem to fit; a disciplined definition makes the borders visible. In practice, ${profile.method}. That means the concept has to do real work. It should clarify a case, expose a trade-off or improve a judgement.`,
-          `The second move is comparison. Ask what would look different if ${seed.concept} were absent, weaker or replaced by another explanation. This prevents the classic beginner mistake: naming a concept and assuming the name is the analysis. The intellectual gain comes from testing the idea against examples and seeing which details it explains better than competing interpretations.`,
-        ],
-      },
-      {
-        heading: "Why It Matters",
-        body: [
-          `${profile.stakes}. ${seed.concept} matters because it links a concrete example to a larger pattern. Once you can make that link, you become less dependent on memorised facts. You start building a portable framework that can travel across books, arguments, work situations and news stories.`,
-          `There is also a restraint built into the concept. A strong thinker knows when a concept applies and when it does not. If ${seed.concept} becomes a catch-all label, it stops sharpening thought and starts blurring it. The better habit is to ask: what evidence supports this reading, what evidence would challenge it, and what would a more careful alternative explanation look like?`,
-        ],
-      },
-      {
-        heading: "Use It Today",
-        body: [
-          `Use ${seed.concept} by ${seed.practice}. Pick one real example from your reading, work, media feed or daily life. Write a two-sentence explanation: first define the concept, then show exactly how the example demonstrates it. If the second sentence feels forced, the example probably needs more evidence or a different concept.`,
-          `For the quiz, do not try to memorise the paragraphs. Aim to understand the structure: definition, distinction, evidence, application. That pattern is the point of Learning Zone. Each topic broadens your intellect score, but the real gain is that the concepts become available when you are thinking under pressure, not only when you are staring at the lesson page.`,
-        ],
-      },
-    ],
+    sections: buildArticleSections(topic, seed, profile, seedIndex),
     slug,
     sources: profile.sourceKeys.map((key) => sourcePack[key]),
     subtitle: `${seed.level} concept in ${profile.topic.label}: ${seed.focus}.`,
@@ -859,7 +1159,7 @@ function buildLesson(topic: LearningTopicId, seed: LessonSeed): LearningLesson {
 export const LEARNING_LESSONS: LearningLesson[] = Object.entries(
   topicLessonSeeds,
 ).flatMap(([topic, seeds]) =>
-  seeds.map((seed) => buildLesson(topic as LearningTopicId, seed)),
+  seeds.map((seed, index) => buildLesson(topic as LearningTopicId, seed, index)),
 );
 
 export function isLearningTopicId(value: string): value is LearningTopicId {
