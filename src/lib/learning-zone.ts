@@ -16,6 +16,7 @@ export type LearningTopicId =
   | "artificial-intelligence"
   | "social-engineering"
   | "business"
+  | "music-theory"
   | "pharmaceutical-businesses";
 
 export type LearningConceptLevel = "GCSE" | "A-level" | "University";
@@ -223,6 +224,24 @@ const sourcePack = {
     type: "Textbook",
     url: "https://open.umn.edu/opentextbooks/textbooks/50",
   },
+  musicTheory21C: {
+    label: "Music Theory for the 21st-Century Classroom",
+    note: "Open four-semester college music theory textbook by Robert Hutchinson.",
+    type: "Textbook",
+    url: "https://musictheory.pugetsound.edu/mt21c/MusicTheory.html",
+  },
+  openMusicTheory: {
+    label: "Open Music Theory",
+    note: "Open undergraduate music theory textbook covering fundamentals, harmony, form, rhythm and twentieth-century materials.",
+    type: "Textbook",
+    url: "https://viva.pressbooks.pub/openmusictheory/",
+  },
+  fretboardHarmony: {
+    label: "Fretboard Harmony for University Study",
+    note: "Reference on integrating harmony with guitar fretboard performance and tactile understanding.",
+    type: "Reference",
+    url: "https://www.laguitarra-blog.com/wp-content/uploads/2012/05/Fretboard-Harmony-Jeffrey-McFadden-.pdf",
+  },
   nistSecurity: {
     label: "NIST Cybersecurity and Human Factors Resources",
     note: "Reference material for recognising and reducing manipulation risk.",
@@ -422,6 +441,23 @@ const topicProfiles: Record<LearningTopicId, TopicProfile> = {
       shortLabel: "Mktg",
     },
   },
+  "music-theory": {
+    fieldFrame:
+      "music theory explains how pitch, rhythm, harmony, melody, texture and form organise musical sound, with guitarists translating those structures onto a tuned, fretted instrument",
+    method:
+      "connect staff or chord-symbol theory to fretboard locations, interval shapes, voicings, rhythmic feel and the sound of real progressions",
+    practicalContext:
+      "understanding songs, improvisation, chord melody, riffs, accompaniment and composition through the guitar rather than through abstract notation alone",
+    sourceKeys: ["openMusicTheory", "musicTheory21C", "fretboardHarmony"],
+    stakes:
+      "guitar theory is strongest when ear, hand, fretboard pattern and harmonic explanation all point to the same musical fact",
+    topic: {
+      accent: "#7c5f9f",
+      id: "music-theory",
+      label: "Music Theory for Guitar",
+      shortLabel: "Guitar",
+    },
+  },
   "pharmaceutical-businesses": {
     fieldFrame:
       "pharmaceutical business studies how medicines move from scientific discovery through trials, regulation, market access, commercial launch and patient use",
@@ -583,6 +619,13 @@ const sectionPlans: Record<LearningTopicId, SectionPlan> = {
     mechanism: "Customer, Promise, and Exchange",
     opening: "Marketing Concept",
   },
+  "music-theory": {
+    comparison: "Related Fretboard Ideas",
+    debate: "Musical Tension",
+    example: "Guitar Example",
+    mechanism: "Sound, Shape, and Function",
+    opening: "Guitar Theory Concept",
+  },
   "pharmaceutical-businesses": {
     comparison: "Related Pharma Terms",
     debate: "Commercial and Ethical Tension",
@@ -723,6 +766,18 @@ const advancedLenses: Record<LearningTopicId, AdvancedLens> = {
       "The gain is sharper commercial empathy: the market is not an abstract audience but a set of people making choices under constraints.",
     theoryMove:
       "The theoretical move is to translate a product feature into perceived value for a specific segment in a specific buying context.",
+  },
+  "music-theory": {
+    complication:
+      "Guitar theory becomes complex because the same pitch, interval or chord can appear in several physical places, each with a different fingering, register, timbre and voice-leading possibility.",
+    evidenceProblem:
+      "The evidence problem is musical rather than only symbolic: notation, tablature, chord symbols, fretboard shapes and the ear can each describe the same event differently.",
+    sourceTradition:
+      "Open music theory textbooks usually build from pitch, rhythm, scales and intervals into harmony, cadence, form and chromaticism; a guitarist has to translate that sequence into strings, frets, positions, voicings and idiomatic movement.",
+    stakes:
+      "The gain is practical musicianship: theory stops being a list of names and becomes a way to hear, locate, voice, vary and explain musical choices on the guitar.",
+    theoryMove:
+      "The theoretical move is to connect a sound to its intervallic structure and then map that structure onto the fretboard without losing harmonic function.",
   },
   "pharmaceutical-businesses": {
     complication:
@@ -926,6 +981,22 @@ const articleFrames: Record<LearningTopicId, ArticleFrame> = {
       "Marketing textbooks tend to move from customer need to segmentation, targeting, positioning and the marketing mix, then test those choices against behaviour.",
     studyPractice:
       "Write a market note: segment, unmet need, competing alternative, positioning claim, proof point and one metric that would show behaviour changed.",
+  },
+  "music-theory": {
+    advancedProblem:
+      "The university-level problem is to connect abstract musical structure to embodied guitar playing without reducing theory to memorised box shapes or treating the fretboard as disconnected patterns.",
+    caseWorld:
+      "Use a guitar case: a chord progression, riff, melodic line, comping pattern, barre chord, triad shape, scale position or cadence that has to be heard and located on the fretboard.",
+    disciplinaryQuestion:
+      "Music theory asks how pitch, rhythm, harmony, melody, texture and form create musical meaning over time, and guitar theory adds the question of how those structures become playable shapes, positions and sounds.",
+    evidenceStandard:
+      "Good evidence comes from the sound, the notation or chord symbol, the interval structure, the fretboard location and the musical function inside the phrase.",
+    limits:
+      "The limit is shape without understanding. A guitarist can move a pattern accurately while missing what the notes are doing harmonically, rhythmically or melodically.",
+    sourceMode:
+      "Open music theory textbooks supply the conceptual grammar, while fretboard-harmony material translates that grammar into positions, voicings and tactile performance knowledge.",
+    studyPractice:
+      "Take one chord, scale or phrase and describe it three ways: by sound, by interval structure and by fretboard shape.",
   },
   "pharmaceutical-businesses": {
     advancedProblem:
@@ -1142,6 +1213,23 @@ const topicLessonSeeds: Record<LearningTopicId, LessonSeed[]> = {
     { concept: "Retention", focus: "keeping customers through repeated value and reduced friction", level: "A-level", practice: "optimising beyond acquisition" },
     { concept: "Category Design", focus: "framing a new problem so a new solution makes sense", level: "University", practice: "creating context before pitching features" },
   ],
+  "music-theory": [
+    { concept: "Fretboard Geography", focus: "understanding pitch locations across strings, frets and repeated octaves", level: "GCSE", practice: "mapping notes by string, position and octave rather than memorising isolated dots" },
+    { concept: "Intervals on Guitar", focus: "the distance between notes as movable fretboard relationships", level: "GCSE", practice: "hearing and locating thirds, fifths, sevenths and octaves inside shapes" },
+    { concept: "Major Scale Construction", focus: "the whole-step and half-step pattern that organises major-key melody and harmony", level: "GCSE", practice: "building scale degrees across one string and across positions" },
+    { concept: "Minor Keys", focus: "minor-key pitch collections and their natural, harmonic and melodic variants", level: "A-level", practice: "relating minor sounds to chord function and lead lines" },
+    { concept: "Triads Across String Sets", focus: "three-note chord structures mapped through adjacent guitar strings", level: "A-level", practice: "seeing chords as movable interval stacks, not only grips" },
+    { concept: "Seventh Chords", focus: "four-note sonorities that add harmonic colour and function", level: "A-level", practice: "connecting chord symbols to chord tones and shell voicings" },
+    { concept: "Inversions and Voicings", focus: "reordering chord tones to control register, bass movement and texture", level: "University", practice: "choosing guitar voicings for function, voice-leading and playability" },
+    { concept: "Functional Harmony", focus: "tonic, predominant and dominant roles inside tonal progressions", level: "A-level", practice: "hearing why chords move rather than treating progressions as lists" },
+    { concept: "Cadences", focus: "harmonic punctuation that creates arrival, pause or continuation", level: "A-level", practice: "recognising resolution points in songs and comping patterns" },
+    { concept: "Rhythm and Meter", focus: "the organisation of beats, accents and subdivisions over time", level: "GCSE", practice: "locking strumming, picking and rests to pulse and grouping" },
+    { concept: "Syncopation and Groove", focus: "accenting weak beats or offbeats to create forward motion", level: "A-level", practice: "placing attacks and silences against the underlying meter" },
+    { concept: "Modes on the Fretboard", focus: "scale rotations with distinct centres, intervals and harmonic colours", level: "University", practice: "linking modal sound to drone, chord vamp and characteristic tones" },
+    { concept: "Pentatonic and Blues Language", focus: "five-note frameworks and blue notes used in guitar melody and improvisation", level: "A-level", practice: "turning boxes into phrases with bends, targets and call-response" },
+    { concept: "Voice Leading", focus: "smooth movement between chord tones across changing harmony", level: "University", practice: "connecting nearby notes instead of jumping between unrelated grips" },
+    { concept: "Phrase and Form", focus: "how musical ideas group into motives, phrases, sections and larger designs", level: "University", practice: "hearing riffs, solos and progressions as structured musical paragraphs" },
+  ],
   "pharmaceutical-businesses": [
     { concept: "Drug Discovery", focus: "identifying promising biological targets and candidate molecules", level: "GCSE", practice: "linking scientific hypothesis to commercial risk" },
     { concept: "Preclinical Development", focus: "testing safety and biological activity before human trials", level: "A-level", practice: "understanding why early promise often fails" },
@@ -1312,6 +1400,23 @@ const topicLessonDetails: Record<LearningTopicId, LessonDetail[]> = {
     { anchor: "social influence sections in consumer behaviour", case: "reviews making an uncertain buyer trust a product they cannot inspect", challenge: "show when others' behaviour becomes evidence and when it becomes herd pressure", method: "identify uncertainty, reference group, credibility and visible adoption", misconception: "social proof is not proof that a choice is objectively good" },
     { anchor: "relationship marketing chapters on satisfaction, loyalty and retention", case: "a subscription product reducing churn through repeated value and lower friction", challenge: "explain retention as value delivery, not email reminders", method: "track onboarding, habit formation, switching cost, support and renewal trigger", misconception: "retention is not trapping customers who want to leave" },
     { anchor: "category and positioning material on market creation", case: "a product teaching buyers to name a problem they previously tolerated", challenge: "explain how category language shapes demand", method: "define old alternative, new problem frame, stakes and category proof", misconception: "category design is not inventing jargon for an ordinary product" },
+  ],
+  "music-theory": [
+    { anchor: "fundamentals chapters on pitch notation, octave equivalence and the guitar fretboard", case: "finding every E across open strings, twelfth fret duplicates and octave shapes", challenge: "explain why one pitch class appears in many playable locations", method: "map string tuning, fret distance, octave displacement and register", misconception: "knowing one note name is not the same as knowing its fretboard geography" },
+    { anchor: "interval chapters connected to guitar shapes and string tuning", case: "a major third appearing as different fret shapes across the B-string break", challenge: "show how intervals stay conceptually stable while fingerings change", method: "identify semitone distance, quality, direction, string pair and sound", misconception: "intervals are not just scale numbers or memorised fret gaps" },
+    { anchor: "major-scale sections on whole steps, half steps and scale degrees", case: "building G major on one string before shifting it into two-position guitar fingering", challenge: "connect the step pattern to scale degrees and chord construction", method: "track tonic, step pattern, degree names, position shift and available open strings", misconception: "a scale box is not the same as the major scale itself" },
+    { anchor: "minor-key chapters on natural, harmonic and melodic minor materials", case: "A minor rhythm guitar moving between Am, Dm and E7 while lead lines raise G sharp over the dominant", challenge: "explain why minor keys often alter notes for harmonic function", method: "compare natural minor collection, raised leading tone, chord function and melodic tendency", misconception: "minor is not just the major scale starting on a different note" },
+    { anchor: "triad chapters on root, third, fifth and inversion applied to string sets", case: "C major triads on strings 1-3, 2-4 and 3-5 with different inversions", challenge: "hear and name triads as chord tones rather than full six-string grips", method: "identify root, quality, inversion, string set and top voice", misconception: "a chord is not defined by how many strings are strummed" },
+    { anchor: "seventh-chord chapters on chord quality, extensions and chord symbols", case: "G7, Gmaj7, Gm7 and Gm7b5 reduced to compact shell voicings", challenge: "connect chord symbol, chord tones and function without relying on big grips", method: "identify third, seventh, quality, omitted tones and likely resolution", misconception: "seventh chords are not just triads with a decorative extra note" },
+    { anchor: "harmony and fretboard-harmony material on inversion, register and voicing", case: "choosing between open C, C/E, a closed triad and a high three-note voicing in the same progression", challenge: "explain how voicing changes texture and bass motion without changing chord identity", method: "track chord tones, bass note, spacing, register, doubling and physical playability", misconception: "inversion is not a different chord merely because the grip looks different" },
+    { anchor: "functional-harmony chapters on tonic, predominant and dominant roles", case: "I-vi-IV-V or ii-V-I progressions played as movable shapes up the neck", challenge: "explain why chords create departure, preparation and return", method: "identify key, Roman numeral, chord function, tendency tones and resolution", misconception: "functional harmony is not just assigning Roman numerals after the fact" },
+    { anchor: "cadence chapters on phrase endings and harmonic punctuation", case: "a V-I ending strengthened by leading tone resolution and bass motion on guitar", challenge: "show how cadence depends on placement, melody and harmonic arrival", method: "identify phrase boundary, dominant preparation, resolution, bass motion and top voice", misconception: "a cadence is not every chord change that sounds pleasant" },
+    { anchor: "rhythm chapters on meter, beat, subdivision and notation", case: "a strumming pattern that accents beats two and four while subdividing sixteenth notes", challenge: "separate meter, subdivision, accent and strumming motion", method: "count pulse, beat grouping, subdivision, rests, ties and attack pattern", misconception: "rhythm is not just strumming continuously until the chord changes" },
+    { anchor: "rhythm and popular-music sections on syncopation, anticipation and groove", case: "a funk guitar part placing short chord stabs on offbeats against a steady drummer", challenge: "explain groove through placement and silence as much as through notes", method: "identify weak-beat accent, anticipation, rest, muting and repeated pattern", misconception: "syncopation is not random playing off the beat" },
+    { anchor: "modal chapters on scale rotations, tonal centre and characteristic tones", case: "D Dorian over a static Dm7 vamp compared with D natural minor in a progression", challenge: "distinguish modal colour from simply starting a major scale on another degree", method: "identify tonal centre, parent collection, characteristic interval, chord support and drone or vamp", misconception: "modes are not magic scale boxes for soloing over anything" },
+    { anchor: "popular-music and blues materials on pentatonic scales, blue notes and phrase vocabulary", case: "minor pentatonic phrases targeting chord tones over a twelve-bar blues", challenge: "explain why the same box can sound musical or aimless depending on targets and phrasing", method: "track scale degree, bend, blue note, call-response, chord tone and rhythmic placement", misconception: "pentatonic fluency is not running the box up and down" },
+    { anchor: "counterpoint and harmony material adapted to fretboard voice leading", case: "moving from G7 to Cmaj7 using nearest available thirds and sevenths on middle strings", challenge: "show how small melodic motions inside chords create harmonic clarity", method: "identify guide tones, common tones, semitone resolutions and playable string-set movement", misconception: "voice leading is not only a classical SATB rule for singers" },
+    { anchor: "form and phrase chapters on motives, periods, sections and popular-song design", case: "a riff returning as intro, verse hook and solo reference inside a guitar song", challenge: "explain how repetition and variation create larger musical shape", method: "identify motive, phrase, cadence, section, contrast and return", misconception: "form is not just labelling verse and chorus after listening once" },
   ],
   "pharmaceutical-businesses": [
     { anchor: "drug development references on target identification and lead discovery", case: "a company pursuing a biological pathway with promising lab evidence but uncertain clinical relevance", challenge: "separate scientific plausibility from developable asset", method: "identify target, mechanism, candidate, unmet need and translational risk", misconception: "drug discovery is not simply finding a cure in a lab" },
