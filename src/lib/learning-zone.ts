@@ -14,10 +14,18 @@ export type LearningTopicId =
   | "politics"
   | "sociology"
   | "artificial-intelligence"
+  | "architecture-urbanism"
   | "social-engineering"
   | "business"
+  | "classical-civilisation"
+  | "geopolitics"
+  | "history-of-ideas"
+  | "military-strategy"
   | "music-theory"
-  | "pharmaceutical-businesses";
+  | "pharmaceutical-businesses"
+  | "psychology"
+  | "rhetoric-argumentation"
+  | "systems-thinking";
 
 export type LearningConceptLevel = "GCSE" | "A-level" | "University";
 
@@ -260,17 +268,41 @@ const sourcePack = {
     type: "Textbook",
     url: "https://openstax.org/details/books/principles-economics-3e",
   },
+  openStaxPoliticalScience: {
+    label: "OpenStax Introduction to Political Science",
+    note: "Open textbook covering political institutions, comparative politics and international relations.",
+    type: "Textbook",
+    url: "https://openstax.org/books/introduction-political-science/pages/1-introduction",
+  },
   openStaxPolitics: {
     label: "OpenStax American Government 3e",
     note: "Open textbook on institutions, representation and political behaviour.",
     type: "Textbook",
     url: "https://openstax.org/details/books/american-government-3e",
   },
+  openStaxPsychology: {
+    label: "OpenStax Psychology 2e",
+    note: "Open psychology textbook covering cognition, development, social psychology, learning, stress and behaviour.",
+    type: "Textbook",
+    url: "https://openstax.org/details/books/psychology-2e",
+  },
   openStaxSociology: {
     label: "OpenStax Introduction to Sociology 3e",
     note: "Open textbook on social structure, institutions and research methods.",
     type: "Textbook",
     url: "https://openstax.org/details/books/introduction-sociology-3e",
+  },
+  openStaxWorldHistory1: {
+    label: "OpenStax World History Volume 1",
+    note: "Open textbook covering ancient and classical civilisations to 1500.",
+    type: "Textbook",
+    url: "https://openstax.org/details/books/world-history-volume-1",
+  },
+  openStaxWorldHistory2: {
+    label: "OpenStax World History Volume 2",
+    note: "Open textbook covering modern global history, revolutions, imperialism, conflict and globalisation.",
+    type: "Textbook",
+    url: "https://openstax.org/details/books/world-history-volume-2",
   },
   pharmaAccess: {
     label: "WHO Medicines Pricing and Financing",
@@ -290,6 +322,18 @@ const sourcePack = {
     type: "Primary",
     url: "https://www.gutenberg.org/",
   },
+  projectGutenbergOnWar: {
+    label: "Project Gutenberg: On War",
+    note: "Public-domain primary text by Carl von Clausewitz for strategy and military theory.",
+    type: "Primary",
+    url: "https://www.gutenberg.org/ebooks/1946",
+  },
+  rhetoricTextbook: {
+    label: "OpenStax Writing Guide with Handbook",
+    note: "Open writing textbook with rhetoric, argumentation, evidence and genre material.",
+    type: "Textbook",
+    url: "https://openstax.org/details/books/writing-guide",
+  },
   sep: {
     label: "Stanford Encyclopedia of Philosophy",
     note: "Peer-reviewed reference for advanced concepts and primary debates.",
@@ -301,6 +345,30 @@ const sourcePack = {
     note: "Museum-grade art history reference with images and essays.",
     type: "Reference",
     url: "https://smarthistory.org/",
+  },
+  silvaRhetoricae: {
+    label: "Silva Rhetoricae",
+    note: "Reference guide to classical and renaissance rhetorical terms and figures.",
+    type: "Reference",
+    url: "https://rhetoric.byu.edu/",
+  },
+  spaceSyntaxUrbanStudies: {
+    label: "Introduction to Space Syntax in Urban Studies",
+    note: "Open access reference on spatial configuration, movement and urban form.",
+    type: "Reference",
+    url: "https://library.oapen.org/handle/20.500.12657/50404",
+  },
+  systemsThinkingSustainability: {
+    label: "Introduction to Sustainability: Systems Thinking",
+    note: "Open textbook chapter introducing feedback loops and systems thinking through everyday sustainability examples.",
+    type: "Textbook",
+    url: "https://openbooks.macewan.ca/introductiontosustainability/chapter/chapter-two-systems-thinking/",
+  },
+  systemsThinker: {
+    label: "The Systems Thinker",
+    note: "Reference material on stocks, flows, causal loops and feedback reasoning.",
+    type: "Reference",
+    url: "https://thesystemsthinker.com/",
   },
 } as const satisfies Record<string, LearningSource>;
 
@@ -356,6 +424,23 @@ const topicProfiles: Record<LearningTopicId, TopicProfile> = {
       shortLabel: "AI",
     },
   },
+  "architecture-urbanism": {
+    fieldFrame:
+      "architecture and urbanism study how buildings, streets, public spaces and infrastructure shape everyday movement, attention, comfort, identity and power",
+    method:
+      "read the built environment through form, material, threshold, circulation, density, land use, public-private boundary and patterns of access",
+    practicalContext:
+      "noticing why a street feels safe or hostile, why a building guides behaviour, and how neighbourhood design changes ordinary life",
+    sourceKeys: ["artHistoryTextbook", "spaceSyntaxUrbanStudies", "openStaxSociology"],
+    stakes:
+      "the built environment quietly trains habits: where people walk, meet, wait, avoid, spend money, feel welcome or feel watched",
+    topic: {
+      accent: "#6d7465",
+      id: "architecture-urbanism",
+      label: "Architecture & Urbanism",
+      shortLabel: "Urban",
+    },
+  },
   business: {
     fieldFrame:
       "business studies how organisations create, deliver and capture value while coordinating people, capital and operations",
@@ -373,6 +458,23 @@ const topicProfiles: Record<LearningTopicId, TopicProfile> = {
       shortLabel: "Biz",
     },
   },
+  "classical-civilisation": {
+    fieldFrame:
+      "classical civilisation studies the cultures of ancient Greece and Rome through myth, politics, war, philosophy, law, theatre, art and urban life",
+    method:
+      "connect ancient texts, monuments, institutions and myths to the everyday concepts they still shape: citizenship, rhetoric, heroism, republics and public virtue",
+    practicalContext:
+      "seeing classical references in politics, buildings, sport, law, literature, luxury branding and ideas of leadership",
+    sourceKeys: ["openStaxWorldHistory1", "projectGutenberg", "smarthistory"],
+    stakes:
+      "classical ideas remain powerful because they supply symbols and arguments that modern institutions still borrow, revise and contest",
+    topic: {
+      accent: "#9a7a45",
+      id: "classical-civilisation",
+      label: "Classical Civilisation",
+      shortLabel: "Classics",
+    },
+  },
   economics: {
     fieldFrame:
       "economics studies scarcity, incentives, coordination and trade-offs across households, firms, markets and governments",
@@ -388,6 +490,40 @@ const topicProfiles: Record<LearningTopicId, TopicProfile> = {
       id: "economics",
       label: "Economics",
       shortLabel: "Econ",
+    },
+  },
+  geopolitics: {
+    fieldFrame:
+      "geopolitics studies how geography, power, resources, technology, alliances and institutions shape the behaviour of states and regions",
+    method:
+      "connect maps to incentives: chokepoints, borders, energy routes, demographic pressures, military reach, trade dependence and diplomatic constraints",
+    practicalContext:
+      "reading news about wars, supply chains, energy prices, migration, sanctions and alliances with more structural depth",
+    sourceKeys: ["openStaxPoliticalScience", "openStaxWorldHistory2", "openStaxEconomics"],
+    stakes:
+      "geopolitical thinking links everyday prices and headlines to geography, institutions and strategic choices made far away",
+    topic: {
+      accent: "#596f8c",
+      id: "geopolitics",
+      label: "Geopolitics",
+      shortLabel: "Geo",
+    },
+  },
+  "history-of-ideas": {
+    fieldFrame:
+      "history of ideas studies how concepts such as liberty, progress, nature, reason, nation, class and the self change across time and institutions",
+    method:
+      "trace an idea through texts, social conditions, institutions, technologies and ordinary vocabulary rather than treating it as timeless common sense",
+    practicalContext:
+      "recognising inherited assumptions in news, workplaces, education, self-improvement culture, politics and moral language",
+    sourceKeys: ["openStaxWorldHistory2", "philosophyTextbook", "sep"],
+    stakes:
+      "ideas are not weightless; they become laws, habits, business models, identities and ways of judging what a good life is",
+    topic: {
+      accent: "#7f6655",
+      id: "history-of-ideas",
+      label: "History of Ideas",
+      shortLabel: "Ideas",
     },
   },
   "linguistics-etymology": {
@@ -441,6 +577,23 @@ const topicProfiles: Record<LearningTopicId, TopicProfile> = {
       shortLabel: "Mktg",
     },
   },
+  "military-strategy": {
+    fieldFrame:
+      "military strategy studies the use of organised force to achieve political aims under danger, uncertainty, friction and limited resources",
+    method:
+      "separate objective, enemy, terrain, logistics, morale, intelligence, timing and political constraint before judging a plan",
+    practicalContext:
+      "understanding conflict news, organisational competition, security decisions and everyday strategic language without romanticising war",
+    sourceKeys: ["projectGutenbergOnWar", "openStaxPoliticalScience", "openStaxWorldHistory2"],
+    stakes:
+      "strategy teaches that plans fail not only through bad intentions but through friction, fog, incentives, logistics and mistaken assumptions about the opponent",
+    topic: {
+      accent: "#6e6a58",
+      id: "military-strategy",
+      label: "Military Strategy",
+      shortLabel: "Strategy",
+    },
+  },
   "music-theory": {
     fieldFrame:
       "music theory explains how pitch, rhythm, harmony, melody, texture and form organise musical sound, with guitarists translating those structures onto a tuned, fretted instrument",
@@ -475,6 +628,23 @@ const topicProfiles: Record<LearningTopicId, TopicProfile> = {
       shortLabel: "Pharma",
     },
   },
+  psychology: {
+    fieldFrame:
+      "psychology studies behaviour and mental processes, including perception, memory, learning, emotion, motivation, development and social influence",
+    method:
+      "connect everyday behaviour to mechanisms, evidence, context and limits rather than explaining everything through personality or willpower",
+    practicalContext:
+      "understanding habits, attention, stress, relationships, persuasion, motivation and decision-making in daily life",
+    sourceKeys: ["openStaxPsychology", "openStaxSociology"],
+    stakes:
+      "psychology is useful when it turns familiar behaviour into testable mechanisms without reducing people to simplistic labels",
+    topic: {
+      accent: "#6f7f55",
+      id: "psychology",
+      label: "Psychology",
+      shortLabel: "Psych",
+    },
+  },
   philosophy: {
     fieldFrame:
       "philosophy tests concepts, arguments and values when ordinary answers become too loose or too inherited",
@@ -507,6 +677,23 @@ const topicProfiles: Record<LearningTopicId, TopicProfile> = {
       id: "politics",
       label: "Politics",
       shortLabel: "Pol",
+    },
+  },
+  "rhetoric-argumentation": {
+    fieldFrame:
+      "rhetoric and argumentation study how claims persuade audiences through evidence, arrangement, style, credibility, emotion and timing",
+    method:
+      "identify claim, audience, context, warrant, evidence, appeal, framing and counterargument before deciding whether persuasion is justified",
+    practicalContext:
+      "reading adverts, speeches, workplace pitches, essays, social media arguments and headlines without being carried by surface confidence",
+    sourceKeys: ["rhetoricTextbook", "silvaRhetoricae", "philosophyTextbook"],
+    stakes:
+      "rhetorical literacy makes persuasion visible: not to become cynical, but to distinguish strong argument from pressure, ornament and manipulation",
+    topic: {
+      accent: "#8a5f78",
+      id: "rhetoric-argumentation",
+      label: "Rhetoric & Argumentation",
+      shortLabel: "Rhetoric",
     },
   },
   science: {
@@ -560,6 +747,23 @@ const topicProfiles: Record<LearningTopicId, TopicProfile> = {
       shortLabel: "Soc",
     },
   },
+  "systems-thinking": {
+    fieldFrame:
+      "systems thinking studies how parts interact through feedback, stocks, flows, delays, incentives and boundaries to produce behaviour over time",
+    method:
+      "look past isolated events and map relationships, feedback loops, bottlenecks, delays, accumulation and unintended consequences",
+    practicalContext:
+      "understanding habits, traffic, money, organisations, apps, health routines, families and cities as interacting systems",
+    sourceKeys: ["systemsThinkingSustainability", "systemsThinker", "openStaxBiology"],
+    stakes:
+      "systems thinking helps explain why sincere fixes can fail when they ignore feedback, delays, incentives or the wider structure",
+    topic: {
+      accent: "#4f8171",
+      id: "systems-thinking",
+      label: "Systems Thinking",
+      shortLabel: "Systems",
+    },
+  },
 };
 
 const sectionPlans: Record<LearningTopicId, SectionPlan> = {
@@ -584,6 +788,13 @@ const sectionPlans: Record<LearningTopicId, SectionPlan> = {
     mechanism: "Model, Data, and Objective",
     opening: "Technical Definition",
   },
+  "architecture-urbanism": {
+    comparison: "Related Spatial Ideas",
+    debate: "Design Tension",
+    example: "Built Environment Example",
+    mechanism: "Form, Flow, and Use",
+    opening: "Spatial Concept",
+  },
   business: {
     comparison: "Adjacent Business Ideas",
     debate: "Strategic Tension",
@@ -591,12 +802,33 @@ const sectionPlans: Record<LearningTopicId, SectionPlan> = {
     mechanism: "Value, Resources, and Execution",
     opening: "Management Concept",
   },
+  "classical-civilisation": {
+    comparison: "Related Classical Ideas",
+    debate: "Ancient and Modern Tension",
+    example: "Classical Example",
+    mechanism: "Myth, Institution, and Public Life",
+    opening: "Classical Concept",
+  },
   economics: {
     comparison: "Nearby Economic Models",
     debate: "Policy and Welfare Tension",
     example: "Market Example",
     mechanism: "Incentives and Constraints",
     opening: "Economic Model",
+  },
+  geopolitics: {
+    comparison: "Related Strategic Ideas",
+    debate: "Power and Constraint",
+    example: "Map and News Example",
+    mechanism: "Geography, Resources, and Power",
+    opening: "Geopolitical Concept",
+  },
+  "history-of-ideas": {
+    comparison: "Related Intellectual Currents",
+    debate: "Historical Tension",
+    example: "Idea in Everyday Life",
+    mechanism: "Concept, Context, and Transmission",
+    opening: "Idea in History",
   },
   "linguistics-etymology": {
     comparison: "Related Language Features",
@@ -619,6 +851,13 @@ const sectionPlans: Record<LearningTopicId, SectionPlan> = {
     mechanism: "Customer, Promise, and Exchange",
     opening: "Marketing Concept",
   },
+  "military-strategy": {
+    comparison: "Related Strategic Concepts",
+    debate: "Friction and Command",
+    example: "Conflict Example",
+    mechanism: "Objective, Force, and Constraint",
+    opening: "Strategy Concept",
+  },
   "music-theory": {
     comparison: "Related Fretboard Ideas",
     debate: "Musical Tension",
@@ -633,6 +872,13 @@ const sectionPlans: Record<LearningTopicId, SectionPlan> = {
     mechanism: "Evidence, Regulation, and Market Access",
     opening: "Life-Sciences Business Concept",
   },
+  psychology: {
+    comparison: "Related Psychological Ideas",
+    debate: "Evidence and Explanation",
+    example: "Everyday Behaviour Example",
+    mechanism: "Mind, Behaviour, and Context",
+    opening: "Psychological Concept",
+  },
   philosophy: {
     comparison: "Neighbouring Arguments",
     debate: "Philosophical Objection",
@@ -646,6 +892,13 @@ const sectionPlans: Record<LearningTopicId, SectionPlan> = {
     example: "Government or Movement Example",
     mechanism: "Power, Authority, and Rules",
     opening: "Political Concept",
+  },
+  "rhetoric-argumentation": {
+    comparison: "Related Persuasive Moves",
+    debate: "Argument and Manipulation",
+    example: "Everyday Argument Example",
+    mechanism: "Claim, Audience, and Appeal",
+    opening: "Rhetorical Concept",
   },
   science: {
     comparison: "Related Scientific Concepts",
@@ -667,6 +920,13 @@ const sectionPlans: Record<LearningTopicId, SectionPlan> = {
     example: "Social Example",
     mechanism: "Structure, Norm, and Institution",
     opening: "Sociological Concept",
+  },
+  "systems-thinking": {
+    comparison: "Related System Ideas",
+    debate: "Intervention Tension",
+    example: "Everyday System Example",
+    mechanism: "Feedback, Flow, and Delay",
+    opening: "Systems Concept",
   },
 };
 
@@ -707,6 +967,18 @@ const advancedLenses: Record<LearningTopicId, AdvancedLens> = {
     theoryMove:
       "The theoretical move is to separate the task, representation, objective function, data distribution and evaluation procedure before judging intelligence.",
   },
+  "architecture-urbanism": {
+    complication:
+      "Built environments become difficult to analyse because aesthetic choice, social control, land value, infrastructure and everyday habit are often fused in the same street or building.",
+    evidenceProblem:
+      "The evidence problem is spatial and lived: plans, photographs, footfall, materials, regulations and ordinary behaviour all reveal different parts of the built environment.",
+    sourceTradition:
+      "Architecture and urbanism sources usually move from form and material into circulation, public space, urban morphology, housing, planning and the politics of access.",
+    stakes:
+      "The gain is spatial literacy: pavements, doors, benches, walls, stations and squares become evidence about how a place expects people to move and behave.",
+    theoryMove:
+      "The theoretical move is to treat space as an active social arrangement rather than a neutral container for life.",
+  },
   business: {
     complication:
       "Business analysis becomes difficult when growth, profit, cash timing, capability and culture point in different directions.",
@@ -719,6 +991,18 @@ const advancedLenses: Record<LearningTopicId, AdvancedLens> = {
     theoryMove:
       "The theoretical move is to connect a firm's choices to its activity system, resource base and economic engine rather than judging ideas in isolation.",
   },
+  "classical-civilisation": {
+    complication:
+      "Classical civilisation is difficult because Greek and Roman material reaches modern life through admiration, translation, empire, education, ruins and selective memory.",
+    evidenceProblem:
+      "The evidence problem is fragmentary and mediated: texts, inscriptions, architecture, sculpture, coins and later retellings preserve different and often partial ancient voices.",
+    sourceTradition:
+      "Classical civilisation teaching usually combines myth, epic, drama, politics, philosophy, art, archaeology and Roman public life rather than treating the ancient world as one unified culture.",
+    stakes:
+      "The gain is cultural recognition: classical references in buildings, law, rhetoric and politics become legible as choices rather than decorative prestige.",
+    theoryMove:
+      "The theoretical move is to connect ancient practices to their institutions and then ask what modern culture keeps, edits or misunderstands.",
+  },
   economics: {
     complication:
       "Economic explanation becomes serious when individual incentives, institutional rules, distributional effects and time horizons are considered together.",
@@ -730,6 +1014,30 @@ const advancedLenses: Record<LearningTopicId, AdvancedLens> = {
       "The gain is second-order reasoning: visible benefits can be compared with opportunity costs, unintended effects and who bears the adjustment.",
     theoryMove:
       "The theoretical move is to model a constraint and then ask how behaviour changes at the margin when incentives or rules change.",
+  },
+  geopolitics: {
+    complication:
+      "Geopolitical explanation becomes complex because geography constrains states, but institutions, technology, ideology and leadership mediate those constraints.",
+    evidenceProblem:
+      "The evidence problem is scale: maps, trade data, troop movements, treaty commitments, energy flows and demographic pressures all matter, but none is enough alone.",
+    sourceTradition:
+      "Political science and world-history textbooks usually approach geopolitics through states, sovereignty, international institutions, war, political economy and historical change.",
+    stakes:
+      "The gain is structural news reading: everyday headlines about fuel, migration, sanctions, supply chains and conflict can be connected to geography and power.",
+    theoryMove:
+      "The theoretical move is to ask how location, resources and security dilemmas change the menu of choices available to political actors.",
+  },
+  "history-of-ideas": {
+    complication:
+      "Ideas become difficult to study because they travel through books, schools, technologies, institutions, habits and slogans, changing meaning as they move.",
+    evidenceProblem:
+      "The evidence problem is contextual: a word such as progress, freedom or nature can mean different things depending on period, class, institution and political need.",
+    sourceTradition:
+      "History of ideas works between intellectual history, philosophy, political theory and social history, tracing concepts through arguments and the worlds that made them plausible.",
+    stakes:
+      "The gain is conceptual self-awareness: everyday assumptions begin to look inherited, contested and historically produced rather than obvious.",
+    theoryMove:
+      "The theoretical move is to treat an idea as an actor in history, shaped by context while also shaping what people think is possible.",
   },
   "linguistics-etymology": {
     complication:
@@ -767,6 +1075,18 @@ const advancedLenses: Record<LearningTopicId, AdvancedLens> = {
     theoryMove:
       "The theoretical move is to translate a product feature into perceived value for a specific segment in a specific buying context.",
   },
+  "military-strategy": {
+    complication:
+      "Military strategy is difficult because violence is organised for political purposes under uncertainty, fear, limited information and resistance from an intelligent opponent.",
+    evidenceProblem:
+      "The evidence problem is counterfactual: battles and campaigns show what happened, but strategy also asks what alternatives were available and what constraints commanders perceived.",
+    sourceTradition:
+      "Classical strategy and political science sources usually connect war to policy, friction, morale, logistics, terrain, command and the opponent's will.",
+    stakes:
+      "The gain is strategic realism: plans in conflict, business and everyday competition can be tested against friction, logistics, uncertainty and enemy adaptation.",
+    theoryMove:
+      "The theoretical move is to connect means to political ends while asking how friction and opposition transform the plan.",
+  },
   "music-theory": {
     complication:
       "Guitar theory becomes complex because the same pitch, interval or chord can appear in several physical places, each with a different fingering, register, timbre and voice-leading possibility.",
@@ -791,6 +1111,18 @@ const advancedLenses: Record<LearningTopicId, AdvancedLens> = {
     theoryMove:
       "The theoretical move is to follow the asset from molecule to patient while tracking which institution controls each decision gate.",
   },
+  psychology: {
+    complication:
+      "Psychological explanation becomes difficult because behaviour can be shaped by biology, learning history, perception, social context and conscious interpretation at the same time.",
+    evidenceProblem:
+      "The evidence problem is measurement: self-report, experiments, observation, reaction time and physiological data each capture only part of mental life.",
+    sourceTradition:
+      "Psychology textbooks usually move from biological bases and sensation into learning, memory, development, motivation, personality, stress and social behaviour.",
+    stakes:
+      "The gain is everyday self-understanding: habits, attention, conflict and motivation become mechanisms that can be studied rather than mysteries or moral failures.",
+    theoryMove:
+      "The theoretical move is to explain behaviour through interacting mechanisms rather than through a single trait label.",
+  },
   philosophy: {
     complication:
       "Philosophical difficulty often lies in a concept's apparent simplicity: familiar words such as knowledge, good, self or truth become unstable under analysis.",
@@ -814,6 +1146,18 @@ const advancedLenses: Record<LearningTopicId, AdvancedLens> = {
       "The gain is institutional literacy: slogans can be translated into rules, incentives, authority and consequences.",
     theoryMove:
       "The theoretical move is to ask how power is authorised, limited, distributed and justified.",
+  },
+  "rhetoric-argumentation": {
+    complication:
+      "Rhetoric becomes difficult because persuasive force can come from good evidence, emotional timing, audience identity, style, omission or social pressure.",
+    evidenceProblem:
+      "The evidence problem is argumentative: claims need warrants, support, context and counterargument, while rhetorical appeals must be judged by audience and purpose.",
+    sourceTradition:
+      "Rhetoric and writing textbooks usually combine classical appeals, arrangement, evidence, genre, style, audience analysis and fallacy detection.",
+    stakes:
+      "The gain is persuasion literacy: adverts, speeches, workplace decks and online arguments become inspectable rather than merely convincing or annoying.",
+    theoryMove:
+      "The theoretical move is to separate how a claim persuades from whether its reasons actually justify belief or action.",
   },
   science: {
     complication:
@@ -850,6 +1194,18 @@ const advancedLenses: Record<LearningTopicId, AdvancedLens> = {
       "The gain is structural imagination: private experiences can be connected to public patterns without erasing agency.",
     theoryMove:
       "The theoretical move is to ask how patterned conditions make some actions more likely, rewarded or visible than others.",
+  },
+  "systems-thinking": {
+    complication:
+      "Systems thinking becomes difficult because the visible event is often produced by hidden accumulations, feedback loops, delays and incentives elsewhere in the system.",
+    evidenceProblem:
+      "The evidence problem is dynamic: a snapshot rarely explains behaviour over time, so stocks, flows, rates, delays and feedback signs have to be traced.",
+    sourceTradition:
+      "Systems-thinking sources usually begin with feedback loops, stocks, flows, boundaries, leverage points and unintended consequences in ecological, organisational and everyday systems.",
+    stakes:
+      "The gain is intervention discipline: quick fixes can be judged by how they alter the system rather than by how satisfying they feel immediately.",
+    theoryMove:
+      "The theoretical move is to shift from linear cause to interacting structure, asking what pattern the system is set up to reproduce.",
   },
 };
 
@@ -902,6 +1258,22 @@ const articleFrames: Record<LearningTopicId, ArticleFrame> = {
     studyPractice:
       "Write a model card fragment: task, data, objective, intended use, likely failure case and one evaluation you would trust.",
   },
+  "architecture-urbanism": {
+    advancedProblem:
+      "The advanced problem is to read space as both design and social instruction: a building can be beautiful, profitable, exclusionary and efficient at the same time.",
+    caseWorld:
+      "Use an everyday place: a station entrance, shopping street, housing estate, office lobby, bench, crossing, cafe frontage, school corridor or public square.",
+    disciplinaryQuestion:
+      "Architecture and urbanism ask how built form organises movement, visibility, belonging, comfort, ownership and public life.",
+    evidenceStandard:
+      "Good evidence includes spatial layout, material, threshold, route, sightline, regulation, user behaviour, maintenance and who is included or excluded.",
+    limits:
+      "The limit is treating design as either pure aesthetics or pure social control; most places combine beauty, function, cost and power.",
+    sourceMode:
+      "Architecture and urbanism sources move from form and material into circulation, urban morphology, public space and social use.",
+    studyPractice:
+      "Choose one everyday space and describe its path, boundary, invitation, obstruction and likely social effect.",
+  },
   business: {
     advancedProblem:
       "The university-level problem is to connect strategic language to an operating model: resources, incentives, customer behaviour, cash timing and execution capacity.",
@@ -933,6 +1305,54 @@ const articleFrames: Record<LearningTopicId, ArticleFrame> = {
       "Economics textbooks normally introduce a model, state its assumptions, show the predicted comparative statics and then test where the model clarifies or fails.",
     studyPractice:
       "Write a short economic analysis: decision-maker, constraint, incentive, likely response, external effect and one missing variable.",
+  },
+  "classical-civilisation": {
+    advancedProblem:
+      "The advanced problem is to recognise classical inheritance without turning Greece and Rome into timeless ideals or simple origins for modern life.",
+    caseWorld:
+      "Use an everyday classical trace: a courthouse column, Olympic language, republican symbolism, a heroic brand name, a political speech or a myth retold in film.",
+    disciplinaryQuestion:
+      "Classical civilisation asks how Greek and Roman myths, institutions, arts, wars and public ideals shaped ancient life and later cultural memory.",
+    evidenceStandard:
+      "Good evidence distinguishes primary ancient material, archaeological context, later reception and modern appropriation.",
+    limits:
+      "The limit is nostalgia. Classical material should not be treated as a single golden age or as automatic authority.",
+    sourceMode:
+      "Classical sources combine ancient texts, material culture, art history, political institutions and later reception.",
+    studyPractice:
+      "Identify one classical reference in modern life and separate the ancient source from the modern use.",
+  },
+  geopolitics: {
+    advancedProblem:
+      "The advanced problem is to avoid map determinism while still taking geography, resources and strategic position seriously.",
+    caseWorld:
+      "Use a news case: energy prices, shipping disruption, sanctions, border conflict, military basing, migration pressure or supply-chain vulnerability.",
+    disciplinaryQuestion:
+      "Geopolitics asks how geography, resources, technology, institutions and power shape state behaviour and regional order.",
+    evidenceStandard:
+      "Good evidence joins map position to trade flows, military reach, alliances, institutions, demographics and historical grievances.",
+    limits:
+      "The limit is explaining politics from geography alone. Leaders, institutions, ideas and mistakes still matter.",
+    sourceMode:
+      "Political science and world-history sources connect states, international systems, conflict, economics and historical development.",
+    studyPractice:
+      "Pick one headline and identify the map factor, economic factor, security factor and institution involved.",
+  },
+  "history-of-ideas": {
+    advancedProblem:
+      "The advanced problem is to see ideas as historical forces without pretending that texts alone explain social change.",
+    caseWorld:
+      "Use an everyday idea: productivity, freedom, progress, civilisation, nature, authenticity, merit or the self.",
+    disciplinaryQuestion:
+      "History of ideas asks how concepts emerge, travel, change meaning and become embedded in institutions and ordinary judgement.",
+    evidenceStandard:
+      "Good evidence traces vocabulary, texts, institutions, technologies, social conflict and the practical settings where an idea becomes plausible.",
+    limits:
+      "The limit is treating ideas as timeless definitions rather than contested historical tools.",
+    sourceMode:
+      "History-of-ideas work moves between philosophy, political theory, intellectual history and social context.",
+    studyPractice:
+      "Choose one familiar word and ask what period, institution or social problem gave it its current force.",
   },
   "linguistics-etymology": {
     advancedProblem:
@@ -982,6 +1402,22 @@ const articleFrames: Record<LearningTopicId, ArticleFrame> = {
     studyPractice:
       "Write a market note: segment, unmet need, competing alternative, positioning claim, proof point and one metric that would show behaviour changed.",
   },
+  "military-strategy": {
+    advancedProblem:
+      "The advanced problem is to connect force to political purpose while accounting for friction, uncertainty, morale, logistics and enemy adaptation.",
+    caseWorld:
+      "Use a conflict case or strategic analogy: a campaign, siege, deterrence problem, organisational rivalry, security dilemma or failed plan.",
+    disciplinaryQuestion:
+      "Military strategy asks how organised force is used to achieve political aims under danger, uncertainty and resistance.",
+    evidenceStandard:
+      "Good evidence distinguishes objective, means, terrain, logistics, intelligence, morale, enemy will and political constraint.",
+    limits:
+      "The limit is romanticising battle or reducing strategy to clever tactics. Strategy is judged by political outcome, not drama.",
+    sourceMode:
+      "Strategy sources move between primary theory, historical campaigns and political science accounts of war and state behaviour.",
+    studyPractice:
+      "Analyse one plan by naming the objective, constraint, opponent, supply problem and likely friction.",
+  },
   "music-theory": {
     advancedProblem:
       "The university-level problem is to connect abstract musical structure to embodied guitar playing without reducing theory to memorised box shapes or treating the fretboard as disconnected patterns.",
@@ -1014,6 +1450,22 @@ const articleFrames: Record<LearningTopicId, ArticleFrame> = {
     studyPractice:
       "Write an asset memo: mechanism, development stage, main evidence risk, regulator question, payer question and commercial implication.",
   },
+  psychology: {
+    advancedProblem:
+      "The advanced problem is to explain behaviour without reducing it to one cause: mind, body, habit, social context and interpretation interact.",
+    caseWorld:
+      "Use an everyday behaviour: procrastination, checking a phone, remembering a face, stress eating, arguing, practising, learning or avoiding a task.",
+    disciplinaryQuestion:
+      "Psychology asks how behaviour and mental processes arise from perception, learning, memory, emotion, motivation, development and social context.",
+    evidenceStandard:
+      "Good evidence distinguishes experiment, observation, self-report, physiological signal, effect size and alternative explanation.",
+    limits:
+      "The limit is armchair diagnosis. A psychological concept should explain a mechanism without pretending to know a person's whole mind.",
+    sourceMode:
+      "Psychology textbooks move from biological and cognitive mechanisms into learning, development, stress, personality and social behaviour.",
+    studyPractice:
+      "Choose one everyday behaviour and separate trigger, interpretation, learned response, social context and consequence.",
+  },
   philosophy: {
     advancedProblem:
       "The university-level problem is to reconstruct arguments charitably while still pressing them hard enough to reveal hidden premises, counterexamples and conceptual costs.",
@@ -1045,6 +1497,22 @@ const articleFrames: Record<LearningTopicId, ArticleFrame> = {
       "Government and politics textbooks usually introduce institutions and ideologies together, showing how principles become procedures, rights, budgets and constraints.",
     studyPractice:
       "Write a political analysis: actor, institution, authority, incentive, legitimacy claim, affected group and likely unintended consequence.",
+  },
+  "rhetoric-argumentation": {
+    advancedProblem:
+      "The advanced problem is to distinguish persuasion that clarifies from persuasion that bypasses judgement through style, identity or pressure.",
+    caseWorld:
+      "Use an everyday argument: an advert, headline, speech, meeting pitch, online thread, apology, review or campaign message.",
+    disciplinaryQuestion:
+      "Rhetoric and argumentation ask how claims are made persuasive through audience, evidence, credibility, emotion, arrangement and style.",
+    evidenceStandard:
+      "Good evidence identifies claim, warrant, support, audience, appeal, counterargument, framing and missing alternatives.",
+    limits:
+      "The limit is cynicism. Rhetoric is not automatically manipulation; it is the study of how persuasion works.",
+    sourceMode:
+      "Rhetoric sources combine classical appeals with modern writing, argument structure, genre and audience analysis.",
+    studyPractice:
+      "Take one persuasive message and name the claim, audience, appeal, evidence and likely omission.",
   },
   science: {
     advancedProblem:
@@ -1093,6 +1561,22 @@ const articleFrames: Record<LearningTopicId, ArticleFrame> = {
       "Sociology textbooks often introduce the sociological imagination: private troubles become public questions when they show patterned causes.",
     studyPractice:
       "Write a sociological explanation: individual case, social pattern, institution, norm, inequality or role, and one piece of evidence beyond anecdote.",
+  },
+  "systems-thinking": {
+    advancedProblem:
+      "The advanced problem is to move from blaming single events to seeing the structure that keeps reproducing the pattern.",
+    caseWorld:
+      "Use an everyday system: sleep routine, money flow, traffic, inbox overload, fitness habits, workplace delays, family chores or app notifications.",
+    disciplinaryQuestion:
+      "Systems thinking asks how interacting parts, feedback loops, stocks, flows, delays and boundaries produce behaviour over time.",
+    evidenceStandard:
+      "Good evidence identifies variables, relationships, rates of change, feedback direction, delay and the boundary of the system being described.",
+    limits:
+      "The limit is making everything too big to act on. A useful system map still points to a leverage point.",
+    sourceMode:
+      "Systems-thinking sources usually begin with causal loops, stocks, flows, delays, boundaries and unintended consequences.",
+    studyPractice:
+      "Map one recurring problem as a loop: stock, inflow, outflow, feedback, delay and possible leverage point.",
   },
 };
 
@@ -1229,6 +1713,102 @@ const topicLessonSeeds: Record<LearningTopicId, LessonSeed[]> = {
     { concept: "Pentatonic and Blues Language", focus: "five-note frameworks and blue notes used in guitar melody and improvisation", level: "A-level", practice: "turning boxes into phrases with bends, targets and call-response" },
     { concept: "Voice Leading", focus: "smooth movement between chord tones across changing harmony", level: "University", practice: "connecting nearby notes instead of jumping between unrelated grips" },
     { concept: "Phrase and Form", focus: "how musical ideas group into motives, phrases, sections and larger designs", level: "University", practice: "hearing riffs, solos and progressions as structured musical paragraphs" },
+  ],
+  "architecture-urbanism": [
+    { concept: "Thresholds", focus: "boundaries that organise entry, privacy and transition", level: "GCSE", practice: "reading doors, gates, lobbies and steps as social filters" },
+    { concept: "Desire Lines", focus: "informal paths showing how people actually move through space", level: "GCSE", practice: "noticing where use disagrees with planned routes" },
+    { concept: "Public Realm", focus: "shared spaces where civic life, movement and encounter happen", level: "A-level", practice: "distinguishing accessible public life from private consumption space" },
+    { concept: "Human Scale", focus: "design proportions that match bodily comfort and everyday perception", level: "A-level", practice: "judging why some streets feel walkable and others feel hostile" },
+    { concept: "Mixed Use", focus: "combining functions so places remain active across the day", level: "A-level", practice: "linking land use to safety, convenience and street life" },
+    { concept: "Defensible Space", focus: "spatial design that shapes surveillance, ownership and perceived safety", level: "University", practice: "separating real safety from exclusionary control" },
+    { concept: "Urban Density", focus: "concentration of people, buildings and activity in a place", level: "A-level", practice: "seeing density as design quality, not crowding alone" },
+    { concept: "Circulation", focus: "the routes people take through buildings and cities", level: "GCSE", practice: "mapping movement, pause, bottleneck and orientation" },
+    { concept: "Gentrification", focus: "neighbourhood change involving reinvestment, rising costs and displacement", level: "University", practice: "connecting visible improvement to power and access" },
+    { concept: "Third Places", focus: "informal social settings outside home and work", level: "A-level", practice: "recognising cafes, parks and barbers as social infrastructure" },
+  ],
+  "classical-civilisation": [
+    { concept: "Myth", focus: "traditional stories that organise values, power and identity", level: "GCSE", practice: "seeing myths as cultural arguments rather than childish tales" },
+    { concept: "Polis", focus: "the Greek city-state as political, religious and social community", level: "A-level", practice: "linking citizenship to place and participation" },
+    { concept: "Republicanism", focus: "public liberty, mixed government and resistance to kingship", level: "University", practice: "recognising Roman political language in modern politics" },
+    { concept: "Patronage", focus: "status and obligation created by unequal support relationships", level: "A-level", practice: "seeing influence networks behind public honour" },
+    { concept: "Stoicism", focus: "discipline of judgement, virtue and emotional self-command", level: "A-level", practice: "separating ancient ethics from modern productivity slogans" },
+    { concept: "Tragedy and Catharsis", focus: "serious drama that stages conflict, error and emotional recognition", level: "University", practice: "reading public emotion as moral education" },
+    { concept: "Roman Law", focus: "legal categories and procedures shaping rights, property and citizenship", level: "A-level", practice: "noticing legal inheritance in modern institutions" },
+    { concept: "Civic Virtue", focus: "public-spirited character expected of citizens", level: "GCSE", practice: "asking what a society rewards as honourable service" },
+    { concept: "Imperium", focus: "command, authority and expansion in Roman political culture", level: "University", practice: "connecting empire to symbols, roads, law and military power" },
+    { concept: "Classical Reception", focus: "later cultures reusing antiquity for prestige, critique or identity", level: "University", practice: "separating ancient source from modern appropriation" },
+  ],
+  geopolitics: [
+    { concept: "Chokepoints", focus: "narrow routes where trade, energy or military movement can be constrained", level: "GCSE", practice: "connecting shipping disruption to everyday prices" },
+    { concept: "Sphere of Influence", focus: "an area where a power expects privileged strategic influence", level: "A-level", practice: "reading alliance pressure beyond formal borders" },
+    { concept: "Energy Security", focus: "reliable access to affordable fuel and power under political risk", level: "A-level", practice: "linking bills, pipelines, sanctions and diplomacy" },
+    { concept: "Buffer States", focus: "states positioned between rival powers", level: "A-level", practice: "seeing geography as exposure and bargaining position" },
+    { concept: "Sanctions", focus: "economic restrictions used to change behaviour or signal pressure", level: "A-level", practice: "asking who bears the cost and what adaptation follows" },
+    { concept: "Sea Power", focus: "control of maritime routes, ports and naval reach", level: "University", practice: "connecting naval access to trade and military options" },
+    { concept: "Resource Curse", focus: "resource wealth producing instability, corruption or dependency", level: "University", practice: "looking beyond natural wealth to institutions" },
+    { concept: "Demographic Pressure", focus: "population patterns shaping labour, migration, welfare and security", level: "A-level", practice: "reading age structure behind policy strain" },
+    { concept: "Strategic Depth", focus: "space that lets a state absorb attack or buy time", level: "University", practice: "understanding why territory can matter militarily" },
+    { concept: "Soft Power", focus: "influence through attraction, culture, legitimacy and institutions", level: "GCSE", practice: "seeing power outside armies and money" },
+  ],
+  "history-of-ideas": [
+    { concept: "Progress", focus: "the belief that history can move toward improvement", level: "A-level", practice: "spotting progress assumptions in technology and politics" },
+    { concept: "Liberty", focus: "freedom understood through rights, non-domination or self-rule", level: "University", practice: "asking what kind of constraint is being opposed" },
+    { concept: "The Self", focus: "ideas of personhood, identity and inner life", level: "University", practice: "seeing self-improvement culture as historically shaped" },
+    { concept: "Nature", focus: "the natural world as fact, norm, resource or ideal", level: "A-level", practice: "noticing when natural means good, original or inevitable" },
+    { concept: "Civilisation", focus: "a contested idea of refinement, order and hierarchy", level: "University", practice: "detecting prestige and exclusion inside civilised language" },
+    { concept: "Reason", focus: "human capacity for explanation, judgement and order", level: "A-level", practice: "seeing when reason is opposed to emotion, faith or tradition" },
+    { concept: "Nation", focus: "a political community imagined through peoplehood, memory and territory", level: "A-level", practice: "recognising national stories in ordinary symbols" },
+    { concept: "Meritocracy", focus: "status justified by talent, effort and achievement", level: "University", practice: "asking what counts as merit and who defines it" },
+    { concept: "Authenticity", focus: "the ideal of being true to oneself or origins", level: "A-level", practice: "spotting authenticity claims in brands and identity" },
+    { concept: "Modernity", focus: "social life shaped by industrialisation, bureaucracy, science and speed", level: "University", practice: "connecting everyday acceleration to historical change" },
+  ],
+  "military-strategy": [
+    { concept: "Friction", focus: "the gap between plans and reality under pressure", level: "GCSE", practice: "expecting delay, confusion and failure points" },
+    { concept: "Centre of Gravity", focus: "the source of strength that holds an opponent's system together", level: "University", practice: "looking for what actually sustains resistance" },
+    { concept: "Logistics", focus: "movement and supply that make operations possible", level: "GCSE", practice: "seeing support systems behind visible action" },
+    { concept: "Deterrence", focus: "preventing action by making costs credible", level: "A-level", practice: "separating threat, capability and belief" },
+    { concept: "Manoeuvre", focus: "gaining advantage through movement, position and tempo", level: "A-level", practice: "thinking beyond direct confrontation" },
+    { concept: "Intelligence", focus: "information used to reduce uncertainty about opponents and terrain", level: "A-level", practice: "asking what is known, assumed and hidden" },
+    { concept: "Morale", focus: "will, cohesion and confidence under strain", level: "GCSE", practice: "seeing human endurance as strategic material" },
+    { concept: "Asymmetric Warfare", focus: "conflict between unequal actors using different methods", level: "University", practice: "not assuming the weaker actor plays the same game" },
+    { concept: "Operational Art", focus: "linking battles and campaigns to strategic objectives", level: "University", practice: "connecting local wins to larger purpose" },
+    { concept: "Rules of Engagement", focus: "constraints governing when and how force may be used", level: "A-level", practice: "seeing legality and legitimacy inside tactical action" },
+  ],
+  psychology: [
+    { concept: "Attention", focus: "selective processing of information under limited mental capacity", level: "GCSE", practice: "seeing distraction as competition, not laziness alone" },
+    { concept: "Working Memory", focus: "temporary mental workspace for holding and manipulating information", level: "A-level", practice: "designing tasks around cognitive limits" },
+    { concept: "Classical Conditioning", focus: "learning associations between stimuli", level: "GCSE", practice: "recognising why cues trigger feelings or habits" },
+    { concept: "Operant Conditioning", focus: "learning through consequences and reinforcement", level: "GCSE", practice: "spotting reward loops in apps and routines" },
+    { concept: "Cognitive Bias", focus: "systematic patterns in judgement under uncertainty", level: "A-level", practice: "treating intuition as evidence to inspect" },
+    { concept: "Social Identity", focus: "self-understanding shaped by group membership", level: "A-level", practice: "noticing us-and-them thinking in ordinary settings" },
+    { concept: "Stress Response", focus: "physiological and psychological mobilisation under perceived demand", level: "A-level", practice: "separating useful arousal from chronic strain" },
+    { concept: "Motivation", focus: "processes that initiate, direct and sustain behaviour", level: "A-level", practice: "linking goals to incentives, meaning and friction" },
+    { concept: "Attachment", focus: "relationship patterns shaped by early bonds and later expectations", level: "University", practice: "reading closeness and distance without instant diagnosis" },
+    { concept: "Metacognition", focus: "awareness and regulation of one's own thinking", level: "University", practice: "checking confidence, strategy and error patterns" },
+  ],
+  "rhetoric-argumentation": [
+    { concept: "Ethos", focus: "persuasion through credibility, character and authority", level: "GCSE", practice: "asking why a speaker seems trustworthy" },
+    { concept: "Pathos", focus: "persuasion through emotion and audience feeling", level: "GCSE", practice: "separating emotional relevance from emotional pressure" },
+    { concept: "Logos", focus: "persuasion through reasons, structure and evidence", level: "GCSE", practice: "checking whether the argument actually follows" },
+    { concept: "Kairos", focus: "the timing and occasion that make persuasion effective", level: "A-level", practice: "seeing why the same message works differently by moment" },
+    { concept: "Framing", focus: "shaping interpretation by selecting context and emphasis", level: "A-level", practice: "noticing what question an argument makes natural" },
+    { concept: "Enthymeme", focus: "an argument with an unstated premise supplied by the audience", level: "University", practice: "finding the hidden assumption that makes persuasion work" },
+    { concept: "Fallacy", focus: "a pattern of reasoning that appears stronger than it is", level: "A-level", practice: "naming errors without using labels as shortcuts" },
+    { concept: "Burden of Proof", focus: "who must support a claim and how much evidence is needed", level: "A-level", practice: "resisting unsupported reversals of responsibility" },
+    { concept: "Steelman", focus: "reconstructing the strongest version of an opposing argument", level: "University", practice: "arguing against the real position, not a weak copy" },
+    { concept: "Narrative Persuasion", focus: "using story structure to make claims memorable and meaningful", level: "University", practice: "seeing how examples become moral direction" },
+  ],
+  "systems-thinking": [
+    { concept: "Feedback Loop", focus: "a circular relationship where outputs influence future inputs", level: "GCSE", practice: "spotting reinforcing and balancing patterns" },
+    { concept: "Stocks and Flows", focus: "accumulations and rates that change them", level: "A-level", practice: "separating current state from speed of change" },
+    { concept: "Delay", focus: "time lag between action and visible consequence", level: "GCSE", practice: "not quitting interventions before effects appear" },
+    { concept: "Leverage Point", focus: "a place in a system where small changes can have large effects", level: "University", practice: "looking for structure, not only effort" },
+    { concept: "Bottleneck", focus: "the constraint limiting overall system performance", level: "A-level", practice: "improving the limiting step rather than everything equally" },
+    { concept: "Unintended Consequences", focus: "effects that emerge because systems respond to interventions", level: "A-level", practice: "asking what behaviour the fix will create" },
+    { concept: "Resilience", focus: "capacity to absorb disturbance and keep functioning", level: "A-level", practice: "valuing buffers, redundancy and recovery time" },
+    { concept: "Emergence", focus: "patterns arising from interactions among parts", level: "University", practice: "not reducing group behaviour to one individual cause" },
+    { concept: "Boundary", focus: "the chosen edge of what counts inside the system", level: "University", practice: "seeing how the frame changes the explanation" },
+    { concept: "Incentive Structure", focus: "rewards and penalties that shape repeated behaviour", level: "A-level", practice: "asking what the system pays people to do" },
   ],
   "pharmaceutical-businesses": [
     { concept: "Drug Discovery", focus: "identifying promising biological targets and candidate molecules", level: "GCSE", practice: "linking scientific hypothesis to commercial risk" },
@@ -1417,6 +1997,102 @@ const topicLessonDetails: Record<LearningTopicId, LessonDetail[]> = {
     { anchor: "popular-music and blues materials on pentatonic scales, blue notes and phrase vocabulary", case: "minor pentatonic phrases targeting chord tones over a twelve-bar blues", challenge: "explain why the same box can sound musical or aimless depending on targets and phrasing", method: "track scale degree, bend, blue note, call-response, chord tone and rhythmic placement", misconception: "pentatonic fluency is not running the box up and down" },
     { anchor: "counterpoint and harmony material adapted to fretboard voice leading", case: "moving from G7 to Cmaj7 using nearest available thirds and sevenths on middle strings", challenge: "show how small melodic motions inside chords create harmonic clarity", method: "identify guide tones, common tones, semitone resolutions and playable string-set movement", misconception: "voice leading is not only a classical SATB rule for singers" },
     { anchor: "form and phrase chapters on motives, periods, sections and popular-song design", case: "a riff returning as intro, verse hook and solo reference inside a guitar song", challenge: "explain how repetition and variation create larger musical shape", method: "identify motive, phrase, cadence, section, contrast and return", misconception: "form is not just labelling verse and chorus after listening once" },
+  ],
+  "architecture-urbanism": [
+    { anchor: "architecture chapters on boundary, entry and spatial sequence", case: "a shop entrance using steps, glass, lighting and security gates to filter who feels invited", challenge: "explain how a threshold changes behaviour before anyone speaks", method: "identify boundary, transition, visibility, access rule and bodily cue", misconception: "a threshold is not just a doorway" },
+    { anchor: "urban design material on pedestrian movement and informal routes", case: "a muddy shortcut across grass beside a paved path", challenge: "show how desire lines reveal user knowledge ignored by planning", method: "compare planned route, actual route, friction, destination and repeated use", misconception: "informal paths are not simply bad behaviour" },
+    { anchor: "urbanism sections on streets, squares and civic accessibility", case: "a privately managed plaza that looks public but controls seating, protest and photography", challenge: "separate public appearance from public rights", method: "map ownership, access, rules, surveillance and social use", misconception: "public realm is not any open-looking outdoor space" },
+    { anchor: "architecture and urban design material on proportion and bodily comfort", case: "a wide road with blank facades feeling hostile to pedestrians despite good paving", challenge: "explain why scale changes comfort and attention", method: "assess height, frontage, speed, distance, detail and pedestrian perception", misconception: "human scale is not smallness by itself" },
+    { anchor: "planning material on land use, street life and daily convenience", case: "a neighbourhood where flats, shops, schools and cafes keep pavements active across the day", challenge: "connect mixed use to safety and ordinary social life", method: "identify uses, hours, walking distance, street frontage and user overlap", misconception: "mixed use is not simply putting shops under any flats" },
+    { anchor: "urban safety debates on defensible space, surveillance and exclusion", case: "a housing block redesigned with lighting, sightlines and controlled entry", challenge: "separate stewardship from hostile exclusion", method: "track visibility, ownership cues, access control, maintenance and who is displaced", misconception: "defensible space is not automatically good or democratic" },
+    { anchor: "urban economics and planning chapters on density and infrastructure", case: "a dense street with small shops feeling lively while a tower district feels empty", challenge: "explain why density depends on design and use mix", method: "compare people, entrances, services, transit, street edge and dwelling mix", misconception: "density is not the same as overcrowding" },
+    { anchor: "architecture sections on circulation and wayfinding", case: "a hospital corridor system that makes visitors lost despite signage", challenge: "explain movement as spatial logic rather than signs alone", method: "map route hierarchy, landmarks, sightlines, decision points and bottlenecks", misconception: "circulation is not only corridors and stairs" },
+    { anchor: "urban sociology and planning material on reinvestment and displacement", case: "independent shops replaced by boutiques after a station upgrade", challenge: "connect visible improvement to rent, class and access", method: "track investment, land value, tenure, business mix and resident displacement", misconception: "gentrification is not just making a place nicer" },
+    { anchor: "urban sociology material on informal gathering places and social infrastructure", case: "a barber, cafe, library or park bench acting as a regular social anchor", challenge: "show how ordinary places support belonging", method: "identify low barrier, repeat use, conversation, neutrality and local memory", misconception: "third places are not just leisure venues" },
+  ],
+  "classical-civilisation": [
+    { anchor: "classical civilisation chapters on myth, ritual and cultural memory", case: "a brand using Hercules to signal strength and heroic effort", challenge: "explain myth as value-bearing narrative rather than decoration", method: "identify story pattern, divine or heroic role, moral tension and modern use", misconception: "myth does not mean false story in the simple modern sense" },
+    { anchor: "Greek history sections on the polis, citizenship and public religion", case: "a city using civic ceremonies, sports and monuments to define belonging", challenge: "connect political identity to place and participation", method: "map citizens, outsiders, assemblies, cult practice and public space", misconception: "the polis was not just a town with walls" },
+    { anchor: "Roman political history material on republic, mixed government and anti-monarchy", case: "modern politicians invoking the republic against concentrated executive power", challenge: "separate Roman republican ideals from modern democratic assumptions", method: "compare magistracy, senate, citizen body, liberty and fear of kingship", misconception: "republicanism is not identical with modern party politics" },
+    { anchor: "Roman social history material on patronage, status and obligation", case: "a powerful contact opening doors while expecting loyalty and public gratitude", challenge: "explain unequal reciprocity without reducing it to friendship", method: "identify patron, client, benefit, obligation, status and public display", misconception: "patronage is not simply generosity" },
+    { anchor: "Hellenistic and Roman philosophy material on Stoic ethics", case: "a person reframing a delayed train as outside their control", challenge: "distinguish ancient Stoic discipline from modern toughness slogans", method: "separate control, judgement, virtue, passion and duty", misconception: "Stoicism is not emotional numbness" },
+    { anchor: "Greek drama chapters on tragedy, conflict and civic performance", case: "a film or public scandal staging a respected figure's downfall", challenge: "explain tragedy as structured recognition, not mere sadness", method: "identify error, conflict, reversal, recognition, audience emotion and public meaning", misconception: "tragedy is not just any bad ending" },
+    { anchor: "Roman law material on citizenship, property and legal categories", case: "modern legal language around contract, property or citizenship echoing Roman categories", challenge: "show how legal concepts can outlive the society that produced them", method: "track category, right, procedure, status and later inheritance", misconception: "Roman law is not just old rules copied into modern codes" },
+    { anchor: "Greek and Roman political ethics material on public service", case: "a school prize, military medal or civic award praising duty over private gain", challenge: "explain virtue as public expectation", method: "identify citizen role, honour, sacrifice, reputation and common good", misconception: "civic virtue is not simply being personally moral" },
+    { anchor: "Roman imperial history material on command, roads, law and expansion", case: "a government building using imperial symbols to imply order and authority", challenge: "connect empire to administration as well as conquest", method: "identify command, territory, infrastructure, legal order and symbolic power", misconception: "imperium is not only military aggression" },
+    { anchor: "reception studies material on antiquity in later culture", case: "a neoclassical museum, bank or courthouse borrowing columns and Latin mottos", challenge: "separate ancient meaning from modern prestige work", method: "compare source motif, later context, intended audience and ideological effect", misconception: "classical reception is not passive copying" },
+  ],
+  geopolitics: [
+    { anchor: "international relations material on trade routes and maritime chokepoints", case: "shipping delays through a canal raising delivery costs for ordinary goods", challenge: "connect a narrow route to global price and security effects", method: "map route, alternative, cargo, actor control and vulnerability", misconception: "a chokepoint is not just a busy place on a map" },
+    { anchor: "political science sections on great powers and regional influence", case: "a larger state pressuring neighbours over military alignment or trade policy", challenge: "explain influence without assuming formal occupation", method: "identify power, dependency, red line, local agency and alliance options", misconception: "sphere of influence is not the same as legal sovereignty" },
+    { anchor: "political economy material on energy dependence and national security", case: "household energy bills rising after a gas supply dispute", challenge: "link domestic prices to infrastructure and foreign policy", method: "trace fuel source, pipeline or shipping route, storage, supplier and substitute", misconception: "energy security is not only having enough fuel underground" },
+    { anchor: "geopolitical history material on borderlands and rival powers", case: "a country between alliances facing pressure from both sides", challenge: "show how location creates risk and bargaining power", method: "map neighbours, terrain, alliance choices, economy and military exposure", misconception: "buffer states are not empty cushions between real actors" },
+    { anchor: "international political economy chapters on sanctions and coercion", case: "banking restrictions changing what ordinary firms can import", challenge: "explain sanctions through cost, adaptation and signalling", method: "identify target, mechanism, enforcement, secondary effects and evasion routes", misconception: "sanctions are not cost-free moral statements" },
+    { anchor: "geopolitical and naval history material on sea power", case: "a port expansion changing a country's trade and military options", challenge: "connect maritime access to economic and strategic reach", method: "track ports, fleet, routes, allies, cargo and naval protection", misconception: "sea power is not just having ships" },
+    { anchor: "development and political economy material on resources and institutions", case: "oil wealth funding public spending while weakening accountability", challenge: "explain why valuable resources can destabilise politics", method: "compare rent, taxation, institutions, corruption risk and external buyers", misconception: "resource curse means resources always make countries poor" },
+    { anchor: "population and international relations material on demographic transition", case: "an ageing country redesigning immigration, pensions and defence priorities", challenge: "connect age structure to policy pressure", method: "track birth rates, dependency ratio, labour market, migration and welfare costs", misconception: "demography is not destiny, but it changes constraints" },
+    { anchor: "military geography material on space, depth and defence", case: "a state valuing territory because it creates time before core cities are threatened", challenge: "show how distance can become strategic resource", method: "identify terrain, transport routes, population centres, warning time and defensive layers", misconception: "strategic depth is not just wanting more land" },
+    { anchor: "international relations sections on culture, legitimacy and attraction", case: "a country's films, universities or sport shaping foreign admiration", challenge: "explain influence without coercion", method: "identify audience, cultural appeal, credibility, institution and policy spillover", misconception: "soft power is not simply good public relations" },
+  ],
+  "history-of-ideas": [
+    { anchor: "modern history material on Enlightenment, industrialisation and reform", case: "a tech advert promising that every update makes life better", challenge: "show how progress becomes a moral assumption", method: "trace improvement claim, historical direction, evidence and excluded cost", misconception: "progress is not the same as change" },
+    { anchor: "political philosophy material on freedom, rights and domination", case: "a workplace policy described as flexible by managers and insecure by workers", challenge: "distinguish kinds of liberty in ordinary language", method: "compare non-interference, self-rule, dependency and institutional constraint", misconception: "liberty is not one simple thing everyone means the same way" },
+    { anchor: "intellectual history material on individuality and modern subjectivity", case: "a self-tracking app treating mood, productivity and identity as personal optimisation", challenge: "explain the modern self as historically formed", method: "identify inner life, measurement, autonomy, discipline and social expectation", misconception: "the self is not just a private natural fact" },
+    { anchor: "history of science and environmental thought material on nature", case: "a product labelled natural to imply health, purity and moral superiority", challenge: "separate nature as fact from nature as value", method: "identify descriptive claim, normative claim, origin story and commercial use", misconception: "natural does not automatically mean good or harmless" },
+    { anchor: "world history material on civilisation, empire and hierarchy", case: "a political speech contrasting civilised order with barbaric disorder", challenge: "expose hierarchy inside civilisation language", method: "track speaker, standard of refinement, excluded group and political use", misconception: "civilisation is not a neutral compliment" },
+    { anchor: "Enlightenment and philosophy material on reason and critique", case: "a policy debate presenting data as if values were not involved", challenge: "show how reason can clarify without eliminating judgement", method: "separate evidence, inference, value assumption and practical choice", misconception: "reason is not the absence of emotion or interest" },
+    { anchor: "modern political history material on nationalism and imagined communities", case: "flags, anthems and school histories making strangers feel part of one people", challenge: "explain nationhood as constructed and powerful", method: "identify memory, territory, symbol, institution and boundary", misconception: "nation is not simply ethnicity or state bureaucracy" },
+    { anchor: "social and political thought material on merit, equality and education", case: "exam results treated as proof of personal worth despite unequal preparation", challenge: "ask what counts as merit and who gets to display it", method: "compare talent, effort, credential, opportunity and gatekeeping", misconception: "meritocracy is not automatically fair because it rewards achievement" },
+    { anchor: "modern cultural history material on authenticity and the self", case: "a cafe, influencer or musician selling authenticity through curated roughness", challenge: "explain authenticity as a cultural ideal with conventions", method: "identify origin claim, sincerity signal, audience expectation and market value", misconception: "authenticity is not free from performance" },
+    { anchor: "modernity chapters on industrialisation, bureaucracy and acceleration", case: "calendar alerts, commuting systems and performance dashboards shaping daily time", challenge: "connect ordinary speed to historical institutions", method: "track technology, bureaucracy, clock time, productivity and social discipline", misconception: "modernity is not just anything recent" },
+  ],
+  "military-strategy": [
+    { anchor: "Clausewitzian strategy material on friction and uncertainty", case: "a simple event plan failing through weather, late transport and confused instructions", challenge: "explain why execution changes plans", method: "identify plan, uncertainty, delay, human error and adaptation", misconception: "friction is not an excuse for poor preparation" },
+    { anchor: "strategy chapters on decisive sources of strength", case: "a competitor sustained less by one product than by supply chain, trust and cash reserves", challenge: "identify what actually holds resistance together", method: "map objective, opponent system, dependency, vulnerability and political effect", misconception: "centre of gravity is not always headquarters or a leader" },
+    { anchor: "military history material on supply, transport and sustainment", case: "a campaign limited by fuel, food, spare parts and road access", challenge: "show how support determines possible action", method: "track supply source, route, consumption, distance and protection", misconception: "logistics is not background administration" },
+    { anchor: "international security material on deterrence and credibility", case: "a warning only working if the opponent believes capability and willingness", challenge: "separate threat from credible deterrent", method: "identify actor, capability, communication, resolve and opponent perception", misconception: "deterrence is not just making a scary statement" },
+    { anchor: "operational theory material on manoeuvre, tempo and position", case: "a weaker team winning by changing position faster than a stronger opponent can respond", challenge: "explain advantage through movement rather than direct strength", method: "track position, tempo, surprise, objective and opponent dislocation", misconception: "manoeuvre is not merely moving around" },
+    { anchor: "intelligence material on information, uncertainty and deception", case: "a decision made from partial reports, rumours and misleading signals", challenge: "show why information quality changes strategy", method: "compare source, reliability, gap, deception risk and decision need", misconception: "intelligence is not the same as certainty" },
+    { anchor: "military sociology and history material on morale and cohesion", case: "a team continuing under pressure because trust and purpose remain intact", challenge: "explain will as strategic resource", method: "identify cohesion, leadership, belief, fatigue and perceived chance of success", misconception: "morale is not just enthusiasm" },
+    { anchor: "security studies material on insurgency and asymmetric conflict", case: "a small actor avoiding direct battle while using time, terrain and publicity", challenge: "explain unequal conflict without assuming conventional victory rules", method: "map actor strength, weakness, audience, sanctuary, method and political aim", misconception: "asymmetric warfare is not simply unfair fighting" },
+    { anchor: "operational art material on campaigns and strategic linkage", case: "several local wins failing to produce the intended political outcome", challenge: "connect tactical success to campaign purpose", method: "identify battle, campaign, objective, sequencing and culminating point", misconception: "winning engagements is not the same as winning the war" },
+    { anchor: "law of armed conflict material on constraint and legitimacy", case: "a commander limited by civilian risk, coalition rules and political consequence", challenge: "explain constraint as part of strategy", method: "identify authority, permitted action, target, proportionality and legitimacy cost", misconception: "rules of engagement are not optional politeness" },
+  ],
+  psychology: [
+    { anchor: "cognitive psychology chapters on attention and selective processing", case: "checking a phone while reading and losing the thread repeatedly", challenge: "explain attention as limited selection", method: "identify stimulus competition, goal, salience, switching cost and environment", misconception: "attention failure is not always lack of character" },
+    { anchor: "memory chapters on working memory capacity and cognitive load", case: "forgetting a multi-step instruction while trying to solve a problem", challenge: "connect overload to limited mental workspace", method: "track items held, manipulation demand, distraction and chunking", misconception: "working memory is not general intelligence" },
+    { anchor: "learning chapters on association and conditioned responses", case: "feeling tense after hearing an email notification linked to criticism", challenge: "explain emotional response through learned association", method: "identify neutral cue, unconditioned event, pairing and conditioned response", misconception: "conditioning is not only training animals" },
+    { anchor: "behaviourism chapters on reinforcement and consequence", case: "refreshing an app because occasional rewards keep the behaviour alive", challenge: "show how consequences shape repetition", method: "identify behaviour, reward schedule, punishment, extinction and context", misconception: "reinforcement is not the same as bribery" },
+    { anchor: "cognition chapters on heuristics, bias and judgement", case: "overestimating danger after seeing one vivid news story", challenge: "separate useful shortcut from systematic error", method: "identify uncertainty, heuristic, evidence base, error direction and correction", misconception: "bias does not mean stupidity" },
+    { anchor: "social psychology material on group membership and identity", case: "a sports shirt changing how strangers interpret someone's behaviour", challenge: "show how group labels affect perception", method: "identify in-group, out-group, stereotype, status and context", misconception: "social identity is not just personal preference" },
+    { anchor: "stress and health psychology chapters on appraisal and coping", case: "the same deadline feeling motivating one week and overwhelming the next", challenge: "explain stress through demand and perceived resources", method: "compare stressor, appraisal, bodily response, coping and duration", misconception: "stress is not always bad or always external" },
+    { anchor: "motivation chapters on intrinsic, extrinsic and goal-directed behaviour", case: "a habit fading once rewards stop because the activity never felt meaningful", challenge: "connect motivation to value, expectancy and friction", method: "identify goal, incentive, autonomy, competence, feedback and barrier", misconception: "motivation is not a fixed internal fuel tank" },
+    { anchor: "developmental and relationship psychology material on attachment", case: "someone reading delayed replies as rejection despite little evidence", challenge: "discuss attachment patterns without diagnosing", method: "identify expectation, threat cue, regulation strategy and relational context", misconception: "attachment style is not a permanent personality type" },
+    { anchor: "cognitive psychology material on monitoring and regulating thought", case: "realising confidence was high because the task felt familiar, not because answers were correct", challenge: "explain thinking about thinking", method: "compare confidence, strategy, error feedback, planning and adjustment", misconception: "metacognition is not just overthinking" },
+  ],
+  "rhetoric-argumentation": [
+    { anchor: "rhetoric chapters on credibility and speaker character", case: "a doctor, celebrity or founder being believed before evidence is inspected", challenge: "explain credibility as constructed and relevant but not decisive", method: "identify expertise, character, goodwill, context and evidence gap", misconception: "ethos is not automatic truth" },
+    { anchor: "rhetoric chapters on emotional appeal and audience response", case: "a charity advert using one vivid story to make a large problem feel urgent", challenge: "separate legitimate emotion from emotional shortcut", method: "identify feeling, audience value, image, claim and missing scale", misconception: "pathos is not always manipulation" },
+    { anchor: "argumentation chapters on reasons, evidence and inference", case: "a workplace proposal supported by clear figures but a weak causal link", challenge: "check whether evidence supports the claim", method: "identify claim, premise, warrant, data and conclusion", misconception: "logos is not just including numbers" },
+    { anchor: "classical rhetoric material on timing and occasion", case: "the same apology landing differently before and after public evidence emerges", challenge: "explain why timing changes persuasiveness", method: "track occasion, audience mood, urgency, constraint and opportunity", misconception: "kairos is not simply acting quickly" },
+    { anchor: "composition chapters on framing, context and emphasis", case: "a headline describing a protest as unrest or civic action", challenge: "show how wording selects interpretation", method: "identify frame, excluded frame, loaded term, audience and implied cause", misconception: "framing is not only lying" },
+    { anchor: "classical argumentation material on unstated premises", case: "an advert implying successful people use a product without saying it directly", challenge: "recover the missing assumption", method: "identify stated claim, audience belief, missing premise and conclusion", misconception: "enthymeme is not a failed syllogism" },
+    { anchor: "logic and writing material on fallacies and weak reasoning", case: "a debate shifting from evidence to attacking the speaker's motives", challenge: "name the error without using the label as a substitute for analysis", method: "identify claim, support, error pattern and why it weakens inference", misconception: "fallacy spotting is not a way to automatically win arguments" },
+    { anchor: "argumentation chapters on burden of proof and evidence standards", case: "someone demanding others disprove an unsupported claim", challenge: "explain who owes evidence and why", method: "identify claimant, risk, standard, available evidence and default position", misconception: "burden of proof is not whoever feels most challenged" },
+    { anchor: "critical thinking material on charitable reconstruction", case: "rewriting an opponent's clumsy point into its strongest serious form", challenge: "distinguish fairness from agreement", method: "identify core claim, best evidence, strongest version and real objection", misconception: "steelman is not making the other side look correct at all costs" },
+    { anchor: "rhetoric and narrative material on examples, plot and moral direction", case: "a founder story making a company seem inevitable and virtuous", challenge: "show how story selects causes and values", method: "identify protagonist, conflict, sequence, lesson and omitted alternatives", misconception: "narrative persuasion is not only fiction" },
+  ],
+  "systems-thinking": [
+    { anchor: "systems-thinking chapters on reinforcing and balancing feedback", case: "stress causing poor sleep, which causes more stress the next day", challenge: "explain circular causation", method: "identify variable, direction, reinforcement or balance, and loop behaviour", misconception: "feedback is not just receiving comments" },
+    { anchor: "systems material on stocks, flows and accumulation", case: "a bank balance changing through income and spending rates", challenge: "separate level from rate", method: "identify stock, inflow, outflow, time period and net change", misconception: "a stock is not the same as a flow" },
+    { anchor: "systems chapters on delays and unintended timing effects", case: "training harder for a week before fatigue appears later", challenge: "show how delayed effects distort judgement", method: "identify action, lag, visible signal, hidden accumulation and response timing", misconception: "delay does not mean nothing is happening" },
+    { anchor: "systems-thinking material on leverage points and intervention depth", case: "changing phone notification defaults instead of relying on willpower", challenge: "explain why structure beats repeated effort", method: "compare parameter, rule, information flow, goal and mindset", misconception: "leverage point is not simply the biggest visible problem" },
+    { anchor: "operations and systems material on constraints", case: "a team improving every step except the approval queue that controls throughput", challenge: "locate the limiting step", method: "map process, capacity, queue, dependency and downstream effect", misconception: "a bottleneck is not just anything annoying" },
+    { anchor: "systems material on policy resistance and side effects", case: "a discount increasing sales but training customers to wait for discounts", challenge: "trace the behaviour created by the fix", method: "identify intervention, actor response, feedback, side effect and time horizon", misconception: "unintended consequences are not always unpredictable accidents" },
+    { anchor: "systems and sustainability material on resilience and buffers", case: "a household budget surviving a surprise bill because it has slack", challenge: "explain resilience through capacity and recovery", method: "identify disturbance, buffer, redundancy, adaptation and recovery path", misconception: "resilience is not maximum efficiency" },
+    { anchor: "complex systems material on emergence and collective behaviour", case: "traffic jams appearing without one driver causing them", challenge: "show how local interactions create large patterns", method: "identify agents, rules, interaction, threshold and macro pattern", misconception: "emergence is not magic" },
+    { anchor: "systems-thinking chapters on boundaries and framing", case: "a workplace burnout problem framed as individual time management or staffing design", challenge: "show how system boundary changes explanation", method: "identify included variables, excluded actors, time scale and responsibility", misconception: "the boundary is not given by nature" },
+    { anchor: "systems and organisational behaviour material on incentives", case: "a sales target encouraging short-term deals that damage retention", challenge: "connect repeated behaviour to reward structure", method: "identify metric, reward, actor adaptation, side effect and redesigned incentive", misconception: "bad outcomes are not always caused by bad people" },
   ],
   "pharmaceutical-businesses": [
     { anchor: "drug development references on target identification and lead discovery", case: "a company pursuing a biological pathway with promising lab evidence but uncertain clinical relevance", challenge: "separate scientific plausibility from developable asset", method: "identify target, mechanism, candidate, unmet need and translational risk", misconception: "drug discovery is not simply finding a cure in a lab" },
