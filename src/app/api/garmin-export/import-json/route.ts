@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 import { friendlyDatabaseError } from "@/lib/database-setup";
 import {
+  MAX_GARMIN_JSON_IMPORT_BYTES,
   parseGarminExportJsonEntries,
   type GarminExportJsonEntry,
 } from "@/lib/garmin-export";
@@ -136,7 +137,20 @@ export async function POST(request: Request) {
   let entries: GarminExportJsonEntry[];
 
   try {
-    const payload = (await request.json()) as { entries?: unknown[] };
+    const contentLength = Number(request.headers.get("content-length") ?? 0);
+    if (
+      Number.isFinite(contentLength) &&
+      contentLength > MAX_GARMIN_JSON_IMPORT_BYTES
+    ) {
+      return jsonError("The Garmin JSON import payload is too large.", 413);
+    }
+
+    const text = await request.text();
+    if (Buffer.byteLength(text, "utf8") > MAX_GARMIN_JSON_IMPORT_BYTES) {
+      return jsonError("The Garmin JSON import payload is too large.", 413);
+    }
+
+    const payload = JSON.parse(text) as { entries?: unknown[] };
     entries = (payload.entries ?? []).filter(isEntry);
   } catch {
     return jsonError("Could not read the Garmin JSON import payload.");

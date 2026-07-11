@@ -576,17 +576,6 @@ create policy "Authenticated users can read market prices"
   for select
   using (auth.role() = 'authenticated');
 
-create policy "Authenticated users can insert market prices"
-  on public.market_prices
-  for insert
-  with check (auth.role() = 'authenticated');
-
-create policy "Authenticated users can update market prices"
-  on public.market_prices
-  for update
-  using (auth.role() = 'authenticated')
-  with check (auth.role() = 'authenticated');
-
 create policy "Users can read their own net worth snapshots"
   on public.net_worth_snapshots
   for select

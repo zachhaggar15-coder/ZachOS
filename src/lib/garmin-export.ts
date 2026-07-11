@@ -25,6 +25,10 @@ type JsonRecord = Record<string, unknown>;
 const CENTRAL_DIRECTORY_SIGNATURE = 0x02014b50;
 const END_OF_CENTRAL_DIRECTORY_SIGNATURE = 0x06054b50;
 const LOCAL_FILE_SIGNATURE = 0x04034b50;
+const MAX_ZIP_DIRECTORY_ENTRIES = 20_000;
+const MAX_RELEVANT_JSON_ENTRIES = 2_000;
+const MAX_JSON_ENTRY_BYTES = 2 * 1024 * 1024;
+export const MAX_GARMIN_JSON_IMPORT_BYTES = 25 * 1024 * 1024;
 
 function isRecord(value: unknown): value is JsonRecord {
   return !!value && typeof value === "object" && !Array.isArray(value);
@@ -150,6 +154,11 @@ function readRelevantZipJsonEntries(buffer: Buffer) {
   let directoryOffset = buffer.readUInt32LE(eocdOffset + 16);
   const entries: { fullName: string; text: string }[] = [];
   let skippedFiles = 0;
+  let totalJsonBytes = 0;
+
+  if (entryCount > MAX_ZIP_DIRECTORY_ENTRIES) {
+    throw new Error("The Garmin ZIP contains too many files to import safely.");
+  }
 
   for (let index = 0; index < entryCount; index += 1) {
     if (buffer.readUInt32LE(directoryOffset) !== CENTRAL_DIRECTORY_SIGNATURE) {
@@ -158,6 +167,7 @@ function readRelevantZipJsonEntries(buffer: Buffer) {
 
     const compressionMethod = buffer.readUInt16LE(directoryOffset + 10);
     const compressedSize = buffer.readUInt32LE(directoryOffset + 20);
+    const uncompressedSize = buffer.readUInt32LE(directoryOffset + 24);
     const fileNameLength = buffer.readUInt16LE(directoryOffset + 28);
     const extraLength = buffer.readUInt16LE(directoryOffset + 30);
     const commentLength = buffer.readUInt16LE(directoryOffset + 32);
@@ -173,6 +183,18 @@ function readRelevantZipJsonEntries(buffer: Buffer) {
       continue;
     }
 
+    if (entries.length >= MAX_RELEVANT_JSON_ENTRIES) {
+      throw new Error("The Garmin ZIP contains too many relevant JSON files to import safely.");
+    }
+
+    if (uncompressedSize > MAX_JSON_ENTRY_BYTES) {
+      throw new Error(`The Garmin file ${fullName} is too large to import safely.`);
+    }
+
+    if (totalJsonBytes + uncompressedSize > MAX_GARMIN_JSON_IMPORT_BYTES) {
+      throw new Error("The Garmin ZIP expands to too much JSON data to import safely.");
+    }
+
     if (buffer.readUInt32LE(localHeaderOffset) !== LOCAL_FILE_SIGNATURE) {
       skippedFiles += 1;
       continue;
@@ -181,12 +203,20 @@ function readRelevantZipJsonEntries(buffer: Buffer) {
     const localNameLength = buffer.readUInt16LE(localHeaderOffset + 26);
     const localExtraLength = buffer.readUInt16LE(localHeaderOffset + 28);
     const dataStart = localHeaderOffset + 30 + localNameLength + localExtraLength;
+    const dataEnd = dataStart + compressedSize;
+    if (dataEnd > buffer.length) {
+      skippedFiles += 1;
+      continue;
+    }
+
     const compressedData = buffer.subarray(dataStart, dataStart + compressedSize);
     const data =
       compressionMethod === 0
         ? compressedData
         : compressionMethod === 8
-          ? inflateRawSync(compressedData)
+          ? inflateRawSync(compressedData, {
+              maxOutputLength: MAX_JSON_ENTRY_BYTES + 1,
+            })
           : null;
 
     if (!data) {
@@ -194,6 +224,15 @@ function readRelevantZipJsonEntries(buffer: Buffer) {
       continue;
     }
 
+    if (data.byteLength > MAX_JSON_ENTRY_BYTES) {
+      throw new Error(`The Garmin file ${fullName} is too large to import safely.`);
+    }
+
+    if (totalJsonBytes + data.byteLength > MAX_GARMIN_JSON_IMPORT_BYTES) {
+      throw new Error("The Garmin ZIP expands to too much JSON data to import safely.");
+    }
+
+    totalJsonBytes += data.byteLength;
     entries.push({ fullName, text: data.toString("utf8") });
   }
 
@@ -444,6 +483,8 @@ export function parseGarminExportJsonEntries(
   userId: string,
   skippedFiles = 0,
 ): GarminExportResult {
+  assertGarminJsonEntryBudget(entries);
+
   const activitiesByExternalId = new Map<string, ActivityInsert>();
   const fitnessByDate = new Map<string, FitnessMetricInsert>();
 
@@ -495,4 +536,23 @@ export function parseGarminExportJsonEntries(
     jsonFilesRead: entries.length,
     skippedFiles,
   };
+}
+
+function assertGarminJsonEntryBudget(entries: GarminExportJsonEntry[]) {
+  if (entries.length > MAX_RELEVANT_JSON_ENTRIES) {
+    throw new Error("Too many Garmin JSON entries were provided.");
+  }
+
+  let totalBytes = 0;
+  entries.forEach((entry) => {
+    const textBytes = Buffer.byteLength(entry.text, "utf8");
+    if (textBytes > MAX_JSON_ENTRY_BYTES) {
+      throw new Error(`The Garmin file ${entry.fullName} is too large to import safely.`);
+    }
+
+    totalBytes += textBytes;
+    if (totalBytes > MAX_GARMIN_JSON_IMPORT_BYTES) {
+      throw new Error("The Garmin import contains too much JSON data to import safely.");
+    }
+  });
 }

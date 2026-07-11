@@ -12,6 +12,7 @@ import {
 } from "@/lib/portfolio";
 import { priceRefreshWindowId } from "@/lib/price-refresh";
 import type { Database } from "@/lib/supabase/database.types";
+import { createSupabaseServiceRoleClient } from "@/lib/supabase/admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -286,7 +287,19 @@ export async function POST(request: Request) {
   }
 
   if (rowsToUpsert.length) {
-    const { error } = await supabase
+    let adminSupabase: ReturnType<typeof createSupabaseServiceRoleClient>;
+    try {
+      adminSupabase = createSupabaseServiceRoleClient();
+    } catch (error) {
+      return jsonError(
+        error instanceof Error
+          ? error.message
+          : "Portfolio price writes are not configured.",
+        500,
+      );
+    }
+
+    const { error } = await adminSupabase
       .from("market_prices")
       .upsert(rowsToUpsert, { onConflict: "ticker" });
 

@@ -20,6 +20,7 @@ import {
 } from "@/lib/strava";
 import { NET_WORTH_HISTORY } from "@/lib/net-worth-history";
 import type { Database } from "@/lib/supabase/database.types";
+import { createSupabaseServiceRoleClient } from "@/lib/supabase/admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 type ActivityInsert = Database["public"]["Tables"]["activities"]["Insert"];
@@ -1190,13 +1191,24 @@ export async function savePortfolioHolding(formData: FormData) {
   }
 
   if (ticker && latestPrice !== null) {
+    let adminSupabase: ReturnType<typeof createSupabaseServiceRoleClient>;
+    try {
+      adminSupabase = createSupabaseServiceRoleClient();
+    } catch (error) {
+      redirectToPortfolioWithError(
+        error instanceof Error
+          ? error.message
+          : "Portfolio price writes are not configured.",
+      );
+    }
+
     const pricePayload: MarketPriceInsert = {
       currency: payload.currency,
       price: latestPrice,
       ticker,
       updated_at: new Date().toISOString(),
     };
-    const { error } = await supabase
+    const { error } = await adminSupabase
       .from("market_prices")
       .upsert(pricePayload, { onConflict: "ticker" });
 
