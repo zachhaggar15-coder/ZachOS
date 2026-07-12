@@ -2206,6 +2206,26 @@ function lessonDetailFor(topic: LearningTopicId, seedIndex: number) {
   );
 }
 
+function pickVariant<T>(items: T[], index: number) {
+  return items[index % items.length];
+}
+
+function formatSourceNames(sourceNames: string[]) {
+  if (sourceNames.length <= 1) {
+    return sourceNames[0] ?? "the source material";
+  }
+
+  if (sourceNames.length === 2) {
+    return `${sourceNames[0]} and ${sourceNames[1]}`;
+  }
+
+  return `${sourceNames.slice(0, -1).join(", ")} and ${sourceNames.at(-1)}`;
+}
+
+function sentenceStart(value: string) {
+  return value.length ? `${value[0].toUpperCase()}${value.slice(1)}` : value;
+}
+
 function buildQuestions(
   seed: LessonSeed,
   topic: LearningTopicId,
@@ -2311,60 +2331,191 @@ function buildArticleSections(
   const lens = advancedLenses[topic];
   const plan = sectionPlans[topic];
   const [firstAlt, secondAlt] = neighbouringConcepts(topic, seed.concept);
-  const sourceNames = profile.sourceKeys
-    .map((key) => sourcePack[key].label)
-    .join(" and ");
+  const sourceNames = formatSourceNames(
+    profile.sourceKeys.map((key) => sourcePack[key].label),
+  );
   const relatedOne = firstAlt ?? "a neighbouring concept";
   const relatedTwo = secondAlt ?? "a second neighbouring concept";
   const levelLens =
     seed.level === "University"
-      ? "At university level, the concept also has to survive comparison with rival explanations, disputed evidence and the possibility that the field's own categories are historically shaped."
+      ? "At university level, the concept is strongest when it can be held against rival explanations, awkward evidence and the possibility that the field's own categories are historically shaped."
       : seed.level === "A-level"
-        ? "At A-level, the concept is strongest when it is connected to a named example, a clear mechanism and at least one limitation."
-        : "At GCSE level, the concept should still be treated as an explanation rather than a word to memorise.";
+        ? "At A-level, the concept should be tied to a named case, a mechanism and at least one boundary condition."
+        : "At GCSE level, the concept still does explanatory work: it gives a precise name to a pattern that would otherwise be described loosely.";
+
+  const openingLead = pickVariant(
+    [
+      `${seed.concept} names ${seed.focus}. Within ${profile.topic.label.toLowerCase()}, that definition is attached to ${detail.anchor}, so the term should be read inside the field's wider claim: ${profile.fieldFrame}.`,
+      `In ${profile.topic.label.toLowerCase()}, ${seed.concept} refers to ${seed.focus}. The relevant textbook setting is ${detail.anchor}, where the concept is introduced to solve a particular explanatory problem rather than to decorate an example.`,
+      `${seed.concept} is a compact term for ${seed.focus}. Its academic force comes from ${detail.anchor}, because the concept only becomes clear when placed beside the field's larger concern: ${profile.fieldFrame}.`,
+      `The starting point for ${seed.concept} is ${seed.focus}. In textbook treatment, especially in ${detail.anchor}, the term functions less like a dictionary entry than a small analytic instrument.`,
+    ],
+    seedIndex,
+  );
+
+  const sourceLead = pickVariant(
+    [
+      `${sourceNames} place ${seed.concept} inside a sequence of related problems rather than treating it as a loose fact.`,
+      `The source tradition matters here. ${sourceNames} connect ${seed.concept} to methods, examples and limits, which keeps the concept tied to a discipline rather than to casual opinion.`,
+      `A textbook reading of ${seed.concept} begins with the surrounding chapter logic. ${sourceNames} supply that logic by linking definitions to cases, evidence and neighbouring vocabulary.`,
+      `The concept of ${seed.concept} is easier to misuse when it is detached from its source setting. Read with ${sourceNames}, it belongs to a structured argument rather than to a list of impressive terms.`,
+    ],
+    seedIndex + 1,
+  );
+
+  const methodLead = pickVariant(
+    [
+      `The mechanism can be stated directly: ${detail.method}. This connects the definition to evidence because ${frame.evidenceStandard.toLowerCase()}`,
+      `The explanatory work begins with method. To analyse ${seed.concept}, the relevant move is to ${detail.method}. The evidence standard follows: ${frame.evidenceStandard.toLowerCase()}`,
+      `A textbook account would not stop at the definition. It would show the mechanism through this operation: ${detail.method}. Evidence then has to meet the field's standard: ${frame.evidenceStandard.toLowerCase()}`,
+      `The working logic of the concept is ${detail.method}. That logic prevents ${seed.concept} from becoming a vague impression, because ${frame.evidenceStandard.toLowerCase()}`,
+    ],
+    seedIndex + 2,
+  );
+
+  const exampleLead = pickVariant(
+    [
+      `Consider ${detail.case}. The case matters because it lets the concept appear as a relation among conditions, actions and consequences rather than as a label placed on top of events.`,
+      `The ordinary case is ${detail.case}. It is not included as a decorative illustration; it shows what has to be noticed before the concept can explain anything.`,
+      `A concrete way into the concept is ${detail.case}. The example narrows the field of vision so that the relevant actors, constraints, meanings and consequences remain visible.`,
+      `${sentenceStart(detail.case)} is a useful case because it contains the tension the concept is designed to clarify. The point is not that the case is unusual, but that it makes an ordinary structure legible.`,
+    ],
+    seedIndex + 3,
+  );
+
+  const boundaryLead = pickVariant(
+    [
+      `${frame.advancedProblem} ${seed.concept} becomes academically serious at exactly this boundary: it clarifies something, but it also hides or simplifies something.`,
+      `${frame.advancedProblem} With ${seed.concept}, simple recognition gives way to judgement, scope and competing explanation.`,
+      `${frame.advancedProblem} A strong account therefore treats ${seed.concept} as a disciplined simplification, not as a complete description of reality.`,
+      `${frame.advancedProblem} The difficulty with ${seed.concept} is to keep the term sharp enough to explain the case without letting it absorb everything nearby.`,
+    ],
+    seedIndex + 4,
+  );
+
+  const mechanismClose = pickVariant(
+    [
+      `${lens.theoryMove} For ${seed.concept}, the definition gives the boundary of the term; the mechanism explains why the pattern appears and why some tempting examples fall outside the concept.`,
+      `${lens.theoryMove} This matters for ${seed.concept} because the definition alone only marks the concept's territory; the mechanism shows how the pattern is produced.`,
+      `${lens.theoryMove} In that sense, ${seed.concept} works as a controlled abstraction: it simplifies the case without pretending the simplification is the whole case.`,
+      `${lens.theoryMove} The result is a concept that can travel across examples while ${seed.concept} still depends on disciplined evidence in each one.`,
+    ],
+    seedIndex + 5,
+  );
+
+  const exampleAnalysis = pickVariant(
+    [
+      `The hard part is to ${detail.challenge}. That problem gives the example its academic value: the concept has to select relevant details, exclude misleading ones and preserve enough complexity to remain honest.`,
+      `The interpretive pressure falls on this question: how can the case be used to ${detail.challenge}? A good account keeps the answer close to evidence rather than letting the example become a slogan.`,
+      `The case becomes more than anecdote when it is used to ${detail.challenge}. That requirement keeps the lesson close to the source material, where examples carry definitions rather than merely decorate them.`,
+      `The central difficulty is to ${detail.challenge}. The example is therefore useful because it forces a distinction between what is visible immediately and what the concept explains beneath the surface.`,
+    ],
+    seedIndex + 6,
+  );
+
+  const exampleClose = pickVariant(
+    [
+      `${levelLens} For ${seed.concept}, the case therefore works as evidence only when definition, mechanism and limitation meet in the same passage.`,
+      `${levelLens} This is the point of the case: it should make ${seed.concept} narrower, not vaguer, by showing exactly what the term can and cannot explain.`,
+      `${levelLens} The strongest reading keeps the ordinary detail intact while showing why ${seed.concept} adds explanatory power.`,
+      `${levelLens} The example should leave ${seed.concept} more precise than it was at the start, with clearer evidence and a sharper boundary.`,
+    ],
+    seedIndex + 7,
+  );
+
+  const limitParagraph = pickVariant(
+    [
+      `${frame.limits} A useful boundary is this: ${detail.misconception}. That boundary matters because a concept that explains too much eventually stops explaining with precision.`,
+      `${frame.limits} The common mistake is to forget that ${detail.misconception}. Once that mistake enters, the concept starts to blur rather than clarify.`,
+      `${frame.limits} The limiting rule can be put plainly: ${detail.misconception}. This keeps the concept from becoming a catch-all for anything that looks roughly similar.`,
+      `${frame.limits} The source material usually protects this distinction by making clear that ${detail.misconception}. Without that restraint, the concept loses its analytic edge.`,
+    ],
+    seedIndex + 8,
+  );
+
+  const comparisonLead = pickVariant(
+    [
+      `${seed.concept} belongs near ${relatedOne} and ${relatedTwo}, but the overlap should not be allowed to flatten the distinctions. ${seed.concept} emphasises ${seed.focus}; ${relatedOne} changes the mechanism, scale or evidence base.`,
+      `The neighbouring vocabulary matters. ${relatedOne} and ${relatedTwo} may appear in the same chapter, yet ${seed.concept} has its own burden of proof: it has to explain ${seed.focus}.`,
+      `Textbook chapters often work by contrast. ${seed.concept}, ${relatedOne} and ${relatedTwo} mark different ways of organising similar material, which is why substituting one for another changes the argument.`,
+      `${seed.concept} should be kept distinct from ${relatedOne} and ${relatedTwo}. The difference is not just terminology; it changes what counts as evidence and what kind of explanation is being offered.`,
+    ],
+    seedIndex + 5,
+  );
+
+  const comparisonMiddle = pickVariant(
+    [
+      `Keeping the distinction around ${seed.concept} intact also protects the structure of the source material. Chapters are built by moving from one explanatory tool to another; if the tools collapse together, the argument becomes a blur.`,
+      `This contrast is not pedantic. In textbook writing, nearby concepts often divide the work around ${seed.concept} between evidence, mechanism, scale and interpretation.`,
+      `The distinction also explains why ${profile.topic.label.toLowerCase()} needs more than one term for similar-looking cases around ${seed.concept}. Each concept brings a different question into focus.`,
+      `The neighbouring terms form a small map of the chapter around ${seed.concept}. Their differences show which parts of the case belong to definition, which to evidence and which to interpretation.`,
+    ],
+    seedIndex + 9,
+  );
+
+  const comparisonClose = pickVariant(
+    [
+      `${seed.concept} is therefore difficult in a productive way. It asks for a decision about evidence, level of analysis and explanatory scope, not merely recall of a definition.`,
+      `That is why ${seed.concept} belongs in a serious learning system: it trains discrimination between similar explanations rather than simple recognition of a keyword.`,
+      `The intellectual value of ${seed.concept} lies in the precision. Once the neighbouring concepts are separated, the original case can be read with less noise and more explanatory control.`,
+      `The lesson is complete only when ${seed.concept} can be used without swallowing the terms beside it. Precision, not verbal difficulty, is what makes the concept advanced.`,
+    ],
+    seedIndex + 10,
+  );
+
+  const sourceModeParagraph = `${frame.sourceMode} For ${seed.concept}, that source pattern is narrowed through ${detail.anchor} and kept concrete by ${detail.case}.`;
+  const methodDepthParagraph = `The concept of ${seed.concept} therefore carries both a definitional claim and an evidential claim. The definitional claim says what counts as ${seed.concept}; the evidential claim explains why this operation is appropriate: ${detail.method}.`;
+  const everydayDepthParagraph = `Seen through ${seed.concept}, the stakes are clear: ${profile.stakes}. In everyday terms, this means ${profile.practicalContext}. The ordinary setting does not lower the academic standard; it makes the abstraction visible.`;
+  const debateDepthParagraph = `The tension is productive because ${seed.concept} is neither a universal key nor a disposable label. It has to preserve the complexity of ${detail.case} while still making a stronger claim than ordinary description would make.`;
+  const comparisonDepthParagraph = `Placed beside ${relatedOne} and ${relatedTwo}, ${seed.concept} also shows how academic vocabulary earns its keep: each term must change the reading of the case, not merely rename it.`;
 
   const openingSection = {
     heading: plan.opening,
     body: [
-      `${seed.concept} means ${seed.focus}. In ${profile.topic.label.toLowerCase()}, the term belongs to ${detail.anchor}, and it is normally introduced alongside the wider claim that ${profile.fieldFrame}. ${frame.disciplinaryQuestion}`,
-      `Sources such as ${sourceNames} normally treat ${seed.concept} as part of a connected chapter, not as an isolated definition. The surrounding material matters because it supplies the problem, examples, limits and neighbouring vocabulary that give the term its academic force.`,
-      lens.sourceTradition,
+      `${openingLead} ${frame.disciplinaryQuestion}`,
+      sourceLead,
+      `${lens.sourceTradition} In this article, that wider tradition is narrowed to ${seed.concept} through ${detail.anchor}.`,
+      sourceModeParagraph,
     ],
   };
 
   const mechanismSection = {
     heading: plan.mechanism,
     body: [
-      `The central mechanism is this: ${detail.method}. That mechanism connects the definition of ${seed.concept} to evidence, because ${frame.evidenceStandard.toLowerCase()}`,
-      lens.evidenceProblem,
-      `This is why ${seed.concept} is more specific than a general impression. It selects a level of analysis, a type of evidence and a likely cause. ${lens.theoryMove} In textbook terms, the definition says what the term covers, while the explanation shows why the pattern appears.`,
+      methodLead,
+      `${lens.evidenceProblem} For ${seed.concept}, that means the article has to keep this operation in view: ${detail.method}.`,
+      mechanismClose,
+      methodDepthParagraph,
     ],
   };
 
   const exampleSection = {
     heading: plan.example,
     body: [
-      `A standard example is ${detail.case}. In that setting, ${seed.concept} is not merely a name for the example. It explains a relationship between conditions, actions and consequences that would otherwise remain scattered across the description.`,
-      `The key difficulty is to ${detail.challenge}. The example therefore works like a small model: it removes some background noise, keeps the relevant variables visible and shows why the concept has a narrower meaning than ordinary language suggests.`,
-      `${levelLens} In this sense, the example is not a decorative illustration. It is the place where definition, evidence and explanatory scope are tested against one another.`,
+      exampleLead,
+      exampleAnalysis,
+      exampleClose,
+      everydayDepthParagraph,
     ],
   };
 
   const debateSection = {
     heading: plan.debate,
     body: [
-      `${frame.advancedProblem} This is the point at which the concept becomes more than an introductory definition. The important question is not whether ${seed.concept} can be named, but what the concept clarifies and what it pushes into the background.`,
-      `${frame.limits} A frequent error is that ${detail.misconception}. Textbook discussions usually mark this boundary because a concept that explains too much becomes too vague to explain anything well.`,
-      `${lens.complication} ${lens.stakes}`,
+      boundaryLead,
+      limitParagraph,
+      `${lens.complication} In the specific case of ${seed.concept}, ${lens.stakes}`,
+      debateDepthParagraph,
     ],
   };
 
   const comparisonSection = {
     heading: plan.comparison,
     body: [
-      `${seed.concept} sits near ${relatedOne} and ${relatedTwo}, but the concepts do different work. ${seed.concept} emphasises ${seed.focus}; ${relatedOne} shifts attention to another mechanism, scale or body of evidence.`,
-      `The distinction matters because textbooks often build chapters by moving from one concept to the next. If the terms collapse into one another, the argument of the chapter is lost; if they remain separate, the field's need for multiple explanations of similar-looking cases becomes clearer.`,
-      `This also gives ${seed.concept} its intellectual difficulty. It is not simply harder vocabulary; it is a more exact way of deciding what kind of explanation is being offered and what kind of evidence would make that explanation stronger or weaker.`,
+      comparisonLead,
+      comparisonMiddle,
+      comparisonClose,
+      comparisonDepthParagraph,
     ],
   };
 
@@ -2422,7 +2573,7 @@ function buildLesson(
       level: seed.level,
       summary: seed.focus,
     },
-    deck: `${seed.concept} is taught through ${detail.anchor}, using ${detail.case} as the working case and ${detail.method} as the core study move.`,
+    deck: `${seed.concept} examines ${seed.focus}, anchored in ${detail.anchor} and tested through ${detail.case}.`,
     difficulty,
     estimatedMinutes: seed.level === "University" ? 9 : seed.level === "A-level" ? 8 : 7,
     keyTerms: [
