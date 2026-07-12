@@ -15,8 +15,10 @@ export type Database = {
           application_points: number;
           breadth_points: number;
           completed_at: string;
+          consistency_points: number;
           correct_count: number;
           created_at: string;
+          depth_points: number;
           id: string;
           knowledge_points: number;
           lesson_slug: string;
@@ -34,8 +36,10 @@ export type Database = {
           application_points?: number;
           breadth_points?: number;
           completed_at?: string;
+          consistency_points?: number;
           correct_count?: number;
           created_at?: string;
+          depth_points?: number;
           id?: string;
           knowledge_points?: number;
           lesson_slug: string;
@@ -53,8 +57,10 @@ export type Database = {
           application_points?: number;
           breadth_points?: number;
           completed_at?: string;
+          consistency_points?: number;
           correct_count?: number;
           created_at?: string;
+          depth_points?: number;
           id?: string;
           knowledge_points?: number;
           lesson_slug?: string;
@@ -65,6 +71,45 @@ export type Database = {
           started_at?: string;
           topic?: string;
           total_questions?: number;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      learning_lesson_notes: {
+        Row: {
+          bookmarked: boolean;
+          created_at: string;
+          highlight: string | null;
+          id: string;
+          lesson_slug: string;
+          note: string | null;
+          revisit: boolean;
+          topic: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          bookmarked?: boolean;
+          created_at?: string;
+          highlight?: string | null;
+          id?: string;
+          lesson_slug: string;
+          note?: string | null;
+          revisit?: boolean;
+          topic: string;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          bookmarked?: boolean;
+          created_at?: string;
+          highlight?: string | null;
+          id?: string;
+          lesson_slug?: string;
+          note?: string | null;
+          revisit?: boolean;
+          topic?: string;
+          updated_at?: string;
           user_id?: string;
         };
         Relationships: [];
@@ -598,6 +643,8 @@ export type Database = {
 export type DailyLog = Database["public"]["Tables"]["daily_logs"]["Row"];
 export type LearningSession =
   Database["public"]["Tables"]["learning_sessions"]["Row"];
+export type LearningLessonNote =
+  Database["public"]["Tables"]["learning_lesson_notes"]["Row"];
 export type DailyRoutineLog =
   Database["public"]["Tables"]["daily_routine_logs"]["Row"];
 export type Activity = Database["public"]["Tables"]["activities"]["Row"];

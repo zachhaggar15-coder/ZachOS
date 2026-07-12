@@ -30,9 +30,9 @@ export type LearningTopicId =
 export type LearningConceptLevel = "GCSE" | "A-level" | "University";
 
 export type LearningDimension =
-  | "application"
   | "breadth"
-  | "knowledge"
+  | "consistency"
+  | "depth"
   | "reasoning"
   | "retention";
 
@@ -92,10 +92,10 @@ export type LearningAnswerResult = {
 
 export type LearningScoreResult = {
   answers: LearningAnswerResult[];
-  applicationPoints: number;
   breadthPoints: number;
+  consistencyPoints: number;
   correctCount: number;
-  knowledgePoints: number;
+  depthPoints: number;
   reasoningPoints: number;
   retentionPoints: number;
   scorePoints: number;
@@ -1587,9 +1587,9 @@ export const LEARNING_TOPICS: LearningTopic[] = Object.values(topicProfiles).map
 const topicIds = new Set<string>(LEARNING_TOPICS.map((topic) => topic.id));
 
 export const LEARNING_DIMENSION_LABELS: Record<LearningDimension, string> = {
-  application: "Application",
   breadth: "Breadth",
-  knowledge: "Knowledge",
+  consistency: "Consistency",
+  depth: "Depth",
   reasoning: "Reasoning",
   retention: "Retention",
 };
@@ -1599,6 +1599,157 @@ export const LEARNING_CONCEPT_LEVEL_LABELS: Record<LearningConceptLevel, string>
   GCSE: "GCSE",
   University: "University",
 };
+
+export type LearningPath = {
+  description: string;
+  id: string;
+  lessons: string[];
+  title: string;
+  topics: LearningTopicId[];
+};
+
+export type LearningConceptMapLink = {
+  description: string;
+  from: LearningTopicId;
+  id: string;
+  title: string;
+  to: LearningTopicId;
+};
+
+export const LEARNING_PATHS: LearningPath[] = [
+  {
+    description:
+      "Power, persuasion, institutions and social order from everyday arguments to state decisions.",
+    id: "power-and-society",
+    lessons: [
+      "politics-power",
+      "rhetoric-argumentation-ethos",
+      "sociology-status",
+      "geopolitics-soft-power",
+      "military-strategy-deterrence",
+    ],
+    title: "Power and Society",
+    topics: [
+      "politics",
+      "rhetoric-argumentation",
+      "sociology",
+      "geopolitics",
+      "military-strategy",
+    ],
+  },
+  {
+    description:
+      "Customer behaviour, value, incentives and organisational judgement without reducing business to slogans.",
+    id: "business-judgement",
+    lessons: [
+      "business-value-proposition",
+      "marketing-positioning",
+      "economics-opportunity-cost",
+      "psychology-motivation",
+      "systems-thinking-leverage-point",
+    ],
+    title: "Business Judgement",
+    topics: ["business", "marketing", "economics", "psychology", "systems-thinking"],
+  },
+  {
+    description:
+      "A calmer route through attention, habit, stress, influence and decision-making.",
+    id: "everyday-psychology",
+    lessons: [
+      "psychology-attention",
+      "psychology-working-memory",
+      "psychology-stress-response",
+      "social-engineering-authority",
+      "systems-thinking-feedback-loop",
+    ],
+    title: "Everyday Psychology",
+    topics: ["psychology", "social-engineering", "systems-thinking"],
+  },
+  {
+    description:
+      "Classical inheritance, rhetoric, tragedy, architecture and ideas still visible in modern life.",
+    id: "classical-modern-world",
+    lessons: [
+      "classical-civilisation-republicanism",
+      "classical-civilisation-tragedy-and-catharsis",
+      "rhetoric-argumentation-logos",
+      "architecture-urbanism-public-realm",
+      "history-of-ideas-liberty",
+    ],
+    title: "Classical Ideas in Modern Life",
+    topics: [
+      "classical-civilisation",
+      "rhetoric-argumentation",
+      "architecture-urbanism",
+      "history-of-ideas",
+    ],
+  },
+  {
+    description:
+      "A guitarist's path from fretboard geography to harmony, voice leading and phrase design.",
+    id: "guitar-theory-foundations",
+    lessons: [
+      "music-theory-fretboard-geography",
+      "music-theory-intervals-on-guitar",
+      "music-theory-triads-across-string-sets",
+      "music-theory-functional-harmony",
+      "music-theory-voice-leading",
+    ],
+    title: "Guitar Theory Foundations",
+    topics: ["music-theory"],
+  },
+];
+
+export const LEARNING_CONCEPT_MAP: LearningConceptMapLink[] = [
+  {
+    description:
+      "Persuasive appeals become more powerful when they meet attention, identity and social pressure.",
+    from: "rhetoric-argumentation",
+    id: "rhetoric-psychology",
+    title: "Persuasion and Attention",
+    to: "psychology",
+  },
+  {
+    description:
+      "Marketing turns psychological and rhetorical mechanisms into offers, categories and behaviour change.",
+    from: "psychology",
+    id: "psychology-marketing",
+    title: "Behaviour to Market",
+    to: "marketing",
+  },
+  {
+    description:
+      "Urban form, social norms and institutions shape who feels invited, watched or excluded.",
+    from: "architecture-urbanism",
+    id: "urbanism-sociology",
+    title: "Space and Society",
+    to: "sociology",
+  },
+  {
+    description:
+      "Systems thinking makes economics more dynamic by adding feedback, delay and unintended consequences.",
+    from: "economics",
+    id: "economics-systems",
+    title: "Markets as Systems",
+    to: "systems-thinking",
+  },
+  {
+    description:
+      "Classical political vocabulary reappears in modern arguments about liberty, virtue and republics.",
+    from: "classical-civilisation",
+    id: "classics-ideas",
+    title: "Ancient Terms, Modern Arguments",
+    to: "history-of-ideas",
+  },
+  {
+    description:
+      "Geopolitical constraints become military problems when power, logistics and deterrence meet resistance.",
+    from: "geopolitics",
+    id: "geopolitics-strategy",
+    title: "Map to Strategy",
+    to: "military-strategy",
+  },
+];
 
 const topicLessonSeeds: Record<LearningTopicId, LessonSeed[]> = {
   anthropology: [
@@ -2258,7 +2409,7 @@ function buildQuestions(
         },
       ],
       correctChoiceId: "a",
-      dimension: "knowledge",
+      dimension: "depth",
       explanation: `${seed.concept} is best understood as ${seed.focus}. The lesson anchors that definition in ${detail.anchor}, so the term has to do interpretive work rather than sit as vocabulary.`,
       id: `${slug}-knowledge`,
       prompt: `Which definition best captures ${seed.concept} as used in the article?`,
@@ -2312,10 +2463,64 @@ function buildQuestions(
         },
       ],
       correctChoiceId: "a",
-      dimension: "application",
+      dimension: "depth",
       explanation: `${seed.concept} becomes useful when it changes what you notice in a case. Here, the case is ${detail.case}, and the challenge is to ${detail.challenge}.`,
       id: `${slug}-application`,
       prompt: `Which application best follows the article's treatment of ${seed.concept}?`,
+    },
+    {
+      choices: [
+        {
+          id: "a",
+          label: `${detail.anchor}; it keeps the concept tied to ${frame.evidenceStandard.toLowerCase()}.`,
+        },
+        {
+          id: "b",
+          label: "A personal memory that feels vivid enough to override source context.",
+        },
+        {
+          id: "c",
+          label: firstAlt
+            ? `${firstAlt}, because neighbouring terms can always replace one another.`
+            : "Any nearby concept, because source context is optional.",
+        },
+        {
+          id: "d",
+          label: "A broad opinion about the topic that does not need the article's evidence standard.",
+        },
+      ],
+      correctChoiceId: "a",
+      dimension: "depth",
+      explanation: `The article treats source context as part of the concept. ${seed.concept} is anchored in ${detail.anchor}, and the evidence standard is ${frame.evidenceStandard.toLowerCase()}`,
+      id: `${slug}-source-context`,
+      prompt: `Which source-context reading best supports ${seed.concept}?`,
+    },
+    {
+      choices: [
+        {
+          id: "a",
+          label: `${seed.concept} focuses on ${seed.focus}, while ${secondAlt ?? "a neighbouring concept"} would shift the explanation toward a different mechanism or scale.`,
+        },
+        {
+          id: "b",
+          label: `${seed.concept} is just a more advanced name for ${secondAlt ?? "any related concept"}.`,
+        },
+        {
+          id: "c",
+          label: "Comparison is unnecessary because a single correct concept should explain the whole case.",
+        },
+        {
+          id: "d",
+          label: thirdAlt
+            ? `${thirdAlt} is automatically the better answer whenever the article becomes complex.`
+            : "A harder-sounding term is automatically the better answer.",
+        },
+      ],
+      correctChoiceId: "a",
+      dimension: "reasoning",
+      explanation: `Strong comparison keeps ${seed.concept} distinct from neighbouring ideas. The point is to preserve what ${seed.concept} explains, not to collapse the topic's vocabulary into one broad label.`,
+      id: `${slug}-comparison`,
+      prompt: `Which comparison shows the strongest understanding of ${seed.concept}?`,
     },
   ];
 }
@@ -2638,6 +2843,30 @@ function daysBetween(left: Date, right: Date) {
   return Math.abs(left.getTime() - right.getTime()) / 86_400_000;
 }
 
+function sessionDepthPoints(session: LearningSession) {
+  const withNewScore = session as LearningSession & { depth_points?: number };
+
+  return withNewScore.depth_points ?? session.knowledge_points + session.application_points;
+}
+
+function sessionConsistencyPoints(session: LearningSession) {
+  const withNewScore = session as LearningSession & {
+    consistency_points?: number;
+  };
+
+  return withNewScore.consistency_points ?? 0;
+}
+
+function uniqueLearningDates(sessions: LearningSession[]) {
+  return Array.from(
+    new Set(
+      sessions.map((session) =>
+        (session.completed_at ?? session.created_at).slice(0, 10),
+      ),
+    ),
+  ).sort((left, right) => right.localeCompare(left));
+}
+
 export function chooseNextLearningLesson(
   topic: LearningTopicId,
   sessions: LearningSession[],
@@ -2676,18 +2905,22 @@ export function scoreLearningAttempt(
   });
   const correctCount = answerResults.filter((answer) => answer.correct).length;
   const basePoints = 10 + lesson.difficulty * 2;
-  const knowledgePoints =
+  const depthAnswerPoints =
     answerResults.filter(
-      (answer) => answer.correct && answer.dimension === "knowledge",
+      (answer) => answer.correct && answer.dimension === "depth",
     ).length * basePoints;
   const reasoningPoints =
     answerResults.filter(
       (answer) => answer.correct && answer.dimension === "reasoning",
     ).length * basePoints;
-  const applicationPoints =
-    answerResults.filter(
-      (answer) => answer.correct && answer.dimension === "application",
-    ).length * basePoints;
+  const levelDepthBonus =
+    lesson.concept.level === "University"
+      ? 10
+      : lesson.concept.level === "A-level"
+        ? 6
+        : 3;
+  const depthPoints =
+    depthAnswerPoints + (correctCount === lesson.questions.length ? levelDepthBonus : 0);
   const previousTopicSessions = priorSessions.filter(
     (session) => session.topic === lesson.topic,
   );
@@ -2702,33 +2935,47 @@ export function scoreLearningAttempt(
     latestSession &&
     latestSession.topic !== lesson.topic &&
     previousTopicSessions.length > 0;
-  const breadthPoints = topicIsNew ? 8 : switchedTopic ? 3 : 1;
+  const breadthPoints = topicIsNew ? 14 : switchedTopic ? 5 : 1;
   const latestLessonAttempt = [...previousLessonSessions].sort(
     (left, right) => completedTime(right) - completedTime(left),
   )[0];
   const accuracy = correctCount / Math.max(1, lesson.questions.length);
   const retentionPoints =
     latestLessonAttempt &&
-    daysBetween(now, new Date(latestLessonAttempt.completed_at)) >= 7
-      ? accuracy >= 0.67
-        ? 8
-        : 2
+    daysBetween(now, new Date(latestLessonAttempt.completed_at)) >= 3
+      ? accuracy >= 0.8
+        ? 12
+        : accuracy >= 0.6
+          ? 6
+          : 2
       : latestLessonAttempt
-        ? 2
+        ? 1
         : 0;
+  const sortedDates = uniqueLearningDates(priorSessions);
+  const todayKey = now.toISOString().slice(0, 10);
+  const yesterday = new Date(now);
+  yesterday.setUTCDate(yesterday.getUTCDate() - 1);
+  const yesterdayKey = yesterday.toISOString().slice(0, 10);
+  const studiedToday = sortedDates.includes(todayKey);
+  const studiedYesterday = sortedDates.includes(yesterdayKey);
+  const recentStudyDays = sortedDates.filter(
+    (date) => daysBetween(now, new Date(`${date}T12:00:00Z`)) <= 7,
+  ).length;
+  const consistencyPoints =
+    Math.min(10, recentStudyDays * 2) + (studiedToday || studiedYesterday ? 4 : 0);
   const scorePoints =
-    knowledgePoints +
-    reasoningPoints +
-    applicationPoints +
     breadthPoints +
-    retentionPoints;
+    depthPoints +
+    retentionPoints +
+    reasoningPoints +
+    consistencyPoints;
 
   return {
     answers: answerResults,
-    applicationPoints,
     breadthPoints,
+    consistencyPoints,
     correctCount,
-    knowledgePoints,
+    depthPoints,
     reasoningPoints,
     retentionPoints,
     scorePoints,
@@ -2738,25 +2985,23 @@ export function scoreLearningAttempt(
 
 export function summariseLearningProgress(sessions: LearningSession[]) {
   const dimensions: Record<LearningDimension, number> = {
-    application: 0,
     breadth: 0,
-    knowledge: 0,
+    consistency: 0,
+    depth: 0,
     reasoning: 0,
     retention: 0,
   };
   let correct = 0;
   let total = 0;
-  let score = 0;
 
   sessions.forEach((session) => {
-    dimensions.application += session.application_points;
     dimensions.breadth += session.breadth_points;
-    dimensions.knowledge += session.knowledge_points;
+    dimensions.consistency += sessionConsistencyPoints(session);
+    dimensions.depth += sessionDepthPoints(session);
     dimensions.reasoning += session.reasoning_points;
     dimensions.retention += session.retention_points;
     correct += session.correct_count;
     total += session.total_questions;
-    score += session.score_points;
   });
 
   const topicStats = LEARNING_TOPICS.map((topic) => {
@@ -2787,13 +3032,7 @@ export function summariseLearningProgress(sessions: LearningSession[]) {
       topic,
     };
   });
-  const sortedDates = Array.from(
-    new Set(
-      sessions.map((session) =>
-        (session.completed_at ?? session.created_at).slice(0, 10),
-      ),
-    ),
-  ).sort((left, right) => right.localeCompare(left));
+  const sortedDates = uniqueLearningDates(sessions);
   let streakDays = 0;
 
   if (sortedDates.length) {
@@ -2813,7 +3052,7 @@ export function summariseLearningProgress(sessions: LearningSession[]) {
   return {
     accuracy: total ? Math.round((correct / total) * 100) : 0,
     dimensions,
-    intellectScore: score,
+    intellectScore: Object.values(dimensions).reduce((sum, value) => sum + value, 0),
     lessonsCompleted: sessions.length,
     recentSessions: [...sessions]
       .sort((left, right) => completedTime(right) - completedTime(left))

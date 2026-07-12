@@ -65,7 +65,7 @@ create table if not exists public.learning_sessions (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   lesson_slug text not null,
-  topic text not null check (topic in ('philosophy', 'marketing', 'economics', 'science', 'linguistics-etymology', 'art-history', 'literature', 'anthropology', 'politics', 'sociology', 'artificial-intelligence', 'social-engineering', 'business', 'pharmaceutical-businesses')),
+  topic text not null check (topic in ('philosophy', 'marketing', 'economics', 'science', 'linguistics-etymology', 'art-history', 'literature', 'anthropology', 'politics', 'sociology', 'artificial-intelligence', 'architecture-urbanism', 'social-engineering', 'business', 'classical-civilisation', 'geopolitics', 'history-of-ideas', 'military-strategy', 'music-theory', 'pharmaceutical-businesses', 'psychology', 'rhetoric-argumentation', 'systems-thinking')),
   started_at timestamptz not null default now(),
   completed_at timestamptz not null default now(),
   reading_seconds integer not null default 0 check (reading_seconds >= 0),
@@ -76,9 +76,25 @@ create table if not exists public.learning_sessions (
   application_points integer not null default 0 check (application_points >= 0),
   breadth_points integer not null default 0 check (breadth_points >= 0),
   retention_points integer not null default 0 check (retention_points >= 0),
+  depth_points integer not null default 0 check (depth_points >= 0),
+  consistency_points integer not null default 0 check (consistency_points >= 0),
   score_points integer not null default 0 check (score_points >= 0),
   answer_payload jsonb not null default '[]'::jsonb,
   created_at timestamptz not null default now()
+);
+
+create table if not exists public.learning_lesson_notes (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  lesson_slug text not null,
+  topic text not null,
+  note text,
+  highlight text,
+  revisit boolean not null default false,
+  bookmarked boolean not null default false,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (user_id, lesson_slug)
 );
 
 create table if not exists public.consultant_readiness_logs (
@@ -213,6 +229,7 @@ alter table public.strava_connections enable row level security;
 alter table public.garmin_sync_runs enable row level security;
 alter table public.ai_weekly_insights enable row level security;
 alter table public.learning_sessions enable row level security;
+alter table public.learning_lesson_notes enable row level security;
 alter table public.consultant_readiness_logs enable row level security;
 alter table public.daily_logs enable row level security;
 alter table public.daily_routine_logs enable row level security;
@@ -386,6 +403,27 @@ create policy "Users can update their own learning sessions"
 
 create policy "Users can delete their own learning sessions"
   on public.learning_sessions
+  for delete
+  using (auth.uid() = user_id);
+
+create policy "Users can read their own learning lesson notes"
+  on public.learning_lesson_notes
+  for select
+  using (auth.uid() = user_id);
+
+create policy "Users can insert their own learning lesson notes"
+  on public.learning_lesson_notes
+  for insert
+  with check (auth.uid() = user_id);
+
+create policy "Users can update their own learning lesson notes"
+  on public.learning_lesson_notes
+  for update
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+create policy "Users can delete their own learning lesson notes"
+  on public.learning_lesson_notes
   for delete
   using (auth.uid() = user_id);
 
@@ -638,6 +676,12 @@ create index if not exists learning_sessions_user_completed_idx
 
 create index if not exists learning_sessions_user_topic_idx
   on public.learning_sessions (user_id, topic, completed_at desc);
+
+create index if not exists learning_lesson_notes_user_updated_idx
+  on public.learning_lesson_notes (user_id, updated_at desc);
+
+create index if not exists learning_lesson_notes_user_topic_idx
+  on public.learning_lesson_notes (user_id, topic, updated_at desc);
 
 create index if not exists consultant_readiness_logs_user_date_idx
   on public.consultant_readiness_logs (user_id, date desc);

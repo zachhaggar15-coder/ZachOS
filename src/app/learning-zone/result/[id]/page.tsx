@@ -44,11 +44,11 @@ type StoredAnswer = {
 };
 
 const dimensions: LearningDimension[] = [
-  "knowledge",
-  "reasoning",
-  "application",
   "breadth",
+  "depth",
   "retention",
+  "reasoning",
+  "consistency",
 ];
 
 function isRecord(value: Json | undefined): value is Record<string, Json | undefined> {
@@ -215,12 +215,12 @@ export default async function LearningResultPage({
           <div className="mt-5 grid gap-3">
             {dimensions.map((dimension) => {
               const sessionValue =
-                dimension === "application"
-                  ? session.application_points
-                  : dimension === "breadth"
-                    ? session.breadth_points
-                    : dimension === "knowledge"
-                      ? session.knowledge_points
+                dimension === "breadth"
+                  ? session.breadth_points
+                  : dimension === "consistency"
+                    ? session.consistency_points
+                    : dimension === "depth"
+                      ? session.depth_points || session.knowledge_points + session.application_points
                       : dimension === "reasoning"
                         ? session.reasoning_points
                         : session.retention_points;

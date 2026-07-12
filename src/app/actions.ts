@@ -31,6 +31,8 @@ type FinanceSnapshotInsert =
   Database["public"]["Tables"]["finance_snapshots"]["Insert"];
 type LearningSessionInsert =
   Database["public"]["Tables"]["learning_sessions"]["Insert"];
+type LearningLessonNoteInsert =
+  Database["public"]["Tables"]["learning_lesson_notes"]["Insert"];
 type MarketPriceInsert = Database["public"]["Tables"]["market_prices"]["Insert"];
 type PortfolioAccountInsert =
   Database["public"]["Tables"]["portfolio_accounts"]["Insert"];
@@ -1490,11 +1492,13 @@ export async function submitLearningQuiz(formData: FormData) {
           : answer.selectedChoiceId,
       };
     }),
-    application_points: scored.applicationPoints,
+    application_points: scored.consistencyPoints,
     breadth_points: scored.breadthPoints,
+    consistency_points: scored.consistencyPoints,
     completed_at: new Date().toISOString(),
     correct_count: scored.correctCount,
-    knowledge_points: scored.knowledgePoints,
+    depth_points: scored.depthPoints,
+    knowledge_points: scored.depthPoints,
     lesson_slug: lesson.slug,
     reading_seconds: readingSeconds,
     reasoning_points: scored.reasoningPoints,
@@ -1521,4 +1525,38 @@ export async function submitLearningQuiz(formData: FormData) {
   revalidatePath("/learning-zone");
   revalidatePath(`/learning-zone/lesson/${lesson.slug}`);
   redirect(`/learning-zone/result/${inserted.data.id}`);
+}
+
+export async function saveLearningLessonNote(formData: FormData) {
+  const { supabase, user } = await requireAuthenticatedUser();
+  const lessonSlug = formString(formData, "lesson_slug");
+  const lesson = getLearningLesson(lessonSlug);
+
+  if (!lesson) {
+    redirectToLearningWithError("That lesson is not registered in Learning Zone.");
+  }
+
+  const note = formString(formData, "note");
+  const highlight = formString(formData, "highlight");
+  const payload: LearningLessonNoteInsert = {
+    bookmarked: formData.get("bookmarked") === "on",
+    highlight: highlight || null,
+    lesson_slug: lesson.slug,
+    note: note || null,
+    revisit: formData.get("revisit") === "on",
+    topic: lesson.topic,
+    updated_at: new Date().toISOString(),
+    user_id: user.id,
+  };
+  const saved = await supabase
+    .from("learning_lesson_notes")
+    .upsert(payload, { onConflict: "user_id,lesson_slug" });
+
+  if (saved.error) {
+    redirectToLearningLessonWithError(lesson.slug, friendlyDatabaseError(saved.error));
+  }
+
+  revalidatePath("/learning-zone");
+  revalidatePath(`/learning-zone/lesson/${lesson.slug}`);
+  redirect(`/learning-zone/lesson/${lesson.slug}?message=Notebook saved`);
 }

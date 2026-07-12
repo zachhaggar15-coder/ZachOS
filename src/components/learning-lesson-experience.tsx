@@ -2,11 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { submitLearningQuiz } from "@/app/actions";
+import { saveLearningLessonNote, submitLearningQuiz } from "@/app/actions";
 import type { LearningLesson } from "@/lib/learning-zone";
+import type { LearningLessonNote } from "@/lib/supabase/database.types";
 
 type LearningLessonExperienceProps = {
   lesson: LearningLesson;
+  note?: LearningLessonNote | null;
 };
 
 function formatTimer(seconds: number) {
@@ -15,7 +17,10 @@ function formatTimer(seconds: number) {
   return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
 }
 
-export function LearningLessonExperience({ lesson }: LearningLessonExperienceProps) {
+export function LearningLessonExperience({
+  lesson,
+  note,
+}: LearningLessonExperienceProps) {
   const [quizOpen, setQuizOpen] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [startedAt] = useState(() => new Date().toISOString());
@@ -137,7 +142,69 @@ export function LearningLessonExperience({ lesson }: LearningLessonExperiencePro
 
         <section className="rounded-md border border-[#2c2824]/[0.13] bg-[#fffaf2] p-5">
           <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
-            Sources
+            Notebook
+          </p>
+          <h3 className="zach-display mt-1 text-2xl font-medium text-[#111820]">
+            Save context
+          </h3>
+          <form action={saveLearningLessonNote} className="mt-4 grid gap-3">
+            <input name="lesson_slug" type="hidden" value={lesson.slug} />
+            <label className="flex items-start gap-3 rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] p-3 text-sm font-semibold text-[#2c2824]">
+              <input
+                className="mt-1 h-4 w-4 accent-[#bb5d3a]"
+                defaultChecked={note?.bookmarked ?? false}
+                name="bookmarked"
+                type="checkbox"
+              />
+              <span>Bookmark this lesson</span>
+            </label>
+            <label className="flex items-start gap-3 rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] p-3 text-sm font-semibold text-[#2c2824]">
+              <input
+                className="mt-1 h-4 w-4 accent-[#bb5d3a]"
+                defaultChecked={note?.revisit ?? false}
+                name="revisit"
+                type="checkbox"
+              />
+              <span>Revisit later</span>
+            </label>
+            <label className="grid gap-1 text-sm font-semibold text-[#2c2824]">
+              Highlight
+              <input
+                className="min-h-10 rounded-md border border-[#2c2824]/[0.13] bg-[#f9f4ec] px-3 text-sm font-normal text-[#3f382f] outline-none transition focus:border-[#bb5d3a]"
+                defaultValue={note?.highlight ?? ""}
+                name="highlight"
+                placeholder="A term, sentence, or idea worth keeping"
+              />
+            </label>
+            <label className="grid gap-1 text-sm font-semibold text-[#2c2824]">
+              Note
+              <textarea
+                className="min-h-28 resize-y rounded-md border border-[#2c2824]/[0.13] bg-[#f9f4ec] p-3 text-sm font-normal leading-6 text-[#3f382f] outline-none transition focus:border-[#bb5d3a]"
+                defaultValue={note?.note ?? ""}
+                name="note"
+                placeholder="Write the context you want future-you to remember."
+              />
+            </label>
+            <button
+              className="h-10 rounded-md border border-[#241f1a] bg-[#241f1a] px-4 text-sm font-semibold text-[#f9f4ec] transition hover:bg-[#3a342c]"
+              type="submit"
+            >
+              Save notebook
+            </button>
+          </form>
+        </section>
+
+        <details className="rounded-md border border-[#2c2824]/[0.13] bg-[#fffaf2] p-5">
+          <summary className="cursor-pointer list-none">
+            <span className="zach-ui block text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
+              Sources
+            </span>
+            <span className="zach-display mt-1 block text-2xl font-medium text-[#111820]">
+              References behind this lesson
+            </span>
+          </summary>
+          <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
+            Source drawer
           </p>
           <div className="mt-4 grid gap-3">
             {lesson.sources.map((source) => (
@@ -160,7 +227,7 @@ export function LearningLessonExperience({ lesson }: LearningLessonExperiencePro
               </a>
             ))}
           </div>
-        </section>
+        </details>
 
         {!quizOpen && (
           <button

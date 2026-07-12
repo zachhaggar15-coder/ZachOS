@@ -72,7 +72,7 @@ export default async function LearningLessonPage({
     return <AuthPanel error={query.error} message={query.message} />;
   }
 
-  const [lessonAttempts, topicAttempts] = await Promise.all([
+  const [lessonAttempts, topicAttempts, lessonNote] = await Promise.all([
     supabase
       .from("learning_sessions")
       .select("*")
@@ -87,8 +87,14 @@ export default async function LearningLessonPage({
       .eq("topic", lesson.topic)
       .order("completed_at", { ascending: false })
       .limit(50),
+    supabase
+      .from("learning_lesson_notes")
+      .select("*")
+      .eq("user_id", user.id)
+      .eq("lesson_slug", lesson.slug)
+      .maybeSingle(),
   ]);
-  const queryErrors = [lessonAttempts.error, topicAttempts.error];
+  const queryErrors = [lessonAttempts.error, topicAttempts.error, lessonNote.error];
   const databaseSetupIssue = getDatabaseSetupIssue(queryErrors);
   const dataError = databaseSetupIssue === null ? queryErrors.find(Boolean) : null;
   const latestAttempt = lessonAttempts.data?.[0] ?? null;
@@ -170,7 +176,7 @@ export default async function LearningLessonPage({
             />
           </section>
 
-          <LearningLessonExperience lesson={lesson} />
+          <LearningLessonExperience lesson={lesson} note={lessonNote.data} />
 
           <div className="flex justify-end">
             <Link
