@@ -40,6 +40,7 @@ function levelDifficulty(level: LearningConceptLevel) {
 }
 
 const TOPIC_LABELS: Partial<Record<LearningTopicId, string>> = {
+  anthropology: "Anthropology",
   philosophy: "Philosophy",
 };
 

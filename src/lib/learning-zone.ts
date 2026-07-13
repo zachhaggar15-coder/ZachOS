@@ -1,4 +1,5 @@
 import type { Database } from "@/lib/supabase/database.types";
+import { anthropologyLessons } from "@/lib/learning-content/anthropology";
 import { philosophyLessons } from "@/lib/learning-content/philosophy";
 
 type LearningSession = Database["public"]["Tables"]["learning_sessions"]["Row"];
@@ -2815,6 +2816,7 @@ function buildLesson(
 // to the template generator below.
 const authoredLessonsByTopic: Partial<Record<LearningTopicId, LearningLesson[]>> =
   {
+    anthropology: anthropologyLessons,
     philosophy: philosophyLessons,
   };
 
