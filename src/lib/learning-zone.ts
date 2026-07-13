@@ -1,4 +1,5 @@
 import type { Database } from "@/lib/supabase/database.types";
+import { philosophyLessons } from "@/lib/learning-content/philosophy";
 
 type LearningSession = Database["public"]["Tables"]["learning_sessions"]["Row"];
 
@@ -2809,11 +2810,26 @@ function buildLesson(
   };
 }
 
+// Hand-written lessons replace the generated ones topic by topic. As each
+// topic is rewritten, it is added here; any topic not present still falls back
+// to the template generator below.
+const authoredLessonsByTopic: Partial<Record<LearningTopicId, LearningLesson[]>> =
+  {
+    philosophy: philosophyLessons,
+  };
+
 export const LEARNING_LESSONS: LearningLesson[] = Object.entries(
   topicLessonSeeds,
-).flatMap(([topic, seeds]) =>
-  seeds.map((seed, index) => buildLesson(topic as LearningTopicId, seed, index)),
-);
+).flatMap(([topic, seeds]) => {
+  const topicId = topic as LearningTopicId;
+  const authored = authoredLessonsByTopic[topicId];
+
+  if (authored) {
+    return authored;
+  }
+
+  return seeds.map((seed, index) => buildLesson(topicId, seed, index));
+});
 
 export function isLearningTopicId(value: string): value is LearningTopicId {
   return topicIds.has(value);
