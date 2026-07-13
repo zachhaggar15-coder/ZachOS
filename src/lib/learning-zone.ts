@@ -1,5 +1,6 @@
 import type { Database } from "@/lib/supabase/database.types";
 import { anthropologyLessons } from "@/lib/learning-content/anthropology";
+import { architectureUrbanismLessons } from "@/lib/learning-content/architecture-urbanism";
 import { philosophyLessons } from "@/lib/learning-content/philosophy";
 
 type LearningSession = Database["public"]["Tables"]["learning_sessions"]["Row"];
@@ -2817,6 +2818,7 @@ function buildLesson(
 const authoredLessonsByTopic: Partial<Record<LearningTopicId, LearningLesson[]>> =
   {
     anthropology: anthropologyLessons,
+    "architecture-urbanism": architectureUrbanismLessons,
     philosophy: philosophyLessons,
   };
 
