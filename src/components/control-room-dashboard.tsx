@@ -5,6 +5,7 @@ import { saveQuickDailyEntry, signOut } from "@/app/actions";
 import { DailyRitualMetricInput } from "@/components/daily-ritual-metric-input";
 import { DailyRoutineToggle } from "@/components/daily-routine-toggle";
 import { DatabaseSetupNotice } from "@/components/database-setup-notice";
+import { PendingSubmitButton } from "@/components/pending-submit-button";
 import { PortfolioPriceRefresher } from "@/components/portfolio-price-refresher";
 import { ZachMobileBottomNav, ZachTopNav } from "@/components/zach-shell";
 import { buildOperatingRecommendation } from "@/lib/ai-insights";
@@ -912,6 +913,60 @@ export function ControlRoomDashboard({
           </div>
         </MobileNotebookCard>
 
+        <MobileNotebookCard>
+          <SectionKicker>Actions</SectionKicker>
+          <div className="mt-4 grid gap-2">
+            <Link
+              className="flex min-h-14 items-center justify-between gap-3 rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] px-3 py-2"
+              href="#habits"
+            >
+              <span>
+                <span className="block text-sm font-semibold text-[#2c2824]">
+                  Check habits
+                </span>
+                <span className="block text-xs leading-5 text-[#71685c]">
+                  {remainingHabits === 0 ? "All clear today" : `${remainingHabits} still open`}
+                </span>
+              </span>
+              <span className="font-mono text-sm text-[#bb5d3a]">
+                {habitDone}/{habitRows.length}
+              </span>
+            </Link>
+            <Link
+              className="flex min-h-14 items-center justify-between gap-3 rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] px-3 py-2"
+              href="#note"
+            >
+              <span>
+                <span className="block text-sm font-semibold text-[#2c2824]">
+                  Leave reflection
+                </span>
+                <span className="block text-xs leading-5 text-[#71685c]">
+                  {todayLog?.notes ? "Saved for today" : "Mood, context and notes"}
+                </span>
+              </span>
+              <span className="text-xs font-semibold text-[#bb5d3a]">
+                {todayLog?.notes ? "View" : "Write"}
+              </span>
+            </Link>
+            <Link
+              className="flex min-h-14 items-center justify-between gap-3 rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] px-3 py-2"
+              href={learningActionHref}
+            >
+              <span>
+                <span className="block text-sm font-semibold text-[#2c2824]">
+                  Learn
+                </span>
+                <span className="block text-xs leading-5 text-[#71685c]">
+                  {latestLearningLesson ? latestLearningLesson.title : "Spin a topic"}
+                </span>
+              </span>
+              <span className="text-xs font-semibold text-[#bb5d3a]">
+                Open
+              </span>
+            </Link>
+          </div>
+        </MobileNotebookCard>
+
         <MobileNotebookCard id="habits">
           <div className="flex items-start justify-between gap-4">
             <div>
@@ -944,7 +999,15 @@ export function ControlRoomDashboard({
         </MobileNotebookCard>
 
         <MobileNotebookCard id="note">
-          <SectionKicker>Note</SectionKicker>
+          <div className="flex items-center justify-between gap-3">
+            <SectionKicker>Reflection</SectionKicker>
+            <Link
+              className="text-xs font-semibold text-[#bb5d3a]"
+              href="/reflections"
+            >
+              Review days
+            </Link>
+          </div>
           <form action={saveQuickDailyEntry} className="mt-4 grid gap-3">
             <input name="date" type="hidden" value={today} />
             <input name="return_to" type="hidden" value="/" />
@@ -977,12 +1040,11 @@ export function ControlRoomDashboard({
                 placeholder="What is worth remembering from today?"
               />
             </label>
-            <button
+            <PendingSubmitButton
               className="h-11 rounded-md border border-[#241f1a] bg-[#241f1a] px-4 text-sm font-semibold text-[#f9f4ec]"
-              type="submit"
             >
               Save note
-            </button>
+            </PendingSubmitButton>
           </form>
         </MobileNotebookCard>
 
@@ -1124,15 +1186,17 @@ export function ControlRoomDashboard({
                     name="notes"
                     placeholder="Reflection or context"
                   />
-                  <button
+                  <PendingSubmitButton
                     className="h-9 rounded bg-[#1f2422] text-sm font-semibold text-[#f9f4ec]"
-                    type="submit"
                   >
                     Save
-                  </button>
-                  <div className="grid grid-cols-3 gap-2 border-t border-[#2c2824]/[0.1] pt-2">
+                  </PendingSubmitButton>
+                  <div className="grid grid-cols-4 gap-2 border-t border-[#2c2824]/[0.1] pt-2">
                     <Link className="rounded border border-[#d2c8b8] px-2 py-1.5 text-center text-xs font-semibold text-[#6f6254]" href="#desktop-rituals">
                       Habits
+                    </Link>
+                    <Link className="rounded border border-[#d2c8b8] px-2 py-1.5 text-center text-xs font-semibold text-[#6f6254]" href="/reflections">
+                      Reflect
                     </Link>
                     <Link className="rounded border border-[#d2c8b8] px-2 py-1.5 text-center text-xs font-semibold text-[#6f6254]" href="/learning-zone">
                       Learning
@@ -1141,8 +1205,9 @@ export function ControlRoomDashboard({
                       Portfolio
                     </Link>
                   </div>
-                </form>
+              </form>
               </details>
+              <NavButton href="/reflections">Reflections</NavButton>
               <NavButton href="/learning-zone">Learning</NavButton>
               <NavButton href="/portfolio">Portfolio</NavButton>
               <details className="group relative">

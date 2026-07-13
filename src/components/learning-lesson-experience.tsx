@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { saveLearningLessonNote, submitLearningQuiz } from "@/app/actions";
+import { PendingSubmitButton } from "@/components/pending-submit-button";
 import type { LearningLesson } from "@/lib/learning-zone";
 import type { LearningLessonNote } from "@/lib/supabase/database.types";
 
@@ -185,12 +186,11 @@ export function LearningLessonExperience({
                 placeholder="Write the context you want future-you to remember."
               />
             </label>
-            <button
+            <PendingSubmitButton
               className="h-10 rounded-md border border-[#241f1a] bg-[#241f1a] px-4 text-sm font-semibold text-[#f9f4ec] transition hover:bg-[#3a342c]"
-              type="submit"
             >
               Save notebook
-            </button>
+            </PendingSubmitButton>
           </form>
         </section>
 
@@ -316,13 +316,13 @@ export function LearningLessonExperience({
               Points feed Knowledge, Reasoning, Application, Breadth and
               Retention.
             </p>
-            <button
+            <PendingSubmitButton
               className="h-11 rounded-md border border-[#241f1a] bg-[#241f1a] px-5 text-sm font-semibold text-[#f9f4ec] transition hover:bg-[#3a342c] disabled:cursor-not-allowed disabled:opacity-50"
               disabled={!allAnswered}
-              type="submit"
+              pendingLabel="Submitting..."
             >
               Submit answers
-            </button>
+            </PendingSubmitButton>
           </div>
         </form>
       )}

@@ -37,6 +37,7 @@ import type {
 
 import { DashboardCharts } from "@/components/dashboard-charts";
 import { DatabaseSetupNotice } from "@/components/database-setup-notice";
+import { PendingSubmitButton } from "@/components/pending-submit-button";
 
 type DashboardShellProps = {
   activities: Activity[];
@@ -556,12 +557,11 @@ function UpdateForms({
               placeholder="Useful context, wins, friction..."
             />
           </label>
-          <button
+          <PendingSubmitButton
             className="h-10 rounded bg-cyan-200 px-4 text-sm font-semibold text-slate-950 transition hover:bg-cyan-100"
-            type="submit"
           >
             Save daily log
-          </button>
+          </PendingSubmitButton>
         </div>
       </form>
 

@@ -13,6 +13,7 @@ type ZachNavKey =
   | "manage"
   | "mood"
   | "portfolio"
+  | "reflections"
   | "recovery"
   | "running";
 
@@ -29,6 +30,7 @@ type ZachPageShellProps = {
 
 const navItems: Array<{ href: string; key: ZachNavKey; label: string }> = [
   { href: "/", key: "dashboard", label: "Dashboard" },
+  { href: "/reflections", key: "reflections", label: "Reflections" },
   { href: "/learning-zone", key: "learning", label: "Learning" },
   { href: "/activities", key: "activities", label: "Activities" },
   { href: "/portfolio", key: "portfolio", label: "Portfolio" },
@@ -44,7 +46,7 @@ const mobileNavItems: Array<{
   { href: "/", key: "dashboard", label: "Home" },
   { href: "/#habits", key: "dashboard", label: "Habits" },
   { href: "/learning-zone", key: "learning", label: "Learn" },
-  { href: "/#note", key: "dashboard", label: "Note" },
+  { href: "/reflections", key: "reflections", label: "Reflect" },
 ];
 
 export function ZachKicker({ children }: { children: React.ReactNode }) {
