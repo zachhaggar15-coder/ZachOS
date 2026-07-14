@@ -2,6 +2,7 @@ import type { Database } from "@/lib/supabase/database.types";
 import { anthropologyLessons } from "@/lib/learning-content/anthropology";
 import { architectureUrbanismLessons } from "@/lib/learning-content/architecture-urbanism";
 import { artHistoryLessons } from "@/lib/learning-content/art-history";
+import { artificialIntelligenceLessons } from "@/lib/learning-content/artificial-intelligence";
 import { philosophyLessons } from "@/lib/learning-content/philosophy";
 
 type LearningSession = Database["public"]["Tables"]["learning_sessions"]["Row"];
@@ -2821,6 +2822,7 @@ const authoredLessonsByTopic: Partial<Record<LearningTopicId, LearningLesson[]>>
     anthropology: anthropologyLessons,
     "architecture-urbanism": architectureUrbanismLessons,
     "art-history": artHistoryLessons,
+    "artificial-intelligence": artificialIntelligenceLessons,
     philosophy: philosophyLessons,
   };
 
