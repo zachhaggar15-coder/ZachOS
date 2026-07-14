@@ -12,6 +12,7 @@ import { linguisticsEtymologyLessons } from "@/lib/learning-content/linguistics-
 import { literatureLessons } from "@/lib/learning-content/literature";
 import { marketingLessons } from "@/lib/learning-content/marketing";
 import { militaryStrategyLessons } from "@/lib/learning-content/military-strategy";
+import { musicTheoryLessons } from "@/lib/learning-content/music-theory";
 import { philosophyLessons } from "@/lib/learning-content/philosophy";
 
 type LearningSession = Database["public"]["Tables"]["learning_sessions"]["Row"];
@@ -2841,6 +2842,7 @@ const authoredLessonsByTopic: Partial<Record<LearningTopicId, LearningLesson[]>>
     literature: literatureLessons,
     marketing: marketingLessons,
     "military-strategy": militaryStrategyLessons,
+    "music-theory": musicTheoryLessons,
     philosophy: philosophyLessons,
   };
 
