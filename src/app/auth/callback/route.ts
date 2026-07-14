@@ -7,8 +7,7 @@ export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
-  const next = requestUrl.searchParams.get("next") || "/";
-  const redirectTo = new URL(next.startsWith("/") ? next : "/", requestUrl.origin);
+  const redirectTo = getSafeRedirectUrl(requestUrl);
 
   if (!code) {
     redirectTo.searchParams.set("error", "Missing sign-in code.");
@@ -25,4 +24,16 @@ export async function GET(request: NextRequest) {
   }
 
   return NextResponse.redirect(redirectTo);
+}
+
+function getSafeRedirectUrl(requestUrl: URL) {
+  const next = requestUrl.searchParams.get("next");
+  const fallback = new URL("/", requestUrl.origin);
+
+  if (!next || !next.startsWith("/") || next.startsWith("//")) {
+    return fallback;
+  }
+
+  const redirectTo = new URL(next, requestUrl.origin);
+  return redirectTo.origin === requestUrl.origin ? redirectTo : fallback;
 }
