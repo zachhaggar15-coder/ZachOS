@@ -10,6 +10,7 @@ import { geopoliticsLessons } from "@/lib/learning-content/geopolitics";
 import { historyOfIdeasLessons } from "@/lib/learning-content/history-of-ideas";
 import { linguisticsEtymologyLessons } from "@/lib/learning-content/linguistics-etymology";
 import { literatureLessons } from "@/lib/learning-content/literature";
+import { marketingLessons } from "@/lib/learning-content/marketing";
 import { philosophyLessons } from "@/lib/learning-content/philosophy";
 
 type LearningSession = Database["public"]["Tables"]["learning_sessions"]["Row"];
@@ -2837,6 +2838,7 @@ const authoredLessonsByTopic: Partial<Record<LearningTopicId, LearningLesson[]>>
     "history-of-ideas": historyOfIdeasLessons,
     "linguistics-etymology": linguisticsEtymologyLessons,
     literature: literatureLessons,
+    marketing: marketingLessons,
     philosophy: philosophyLessons,
   };
 
