@@ -56,6 +56,7 @@ const TOPIC_LABELS: Partial<Record<LearningTopicId, string>> = {
   "music-theory": "Music Theory for Guitar",
   "pharmaceutical-businesses": "Pharmaceutical Businesses",
   philosophy: "Philosophy",
+  politics: "Politics",
 };
 
 const ID_LETTERS = ["a", "b", "c", "d", "e", "f"];
