@@ -6,6 +6,7 @@ import { artificialIntelligenceLessons } from "@/lib/learning-content/artificial
 import { businessLessons } from "@/lib/learning-content/business";
 import { classicalCivilisationLessons } from "@/lib/learning-content/classical-civilisation";
 import { economicsLessons } from "@/lib/learning-content/economics";
+import { geopoliticsLessons } from "@/lib/learning-content/geopolitics";
 import { philosophyLessons } from "@/lib/learning-content/philosophy";
 
 type LearningSession = Database["public"]["Tables"]["learning_sessions"]["Row"];
@@ -2829,6 +2830,7 @@ const authoredLessonsByTopic: Partial<Record<LearningTopicId, LearningLesson[]>>
     business: businessLessons,
     "classical-civilisation": classicalCivilisationLessons,
     economics: economicsLessons,
+    geopolitics: geopoliticsLessons,
     philosophy: philosophyLessons,
   };
 
