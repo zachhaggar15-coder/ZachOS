@@ -13,6 +13,11 @@ import {
   calculateAnalytics,
   calculateConsultantReadiness,
 } from "@/lib/analytics";
+import {
+  formatDistance as formatActivityDistance,
+  formatDuration as formatActivityDuration,
+  trainingBenefit,
+} from "@/lib/fitness-analytics";
 import { getLearningLesson } from "@/lib/learning-zone";
 import type { DatabaseSetupIssue } from "@/lib/database-setup";
 import {
@@ -126,6 +131,31 @@ function formatPercent(value: number | null | undefined) {
   }
 
   return `${value > 0 ? "+" : ""}${value.toFixed(2)}%`;
+}
+
+function formatHours(value: number | null | undefined) {
+  return formatNumber(value, { dash: "--", digits: 1, suffix: " h" });
+}
+
+function formatActivityTitle(activity: Activity | null) {
+  if (!activity) {
+    return "No Garmin activity yet";
+  }
+
+  return activity.notes?.trim() || activity.activity_type?.trim() || "Logged activity";
+}
+
+function formatTrainingStatus(value: string | null | undefined) {
+  if (!value?.trim()) {
+    return "--";
+  }
+
+  return value
+    .trim()
+    .toLowerCase()
+    .split(/[\s_-]+/)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
 }
 
 function formatHeaderDate(date: string) {
@@ -430,6 +460,23 @@ function VitalRow({
   );
 }
 
+function GarminStat({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-md border border-[#2c2824]/[0.08] bg-[#f9f4ec] px-3 py-2">
+      <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#9a8d7a]">
+        {label}
+      </div>
+      <div className="mt-1 text-[15px] font-semibold text-[#2c2824]">{value}</div>
+    </div>
+  );
+}
+
 function AttributeRow({ label, value }: { label: string; value: number }) {
   return (
     <div>
@@ -668,6 +715,7 @@ export function ControlRoomDashboard({
 }: ControlRoomDashboardProps) {
   const todayLog = dailyLogs.find((log) => log.date === today) ?? null;
   const currentFitness = latest(fitnessMetrics);
+  const latestActivity = latest(activities);
   const currentFinance = latest(financeSnapshots);
   const currentNetWorthSnapshot = latest(netWorthSnapshots);
   const attributes = calculateCharacterAttributes({
@@ -719,6 +767,9 @@ export function ControlRoomDashboard({
     finiteNumber(row.sleep_score),
   );
   const hrvValues = valuesFromRows(fitnessMetrics, (row) => finiteNumber(row.hrv));
+  const trainingLoadValues = valuesFromRows(fitnessMetrics, (row) =>
+    finiteNumber(row.training_load),
+  );
   const netWorthValues = latestDatedValues(
     financeSnapshots,
     netWorthSnapshots,
@@ -910,6 +961,33 @@ export function ControlRoomDashboard({
                 {operatingRecommendation.weeklyFocus}
               </span>
             </p>
+          </div>
+        </MobileNotebookCard>
+
+        <MobileNotebookCard>
+          <div className="flex items-center justify-between gap-3">
+            <SectionKicker>Garmin pulse</SectionKicker>
+            <Link className="text-xs font-semibold text-[#bb5d3a]" href="/recovery">
+              Recovery
+            </Link>
+          </div>
+          <div className="mt-4 grid gap-2">
+            <GarminStat
+              label="Sleep"
+              value={`${formatNumber(currentFitness?.sleep_score, { dash: "--", digits: 0 })} score · ${formatHours(currentFitness?.sleep_hours)}`}
+            />
+            <GarminStat
+              label="Recovery"
+              value={`HRV ${formatNumber(currentFitness?.hrv, { dash: "--", digits: 0 })} · RHR ${formatNumber(currentFitness?.resting_hr, { dash: "--", digits: 0 })}`}
+            />
+            <GarminStat
+              label="Load"
+              value={`${formatNumber(currentFitness?.training_load, { dash: "--", digits: 0 })} · ${formatTrainingStatus(currentFitness?.training_status)}`}
+            />
+            <GarminStat
+              label="Latest activity"
+              value={`${formatActivityTitle(latestActivity)} · ${latestActivity ? latestActivity.date : "--"}`}
+            />
           </div>
         </MobileNotebookCard>
 
@@ -1312,6 +1390,24 @@ export function ControlRoomDashboard({
                     sub="ms"
                     value={formatNumber(currentFitness?.hrv, { dash: "--", digits: 0 })}
                   />
+                  <VitalRow
+                    href="/recovery"
+                    label="Sleep time"
+                    sub="hours"
+                    value={formatHours(currentFitness?.sleep_hours)}
+                  />
+                  <VitalRow
+                    href="/recovery"
+                    label="Resting HR"
+                    sub="bpm"
+                    value={formatNumber(currentFitness?.resting_hr, { dash: "--", digits: 0 })}
+                  />
+                  <VitalRow
+                    href="/recovery"
+                    label="Training load"
+                    sub={formatTrainingStatus(currentFitness?.training_status)}
+                    value={formatNumber(currentFitness?.training_load, { dash: "--", digits: 0 })}
+                  />
                 </div>
               </details>
             </div>
@@ -1363,6 +1459,27 @@ export function ControlRoomDashboard({
                   </span>
                   <span className="text-[11px] font-semibold text-[#6f7d8c]">
                     HRV {formatNumber(currentFitness?.hrv, { dash: "--", digits: 0 })}
+                  </span>
+                </div>
+              }
+            >
+              <div className="mt-2 flex items-center justify-between gap-3 text-[11px] font-semibold text-[#71685c]">
+                <span>Sleep {formatHours(currentFitness?.sleep_hours)}</span>
+                <span>Load {formatNumber(currentFitness?.training_load, { dash: "--", digits: 0 })}</span>
+              </div>
+            </SparkPanel>
+
+            <SparkPanel
+              href="/recovery"
+              label="Training load - 14-day"
+              series={[{ color: accent, min: 0, strokeWidth: 1.5, values: trainingLoadValues }]}
+              value={
+                <div className="flex items-baseline gap-3">
+                  <span className="zach-display text-[34px] font-medium leading-none text-[#0f1720]">
+                    {formatNumber(currentFitness?.training_load, { dash: "--", digits: 0 })}
+                  </span>
+                  <span className="text-[11px] font-semibold text-[#6f7d8c]">
+                    {formatTrainingStatus(currentFitness?.training_status)}
                   </span>
                 </div>
               }
@@ -1442,6 +1559,61 @@ export function ControlRoomDashboard({
                   <div className="mt-1.5 text-[13px] font-semibold text-[#3a342c]">
                     {operatingRecommendation.weeklyFocus}
                   </div>
+                </div>
+              </div>
+            </section>
+
+            <section className="border-b border-[#2c2824]/[0.13] py-3.5">
+              <div className="mb-3 flex items-center justify-between">
+                <SectionKicker>Garmin pulse</SectionKicker>
+                <Link className="text-[11px] font-semibold text-[#bb5d3a]" href="/activities">
+                  all activity
+                </Link>
+              </div>
+              <div className="rounded-md border border-[#2c2824]/[0.08] bg-[#f9f4ec] p-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#9a8d7a]">
+                      Latest activity
+                    </div>
+                    <div className="mt-1 text-[16px] font-semibold text-[#2c2824]">
+                      {formatActivityTitle(latestActivity)}
+                    </div>
+                    <div className="mt-1 text-[11px] text-[#71685c]">
+                      {latestActivity?.date ?? "No Garmin activity yet"}
+                    </div>
+                  </div>
+                  <Link className="text-[11px] font-semibold text-[#bb5d3a]" href="/running">
+                    running
+                  </Link>
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  <GarminStat
+                    label="Distance"
+                    value={formatActivityDistance(latestActivity?.distance_km)}
+                  />
+                  <GarminStat
+                    label="Duration"
+                    value={formatActivityDuration(latestActivity?.duration_minutes)}
+                  />
+                  <GarminStat
+                    label="Heart rate"
+                    value={`${formatNumber(latestActivity?.avg_hr, { dash: "--", digits: 0 })} avg · ${formatNumber(latestActivity?.max_hr, { dash: "--", digits: 0 })} max`}
+                  />
+                  <GarminStat
+                    label="Calories"
+                    value={formatNumber(latestActivity?.calories, { dash: "--", digits: 0 })}
+                  />
+                </div>
+                <div className="mt-2 grid gap-2">
+                  <GarminStat
+                    label="Training effect"
+                    value={latestActivity ? trainingBenefit(latestActivity) : "--"}
+                  />
+                  <GarminStat
+                    label="Recovery status"
+                    value={`${formatHours(currentFitness?.sleep_hours)} sleep · ${formatTrainingStatus(currentFitness?.training_status)}`}
+                  />
                 </div>
               </div>
             </section>
