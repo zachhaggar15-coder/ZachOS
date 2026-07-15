@@ -21,6 +21,7 @@ import { rhetoricArgumentationLessons } from "@/lib/learning-content/rhetoric-ar
 import { scienceLessons } from "@/lib/learning-content/science";
 import { socialEngineeringLessons } from "@/lib/learning-content/social-engineering";
 import { sociologyLessons } from "@/lib/learning-content/sociology";
+import { systemsThinkingLessons } from "@/lib/learning-content/systems-thinking";
 
 type LearningSession = Database["public"]["Tables"]["learning_sessions"]["Row"];
 
@@ -2858,6 +2859,7 @@ const authoredLessonsByTopic: Partial<Record<LearningTopicId, LearningLesson[]>>
     science: scienceLessons,
     "social-engineering": socialEngineeringLessons,
     sociology: sociologyLessons,
+    "systems-thinking": systemsThinkingLessons,
   };
 
 export const LEARNING_LESSONS: LearningLesson[] = Object.entries(

@@ -62,6 +62,7 @@ const TOPIC_LABELS: Partial<Record<LearningTopicId, string>> = {
   science: "Science",
   "social-engineering": "Social Engineering",
   sociology: "Sociology",
+  "systems-thinking": "Systems Thinking",
 };
 
 const ID_LETTERS = ["a", "b", "c", "d", "e", "f"];
