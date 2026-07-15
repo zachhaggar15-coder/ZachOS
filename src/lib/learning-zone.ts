@@ -17,6 +17,7 @@ import { pharmaceuticalBusinessesLessons } from "@/lib/learning-content/pharmace
 import { philosophyLessons } from "@/lib/learning-content/philosophy";
 import { politicsLessons } from "@/lib/learning-content/politics";
 import { psychologyLessons } from "@/lib/learning-content/psychology";
+import { rhetoricArgumentationLessons } from "@/lib/learning-content/rhetoric-argumentation";
 
 type LearningSession = Database["public"]["Tables"]["learning_sessions"]["Row"];
 
@@ -2850,6 +2851,7 @@ const authoredLessonsByTopic: Partial<Record<LearningTopicId, LearningLesson[]>>
     philosophy: philosophyLessons,
     politics: politicsLessons,
     psychology: psychologyLessons,
+    "rhetoric-argumentation": rhetoricArgumentationLessons,
   };
 
 export const LEARNING_LESSONS: LearningLesson[] = Object.entries(
