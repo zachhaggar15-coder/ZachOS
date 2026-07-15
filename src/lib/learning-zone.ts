@@ -19,6 +19,7 @@ import { politicsLessons } from "@/lib/learning-content/politics";
 import { psychologyLessons } from "@/lib/learning-content/psychology";
 import { rhetoricArgumentationLessons } from "@/lib/learning-content/rhetoric-argumentation";
 import { scienceLessons } from "@/lib/learning-content/science";
+import { socialEngineeringLessons } from "@/lib/learning-content/social-engineering";
 
 type LearningSession = Database["public"]["Tables"]["learning_sessions"]["Row"];
 
@@ -2854,6 +2855,7 @@ const authoredLessonsByTopic: Partial<Record<LearningTopicId, LearningLesson[]>>
     psychology: psychologyLessons,
     "rhetoric-argumentation": rhetoricArgumentationLessons,
     science: scienceLessons,
+    "social-engineering": socialEngineeringLessons,
   };
 
 export const LEARNING_LESSONS: LearningLesson[] = Object.entries(
