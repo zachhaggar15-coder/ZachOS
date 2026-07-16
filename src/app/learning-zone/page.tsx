@@ -6,7 +6,6 @@ import {
   ZachButtonLink,
   ZachDatabaseSetupNotice,
   ZachEmpty,
-  ZachMetric,
   ZachNotice,
   ZachPageShell,
   ZachPanel,
@@ -46,6 +45,28 @@ const dimensionOrder: LearningDimension[] = [
   "retention",
   "reasoning",
   "consistency",
+];
+const scoringRules: Array<{ label: string; text: string }> = [
+  {
+    label: "Breadth",
+    text: "New topics earn 14 points, returning after a topic switch earns 5, and staying in the same topic earns 1.",
+  },
+  {
+    label: "Depth",
+    text: "Correct depth answers earn the lesson base value. A perfect quiz adds a level bonus: 3 for GCSE, 6 for A-level, 10 for University.",
+  },
+  {
+    label: "Reasoning",
+    text: "Correct reasoning answers earn the same lesson base value, weighted by lesson difficulty.",
+  },
+  {
+    label: "Retention",
+    text: "Retaking a lesson after 3 or more days can earn 12, 6, or 2 points depending on accuracy. Earlier retakes earn 1.",
+  },
+  {
+    label: "Consistency",
+    text: "Recent study days add 2 points each, capped at 10, with 4 more if you studied today or yesterday.",
+  },
 ];
 
 function formatDate(value: string | null) {
@@ -146,12 +167,39 @@ export default async function LearningZonePage({
       lesson.sources.map((source) => source.url),
     ),
   ).size;
+  const learningStats = [
+    {
+      label: "Intellect",
+      meta: `${progress.lessonsCompleted} sessions`,
+      value: progress.intellectScore,
+    },
+    {
+      label: "Accuracy",
+      meta: "All checks",
+      value: `${progress.accuracy}%`,
+    },
+    {
+      label: "Streak",
+      meta: "Learning days",
+      value: progress.streakDays,
+    },
+    {
+      label: "Library",
+      meta: `${sourceCount} sources`,
+      value: LEARNING_LESSONS.length,
+    },
+    {
+      label: "Topics",
+      meta: "Wheel options",
+      value: LEARNING_TOPICS.length,
+    },
+  ];
 
   return (
     <ZachPageShell
       active="learning"
       actions={<ZachButtonLink href="/manage">Update data</ZachButtonLink>}
-      subtitle="A private study loop with a topic wheel, source-backed readings, richer multiple-choice recall and an intellect score split into breadth, depth, retention, reasoning and consistency."
+      subtitle="Spin the topic wheel, take a source-backed lesson, then let the quiz score breadth, depth, retention, reasoning and consistency."
       title="Learning Zone"
       userEmail={user.email}
     >
@@ -170,32 +218,27 @@ export default async function LearningZonePage({
         />
       ) : (
         <>
-          <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
-            <ZachMetric
-              label="Intellect"
-              meta={`${progress.lessonsCompleted} completed sessions`}
-              value={progress.intellectScore}
-            />
-            <ZachMetric
-              label="Accuracy"
-              meta="All multiple-choice checks"
-              value={`${progress.accuracy}%`}
-            />
-            <ZachMetric
-              label="Streak"
-              meta="Consecutive learning days"
-              value={progress.streakDays}
-            />
-            <ZachMetric
-              label="Library"
-              meta={`${sourceCount} referenced textbook/reference sources`}
-              value={`${LEARNING_LESSONS.length} lessons`}
-            />
-            <ZachMetric
-              label="Topics"
-              meta="Registered wheel options"
-              value={LEARNING_TOPICS.length}
-            />
+          <LearningZoneWheel topics={wheelTopics} />
+
+          <section className="grid gap-2 rounded-md border border-[#2c2824]/[0.1] bg-[#fffaf2] p-2 sm:grid-cols-5">
+            {learningStats.map((stat) => (
+              <article
+                className="flex items-center justify-between gap-3 rounded border border-[#2c2824]/[0.06] bg-[#f9f4ec] px-3 py-2 sm:block"
+                key={stat.label}
+              >
+                <div>
+                  <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.16em] text-[#9a7d5f]">
+                    {stat.label}
+                  </p>
+                  <p className="mt-0.5 text-[11px] leading-4 text-[#8c8273]">
+                    {stat.meta}
+                  </p>
+                </div>
+                <p className="zach-display text-2xl font-medium leading-none text-[#111820] sm:mt-2">
+                  {stat.value}
+                </p>
+              </article>
+            ))}
           </section>
 
           <section className="grid gap-4 xl:grid-cols-[minmax(0,1.1fr)_minmax(340px,0.9fr)]">
@@ -377,8 +420,6 @@ export default async function LearningZonePage({
             </ZachPanel>
           </section>
 
-          <LearningZoneWheel topics={wheelTopics} />
-
           <section className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_420px]">
             <ZachPanel>
               <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
@@ -387,7 +428,7 @@ export default async function LearningZonePage({
                     Score anatomy
                   </p>
                   <h2 className="zach-display mt-1 text-3xl font-medium text-[#111820]">
-                    Intellect dimensions
+                    How scoring works
                   </h2>
                 </div>
                 <span className="font-mono text-xs text-[#8c8273]">
@@ -421,6 +462,42 @@ export default async function LearningZonePage({
                     </div>
                   );
                 })}
+              </div>
+              <div className="mt-5 border-t border-[#2c2824]/[0.1] pt-4">
+                <div className="rounded-md border border-[#bb5d3a]/25 bg-[#bb5d3a]/10 p-3">
+                  <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8f442c]">
+                    Formula
+                  </p>
+                  <p className="mt-1 font-mono text-sm leading-6 text-[#2c2824]">
+                    Intellect = Breadth + Depth + Reasoning + Retention +
+                    Consistency
+                  </p>
+                </div>
+                <p className="mt-3 text-sm leading-6 text-[#71685c]">
+                  Quiz accuracy feeds the answer-based dimensions, while topic
+                  choice and study rhythm add breadth, retention and
+                  consistency.
+                </p>
+                <details className="mt-4 rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] p-3">
+                  <summary className="cursor-pointer text-sm font-semibold text-[#2c2824]">
+                    Point rules
+                  </summary>
+                  <div className="mt-3 grid gap-3">
+                    {scoringRules.map((rule) => (
+                      <div
+                        className="border-t border-[#2c2824]/[0.08] pt-3 first:border-t-0 first:pt-0"
+                        key={rule.label}
+                      >
+                        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8c8273]">
+                          {rule.label}
+                        </p>
+                        <p className="mt-1 text-sm leading-6 text-[#3f382f]">
+                          {rule.text}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </details>
               </div>
               <div className="mt-5 grid gap-2 md:grid-cols-3">
                 {levelStats.map((stat) => (
