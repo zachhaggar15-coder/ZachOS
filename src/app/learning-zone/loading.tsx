@@ -8,7 +8,7 @@ export default function LearningZoneLoading() {
   return (
     <ZachPageShell
       active="learning"
-      subtitle="Preparing the wheel, review queue and score anatomy."
+      subtitle="Preparing the wheel, random lesson picker and score anatomy."
       title="Learning Zone"
     >
       <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">

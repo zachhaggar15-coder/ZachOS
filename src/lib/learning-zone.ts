@@ -2930,15 +2930,18 @@ function uniqueLearningDates(sessions: LearningSession[]) {
 export function chooseNextLearningLesson(
   topic: LearningTopicId,
   sessions: LearningSession[],
+  options: { excludeSlug?: string } = {},
 ) {
   const lessons = getLearningLessonsByTopic(topic);
-  const latestSession = [...sessions].sort(
-    (left, right) => completedTime(right) - completedTime(left),
-  )[0];
-  const freshCandidates = lessons.filter(
-    (lesson) => lesson.slug !== latestSession?.lesson_slug,
+  const availableLessons = lessons.filter(
+    (lesson) => lesson.slug !== options.excludeSlug,
   );
-  const pool = freshCandidates.length ? freshCandidates : lessons;
+  const completedSlugs = new Set(sessions.map((session) => session.lesson_slug));
+  const eligibleLessons = availableLessons.length ? availableLessons : lessons;
+  const unfinishedLessons = eligibleLessons.filter(
+    (lesson) => !completedSlugs.has(lesson.slug),
+  );
+  const pool = unfinishedLessons.length ? unfinishedLessons : eligibleLessons;
   const index = Math.floor(Math.random() * pool.length);
 
   return pool[index] ?? lessons[0] ?? LEARNING_LESSONS[0];

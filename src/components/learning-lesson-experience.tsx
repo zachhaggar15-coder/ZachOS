@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 import { saveLearningLessonNote, submitLearningQuiz } from "@/app/actions";
@@ -238,6 +239,12 @@ export function LearningLessonExperience({
             Start quiz
           </button>
         )}
+        <Link
+          className="inline-flex h-11 items-center justify-center rounded-md border border-[#d2c8b8] bg-[#fffaf2] px-4 text-sm font-semibold text-[#2c2824] transition hover:border-[#b9aa95] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#bb5d3a]"
+          href={`/learning-zone/topic/${lesson.topic}?skip=${lesson.slug}`}
+        >
+          Skip to another lesson
+        </Link>
       </aside>
 
       {quizOpen && (
@@ -313,8 +320,7 @@ export function LearningLessonExperience({
 
           <div className="mt-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <p className="text-sm leading-6 text-[#71685c]">
-              Points feed Knowledge, Reasoning, Application, Breadth and
-              Retention.
+              Points feed Breadth, Depth, Reasoning, Retention and Consistency.
             </p>
             <PendingSubmitButton
               className="h-11 rounded-md border border-[#241f1a] bg-[#241f1a] px-5 text-sm font-semibold text-[#f9f4ec] transition hover:bg-[#3a342c] disabled:cursor-not-allowed disabled:opacity-50"

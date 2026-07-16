@@ -19,6 +19,7 @@ type LearningTopicPageProps = {
   searchParams: Promise<{
     error?: string;
     message?: string;
+    skip?: string;
   }>;
 };
 
@@ -63,7 +64,14 @@ export default async function LearningTopicPage({
     );
   }
 
-  const lesson = chooseNextLearningLesson(topic, sessions.data ?? []);
+  const lesson = chooseNextLearningLesson(topic, sessions.data ?? [], {
+    excludeSlug: query.skip,
+  });
+  const message = query.skip
+    ? `?message=${encodeURIComponent(
+        "Skipped lesson. Here is another random pick from this topic.",
+      )}`
+    : "";
 
-  redirect(`/learning-zone/lesson/${lesson.slug}`);
+  redirect(`/learning-zone/lesson/${lesson.slug}${message}`);
 }

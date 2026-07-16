@@ -47,6 +47,28 @@ const dimensionOrder: LearningDimension[] = [
   "reasoning",
   "consistency",
 ];
+const scoringRules: Array<{ label: string; text: string }> = [
+  {
+    label: "Breadth",
+    text: "New topics earn 14 points, returning after a topic switch earns 5, and staying in the same topic earns 1.",
+  },
+  {
+    label: "Depth",
+    text: "Correct depth answers earn the lesson base value. A perfect quiz adds a level bonus: 3 for GCSE, 6 for A-level, 10 for University.",
+  },
+  {
+    label: "Reasoning",
+    text: "Correct reasoning answers earn the same lesson base value, weighted by lesson difficulty.",
+  },
+  {
+    label: "Retention",
+    text: "Retaking a lesson after 3 or more days can earn 12, 6, or 2 points depending on accuracy. Earlier retakes earn 1.",
+  },
+  {
+    label: "Consistency",
+    text: "Recent study days add 2 points each, capped at 10, with 4 more if you studied today or yesterday.",
+  },
+];
 
 function formatDate(value: string | null) {
   if (!value) {
@@ -151,7 +173,7 @@ export default async function LearningZonePage({
     <ZachPageShell
       active="learning"
       actions={<ZachButtonLink href="/manage">Update data</ZachButtonLink>}
-      subtitle="A private study loop with a topic wheel, source-backed readings, richer multiple-choice recall and an intellect score split into breadth, depth, retention, reasoning and consistency."
+      subtitle="Spin the topic wheel, take a random source-backed lesson, then let the quiz score breadth, depth, retention, reasoning and consistency."
       title="Learning Zone"
       userEmail={user.email}
     >
@@ -170,6 +192,8 @@ export default async function LearningZonePage({
         />
       ) : (
         <>
+          <LearningZoneWheel topics={wheelTopics} />
+
           <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
             <ZachMetric
               label="Intellect"
@@ -377,8 +401,6 @@ export default async function LearningZonePage({
             </ZachPanel>
           </section>
 
-          <LearningZoneWheel topics={wheelTopics} />
-
           <section className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_420px]">
             <ZachPanel>
               <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
@@ -387,7 +409,7 @@ export default async function LearningZonePage({
                     Score anatomy
                   </p>
                   <h2 className="zach-display mt-1 text-3xl font-medium text-[#111820]">
-                    Intellect dimensions
+                    How scoring works
                   </h2>
                 </div>
                 <span className="font-mono text-xs text-[#8c8273]">
@@ -421,6 +443,28 @@ export default async function LearningZonePage({
                     </div>
                   );
                 })}
+              </div>
+              <div className="mt-5 border-t border-[#2c2824]/[0.1] pt-4">
+                <p className="text-sm leading-6 text-[#71685c]">
+                  Intellect is the sum of five dimensions. Quiz accuracy feeds
+                  the answer-based dimensions, while topic choice and study
+                  rhythm add breadth, retention and consistency.
+                </p>
+                <div className="mt-4 grid gap-3 md:grid-cols-2">
+                  {scoringRules.map((rule) => (
+                    <div
+                      className="rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] p-3"
+                      key={rule.label}
+                    >
+                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8c8273]">
+                        {rule.label}
+                      </p>
+                      <p className="mt-1 text-sm leading-6 text-[#3f382f]">
+                        {rule.text}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               </div>
               <div className="mt-5 grid gap-2 md:grid-cols-3">
                 {levelStats.map((stat) => (

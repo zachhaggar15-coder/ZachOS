@@ -116,8 +116,10 @@ export default async function LearningLessonPage({
       actions={
         <>
           <ZachButtonLink href="/learning-zone">Learning Zone</ZachButtonLink>
-          <ZachButtonLink href={`/learning-zone/topic/${lesson.topic}`}>
-            Next {topic.label}
+          <ZachButtonLink
+            href={`/learning-zone/topic/${lesson.topic}?skip=${lesson.slug}`}
+          >
+            Skip lesson
           </ZachButtonLink>
         </>
       }

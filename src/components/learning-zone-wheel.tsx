@@ -107,7 +107,7 @@ export function LearningZoneWheel({ topics }: LearningZoneWheelProps) {
             </p>
             <p className="mt-1 text-sm leading-6 text-[#71685c]">
               {selectedTopic
-                ? "The next page will choose the best lesson inside that topic from the registered library."
+                ? "The next page will choose a random unfinished lesson inside that topic."
                 : "Philosophy, marketing, economics and science are loaded."}
             </p>
           </div>
