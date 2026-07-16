@@ -1230,14 +1230,6 @@ export function ControlRoomDashboard({
                   <input
                     className="h-9 rounded border border-[#d2c8b8] bg-white px-2 text-sm"
                     min={0}
-                    name="sleep_score"
-                    placeholder="Sleep score"
-                    step="0.1"
-                    type="number"
-                  />
-                  <input
-                    className="h-9 rounded border border-[#d2c8b8] bg-white px-2 text-sm"
-                    min={0}
                     name="deep_work_hours"
                     placeholder="Deep work hours"
                     step="0.25"

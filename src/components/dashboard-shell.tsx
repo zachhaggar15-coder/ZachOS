@@ -421,7 +421,7 @@ function QuickEntryForm({
         <div>
           <SectionHeader kicker="Quick add" title="Daily check-in" />
           <p className="mt-2 max-w-3xl text-sm leading-6 text-zinc-400">
-            One form for the normal daily flow: habits, recovery score, and
+            One form for the normal daily flow: habits, recovery metrics, and
             writing practice. Empty fields keep existing values for that date.
           </p>
         </div>
@@ -465,13 +465,6 @@ function QuickEntryForm({
           label="Reading pages"
           min={0}
           name="reading_pages"
-        />
-        <Field
-          defaultValue={fitness?.sleep_score}
-          label="Sleep score"
-          min={0}
-          name="sleep_score"
-          step="0.1"
         />
         <Field defaultValue={fitness?.hrv} label="HRV" min={0} name="hrv" />
         <Field
