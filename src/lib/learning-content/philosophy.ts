@@ -57,7 +57,7 @@ const philosophy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why can uniformity of nature not be established as a truth of logic?",
         choices: [
-          { id: "a", label: "No contradiction arises from supposing the future differs, so it is coherently describable" },
+          { id: "a", label: "A differing future is contradiction-free, so describable" },
           { id: "b", label: "Logic concerns only deductive relations, which nature does not exhibit" },
           { id: "c", label: "Uniformity has been observed to fail in quantum-scale phenomena" },
           { id: "d", label: "Logical truths cannot be about physical objects such as the sun" },
@@ -69,7 +69,7 @@ const philosophy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is 'induction has worked well in the past' not a defence?",
         choices: [
-          { id: "a", label: "Inferring it will keep working from its past success is itself an inductive inference" },
+          { id: "a", label: "Inferring future success from past is itself induction" },
           { id: "b", label: "Induction has in fact failed frequently in the history of science" },
           { id: "c", label: "Past success cannot be measured without assuming a theory of probability" },
           { id: "d", label: "The claim confuses the reliability of induction with its popularity" },
@@ -81,7 +81,7 @@ const philosophy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is Popper's falsificationism widely doubted as a solution?",
         choices: [
-          { id: "a", label: "Relying on a theory that survived testing assumes past survival bears on future performance" },
+          { id: "a", label: "Trusting a survived theory assumes past predicts future" },
           { id: "b", label: "Falsification requires induction to establish that a test was correctly conducted" },
           { id: "c", label: "Scientists do not in practice attempt to falsify their own theories" },
           { id: "d", label: "Deduction cannot eliminate hypotheses without auxiliary assumptions" },
@@ -93,7 +93,7 @@ const philosophy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What does Goodman's grue predicate demonstrate?",
         choices: [
-          { id: "a", label: "Identical evidence confirms incompatible hypotheses equally, so evidence cannot select between them" },
+          { id: "a", label: "Identical evidence fits rival hypotheses equally" },
           { id: "b", label: "Colour predicates are unreliable because perception varies between observers" },
           { id: "c", label: "Emeralds may in fact change colour at some unspecified future time" },
           { id: "d", label: "Induction fails only for predicates involving explicit time references" },
@@ -105,7 +105,7 @@ const philosophy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does calling grue 'gerrymandered' fail as an objection?",
         choices: [
-          { id: "a", label: "In a grue/bleen vocabulary, green requires the time reference instead — simplicity is language-relative" },
+          { id: "a", label: "In grue/bleen, green needs the time clause — simplicity is relative" },
           { id: "b", label: "Gerrymandered predicates are used successfully throughout empirical science" },
           { id: "c", label: "Goodman explicitly defined grue without reference to any time" },
           { id: "d", label: "The objection assumes a formal criterion of simplicity that exists" },
@@ -186,7 +186,7 @@ const philosophy: AuthoredLesson[] = [
         choices: [
           { id: "a", label: "Because the clock is broken, so your belief is actually false" },
           { id: "b", label: "Because you had no real justification for trusting the clock" },
-          { id: "c", label: "Because you are right only by luck, not because your reason tracked the truth" },
+          { id: "c", label: "You are right only by luck, not by tracking truth" },
           { id: "d", label: "Because you did not check a second clock" },
         ],
         correctChoiceId: "c",
@@ -196,7 +196,7 @@ const philosophy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What did Gettier's 1963 paper actually show?",
         choices: [
-          { id: "a", label: "That justified true belief is not always sufficient for knowledge" },
+          { id: "a", label: "Justified true belief is not always knowledge" },
           { id: "b", label: "That knowledge is impossible" },
           { id: "c", label: "That true beliefs never need justification" },
           { id: "d", label: "That most of our everyday beliefs are false" },
@@ -209,7 +209,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "How does reliabilism handle the stopped-clock case?",
         choices: [
           { id: "a", label: "It says the belief is knowledge because it is true and justified" },
-          { id: "b", label: "It denies knowledge because the belief was not produced by a reliable process" },
+          { id: "b", label: "It denies knowledge: the process was unreliable" },
           { id: "c", label: "It says all clock-based beliefs are unreliable" },
           { id: "d", label: "It rejects the case as impossible" },
         ],
@@ -222,7 +222,7 @@ const philosophy: AuthoredLesson[] = [
         choices: [
           { id: "a", label: "To prove that demons exist" },
           { id: "b", label: "To show that our senses are always wrong" },
-          { id: "c", label: "To challenge whether we can rule out being systematically deceived about the external world" },
+          { id: "c", label: "To ask if we can rule out total deception" },
           { id: "d", label: "To argue that knowledge comes only from religion" },
         ],
         correctChoiceId: "c",
@@ -288,7 +288,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "What is the core principle of utilitarianism?",
         choices: [
           { id: "a", label: "Always follow moral rules regardless of the outcome" },
-          { id: "b", label: "The right action produces the greatest wellbeing for the greatest number" },
+          { id: "b", label: "The greatest wellbeing for the greatest number" },
           { id: "c", label: "The right action is whatever a virtuous person would do" },
           { id: "d", label: "The right action is whatever benefits you most" },
         ],
@@ -300,7 +300,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "Why did Mill introduce 'higher' and 'lower' pleasures?",
         choices: [
           { id: "a", label: "To argue that pleasure does not matter at all" },
-          { id: "b", label: "To answer the charge that utilitarianism is a philosophy fit only for pigs" },
+          { id: "b", label: "To rebut the charge that it is fit only for pigs" },
           { id: "c", label: "To prove that the hedonic calculus can be measured precisely" },
           { id: "d", label: "To reject Bentham's greatest-happiness principle entirely" },
         ],
@@ -311,7 +311,7 @@ const philosophy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What does the 'surgeon and five patients' thought experiment aim to show?",
         choices: [
-          { id: "a", label: "That utilitarianism can license sacrificing an individual's rights for a greater total" },
+          { id: "a", label: "It can license sacrificing rights for a greater total" },
           { id: "b", label: "That saving five lives is always wrong" },
           { id: "c", label: "That organ donation should be mandatory" },
           { id: "d", label: "That happiness cannot be measured" },
@@ -324,7 +324,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "How does rule utilitarianism differ from act utilitarianism?",
         choices: [
           { id: "a", label: "It ignores consequences entirely" },
-          { id: "b", label: "It asks which rules, if generally followed, would maximise wellbeing" },
+          { id: "b", label: "Which rules, generally followed, maximise wellbeing" },
           { id: "c", label: "It only applies to governments, not individuals" },
           { id: "d", label: "It says every act is permitted" },
         ],
@@ -336,7 +336,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "Which modern practice most directly applies utilitarian reasoning?",
         choices: [
           { id: "a", label: "A constitution listing inviolable individual rights" },
-          { id: "b", label: "A health system using QALYs to get the most health from a fixed budget" },
+          { id: "b", label: "A health system using QALYs on a fixed budget" },
           { id: "c", label: "A court punishing on the basis of desert alone" },
           { id: "d", label: "A religion prescribing fixed duties" },
         ],
@@ -403,7 +403,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "What is the central claim of deontology?",
         choices: [
           { id: "a", label: "The morality of an act depends only on its consequences" },
-          { id: "b", label: "Some acts are right or wrong in themselves, regardless of the results" },
+          { id: "b", label: "Some acts are right or wrong in themselves" },
           { id: "c", label: "Morality is about developing a good character over time" },
           { id: "d", label: "Whatever produces the most happiness is right" },
         ],
@@ -415,7 +415,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "Using Kant's first formulation, why is lying wrong?",
         choices: [
           { id: "a", label: "Because lying usually leads to bad consequences" },
-          { id: "b", label: "Because the maxim of lying cannot be universalised without self-destructing" },
+          { id: "b", label: "The maxim of lying cannot be universalised" },
           { id: "c", label: "Because liars tend to be unhappy" },
           { id: "d", label: "Because society punishes liars" },
         ],
@@ -427,7 +427,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "What does Kant's 'treat humanity as an end, never merely as a means' formulation forbid?",
         choices: [
           { id: "a", label: "Ever relying on another person's help" },
-          { id: "b", label: "Using someone purely as a tool, for example by deceiving or coercing them" },
+          { id: "b", label: "Using someone purely as a tool, by deceit or force" },
           { id: "c", label: "Pursuing your own goals" },
           { id: "d", label: "Making any moral rules at all" },
         ],
@@ -438,7 +438,7 @@ const philosophy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What does the 'murderer at the door' objection reveal about deontology?",
         choices: [
-          { id: "a", label: "That absolute, exceptionless rules can conflict and produce disturbing verdicts" },
+          { id: "a", label: "Exceptionless rules can conflict and disturb" },
           { id: "b", label: "That lying is always morally acceptable" },
           { id: "c", label: "That consequences never matter" },
           { id: "d", label: "That Kant secretly agreed with utilitarianism" },
@@ -451,7 +451,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "In which area is deontological thinking most clearly dominant today?",
         choices: [
           { id: "a", label: "Cost-benefit analysis of public policy" },
-          { id: "b", label: "Human rights law and the ethics of medical consent" },
+          { id: "b", label: "Human rights law and medical consent" },
           { id: "c", label: "Maximising quality-adjusted life years" },
           { id: "d", label: "Calculating aggregate economic welfare" },
         ],
@@ -517,7 +517,7 @@ const philosophy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What makes the two-drivers case a genuine problem rather than an unfairness?",
         choices: [
-          { id: "a", label: "The asymmetry is systematic and survives reflection, so it is not a mistake we can simply correct" },
+          { id: "a", label: "The asymmetry is systematic and survives reflection" },
           { id: "b", label: "The unlucky driver was in fact more negligent than the lucky one" },
           { id: "c", label: "Legal systems require different treatment even when morality does not" },
           { id: "d", label: "The drivers' intentions were subtly different at the moment of the accident" },
@@ -541,7 +541,7 @@ const philosophy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What does Nagel's example of the emigrated Germans illustrate?",
         choices: [
-          { id: "a", label: "Circumstantial luck — their innocence is a matter of never having been tested" },
+          { id: "a", label: "Circumstantial luck — they were never tested" },
           { id: "b", label: "Resultant luck — their actions happened to produce better outcomes" },
           { id: "c", label: "Constitutive luck — they had better characters than those who stayed" },
           { id: "d", label: "That emigration is itself a morally praiseworthy choice" },
@@ -553,7 +553,7 @@ const philosophy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does rigorously applying the control principle eliminate moral judgement?",
         choices: [
-          { id: "a", label: "Strip away the unchosen and no agent remains — the self that would control is itself unchosen" },
+          { id: "a", label: "Strip the unchosen and no agent remains to control" },
           { id: "b", label: "Control can never be established with certainty in any actual case" },
           { id: "c", label: "The principle applies only to outcomes, not to character or circumstance" },
           { id: "d", label: "Determinism shows that no action is ever within anyone's control" },
@@ -565,7 +565,7 @@ const philosophy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is Williams's concept of agent-regret?",
         choices: [
-          { id: "a", label: "A faultless agent's distinctive relation to a harm they caused, different from a bystander's sympathy" },
+          { id: "a", label: "A faultless agent's distinct relation to a harm they caused" },
           { id: "b", label: "Guilt experienced by someone who was in fact morally responsible" },
           { id: "c", label: "The regret of having chosen one course of action over another" },
           { id: "d", label: "A social convention requiring apology regardless of any fault" },
@@ -632,7 +632,7 @@ const philosophy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is substance dualism, as Descartes defended it?",
         choices: [
-          { id: "a", label: "The view that mind and body are two fundamentally different kinds of thing" },
+          { id: "a", label: "Mind and body are two different kinds of thing" },
           { id: "b", label: "The view that only the physical brain exists" },
           { id: "c", label: "The view that the mind is an illusion" },
           { id: "d", label: "The view that everything is made of mind" },
@@ -645,7 +645,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "What is the classic objection to Descartes' dualism?",
         choices: [
           { id: "a", label: "That the brain has no effect on the mind" },
-          { id: "b", label: "That it cannot explain how an immaterial mind interacts with a physical body" },
+          { id: "b", label: "It cannot explain mind-body interaction" },
           { id: "c", label: "That minds do not exist" },
           { id: "d", label: "That it relies too heavily on neuroscience" },
         ],
@@ -657,7 +657,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "How did Chalmers define the 'hard problem' of consciousness?",
         choices: [
           { id: "a", label: "Explaining how the brain discriminates and reacts to stimuli" },
-          { id: "b", label: "Explaining why physical processing is accompanied by any subjective experience at all" },
+          { id: "b", label: "Why any processing is accompanied by experience" },
           { id: "c", label: "Building a computer that can pass as human" },
           { id: "d", label: "Proving that the mind is immaterial" },
         ],
@@ -670,7 +670,7 @@ const philosophy: AuthoredLesson[] = [
         choices: [
           { id: "a", label: "That colour does not really exist" },
           { id: "b", label: "That she never really understood the physics" },
-          { id: "c", label: "That some facts about experience are not captured by physical facts" },
+          { id: "c", label: "Some facts about experience escape physics" },
           { id: "d", label: "That scientists should not study colour" },
         ],
         correctChoiceId: "c",
@@ -681,7 +681,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "What are 'qualia'?",
         choices: [
           { id: "a", label: "The measurable electrical signals in neurons" },
-          { id: "b", label: "The subjective felt qualities of experience, like the redness of red" },
+          { id: "b", label: "The felt qualities of experience, like red" },
           { id: "c", label: "The logical rules governing thought" },
           { id: "d", label: "The behaviours a mind produces" },
         ],
@@ -748,7 +748,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "What does determinism claim?",
         choices: [
           { id: "a", label: "That the future is completely unpredictable" },
-          { id: "b", label: "That every event is fully fixed by prior causes and the laws of nature" },
+          { id: "b", label: "Every event is fixed by prior causes and law" },
           { id: "c", label: "That humans have no desires" },
           { id: "d", label: "That only some events have causes" },
         ],
@@ -760,7 +760,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "How does compatibilism redefine freedom to reconcile it with determinism?",
         choices: [
           { id: "a", label: "Freedom means your choices have no causes at all" },
-          { id: "b", label: "Freedom means acting on your own desires and reasons without coercion" },
+          { id: "b", label: "Acting on your own reasons without coercion" },
           { id: "c", label: "Freedom means always doing the morally right thing" },
           { id: "d", label: "Freedom means being able to predict the future" },
         ],
@@ -773,7 +773,7 @@ const philosophy: AuthoredLesson[] = [
         choices: [
           { id: "a", label: "That determinism is true and free will is an illusion" },
           { id: "b", label: "That government should be as small as possible" },
-          { id: "c", label: "That we have genuine free will, so determinism must be false" },
+          { id: "c", label: "We have free will, so determinism is false" },
           { id: "d", label: "That freedom and determinism are compatible" },
         ],
         correctChoiceId: "c",
@@ -784,7 +784,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "Why is the interpretation of Libet's readiness-potential experiments contested?",
         choices: [
           { id: "a", label: "Because the experiments were never actually performed" },
-          { id: "b", label: "Because the signal may not represent a specific decision, and pressing a button poorly models real deliberate choice" },
+          { id: "b", label: "The signal may not be a decision, and button-pressing models choice poorly" },
           { id: "c", label: "Because they proved free will beyond doubt" },
           { id: "d", label: "Because neuroscience cannot measure brain activity" },
         ],
@@ -796,7 +796,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "What does hard determinism conclude about moral responsibility?",
         choices: [
           { id: "a", label: "That people are fully responsible for everything they do" },
-          { id: "b", label: "That ultimate moral responsibility is an illusion, since no one could have done otherwise" },
+          { id: "b", label: "Ultimate responsibility is an illusion; none could do otherwise" },
           { id: "c", label: "That only some people are responsible" },
           { id: "d", label: "That responsibility depends on quantum physics" },
         ],
@@ -863,7 +863,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "What is the purpose of the 'state of nature' in social contract theory?",
         choices: [
           { id: "a", label: "A historical account of how the first governments literally formed" },
-          { id: "b", label: "A thought experiment about life without government, used to justify why we accept one" },
+          { id: "b", label: "A thought experiment on life without government" },
           { id: "c", label: "A description of life in remote wilderness today" },
           { id: "d", label: "A religious account of human origins" },
         ],
@@ -876,7 +876,7 @@ const philosophy: AuthoredLesson[] = [
         choices: [
           { id: "a", label: "Because he thought people had natural rights that governments must protect" },
           { id: "b", label: "Because he believed the general will demanded it" },
-          { id: "c", label: "Because without a common power, life would be a violent 'war of all against all'" },
+          { id: "c", label: "Without a common power, a war of all against all" },
           { id: "d", label: "Because he wanted citizens to be able to overthrow bad rulers" },
         ],
         correctChoiceId: "c",
@@ -886,7 +886,7 @@ const philosophy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "How did Locke's social contract differ most sharply from Hobbes'?",
         choices: [
-          { id: "a", label: "Locke allowed the people to replace a government that violates their trust" },
+          { id: "a", label: "People may replace a government that breaks trust" },
           { id: "b", label: "Locke denied that any government was ever needed" },
           { id: "c", label: "Locke thought the state of nature was even more violent" },
           { id: "d", label: "Locke rejected the idea of consent" },
@@ -899,7 +899,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "What is the point of Rawls' 'veil of ignorance'?",
         choices: [
           { id: "a", label: "To show that people never really consent to government" },
-          { id: "b", label: "To choose principles of justice without knowing your own position in society, ensuring fairness" },
+          { id: "b", label: "Choosing justice blind to your own position" },
           { id: "c", label: "To prove that inequality is always unjust" },
           { id: "d", label: "To describe how ancient societies were actually organised" },
         ],
@@ -911,7 +911,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "What is Hume's objection to consent-based social contract theory?",
         choices: [
           { id: "a", label: "That government is unnecessary" },
-          { id: "b", label: "That most people never actually consented and often cannot realistically leave" },
+          { id: "b", label: "Most never consented and cannot really leave" },
           { id: "c", label: "That the state of nature was peaceful" },
           { id: "d", label: "That only kings can legitimately rule" },
         ],
@@ -979,7 +979,7 @@ const philosophy: AuthoredLesson[] = [
         choices: [
           { id: "a", label: "Having the same physical body" },
           { id: "b", label: "Having the same immaterial soul" },
-          { id: "c", label: "Continuity of consciousness, linked through memory" },
+          { id: "c", label: "Continuity of consciousness through memory" },
           { id: "d", label: "Keeping the same name and legal identity" },
         ],
         correctChoiceId: "c",
@@ -990,7 +990,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "How does Reid's 'brave officer' case undermine a simple memory theory of identity?",
         choices: [
           { id: "a", label: "It shows that memories are always false" },
-          { id: "b", label: "It shows memory-links can fail to be transitive, so A can be B and B be C without A being C" },
+          { id: "b", label: "Memory-links are not transitive: A-B, B-C, not A-C" },
           { id: "c", label: "It shows the body never changes" },
           { id: "d", label: "It shows that only the soul matters" },
         ],
@@ -1002,7 +1002,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "What is 'psychological continuity' as a criterion of identity?",
         choices: [
           { id: "a", label: "A single memory that runs unbroken through your whole life" },
-          { id: "b", label: "An overlapping chain of memories, intentions and traits, like links in a rope" },
+          { id: "b", label: "An overlapping chain of memories and traits" },
           { id: "c", label: "The physical persistence of your brain cells" },
           { id: "d", label: "Your consistent legal and social status" },
         ],
@@ -1015,7 +1015,7 @@ const philosophy: AuthoredLesson[] = [
         choices: [
           { id: "a", label: "That teleportation is technologically impossible" },
           { id: "b", label: "That both replicas are literally the same single person" },
-          { id: "c", label: "That strict identity cannot survive a split, so what matters may be continuity rather than identity" },
+          { id: "c", label: "Identity cannot survive a split, so continuity matters" },
           { id: "d", label: "That memories cannot be copied" },
         ],
         correctChoiceId: "c",
@@ -1026,7 +1026,7 @@ const philosophy: AuthoredLesson[] = [
         prompt: "What did Parfit mean by claiming identity is 'not what matters'?",
         choices: [
           { id: "a", label: "That we should not care about the future at all" },
-          { id: "b", label: "That what we really value in survival is psychological continuity and connectedness, not strict identity" },
+          { id: "b", label: "We value continuity and connectedness, not strict identity" },
           { id: "c", label: "That personal identity is completely fixed by the body" },
           { id: "d", label: "That memories are irrelevant to who we are" },
         ],
@@ -1092,7 +1092,7 @@ const philosophy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What question do theories of well-being answer?",
         choices: [
-          { id: "a", label: "What makes a life go well for the person living it, as distinct from what is morally right" },
+          { id: "a", label: "What makes a life go well, not what is morally right" },
           { id: "b", label: "Which actions produce the greatest good for the greatest number" },
           { id: "c", label: "What obligations we owe to others in virtue of their interests" },
           { id: "d", label: "How societies should distribute resources between their members" },
@@ -1104,7 +1104,7 @@ const philosophy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does the experience machine threaten hedonism specifically?",
         choices: [
-          { id: "a", label: "The machine dominates on the only dimension hedonism recognises, so refusing should be unintelligible" },
+          { id: "a", label: "The machine wins on hedonism's only measure, so refusal is odd" },
           { id: "b", label: "The machine cannot produce pleasures as intense as real experiences" },
           { id: "c", label: "Hedonists would be unable to choose which experiences to programme" },
           { id: "d", label: "Time spent in the machine produces no pleasure for anyone else" },
@@ -1116,7 +1116,7 @@ const philosophy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why must desire satisfaction retreat to 'informed' desires, and what does that cost?",
         choices: [
-          { id: "a", label: "Desires from false beliefs do not benefit you — but the fix imports a standard of what is worth wanting" },
+          { id: "a", label: "False-belief desires do not benefit you, and the fix smuggles in a standard" },
           { id: "b", label: "Uninformed desires are too numerous to satisfy within a single life" },
           { id: "c", label: "Informed desires are easier to measure empirically than raw preferences" },
           { id: "d", label: "The retreat costs nothing, since informed desires remain fully subjective" },
@@ -1128,7 +1128,7 @@ const philosophy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What does Parfit's stranger on the train show?",
         choices: [
-          { id: "a", label: "If satisfying a desire about something never touching your life benefits you, well-being detaches from your life" },
+          { id: "a", label: "If a desire never touching your life benefits you, well-being detaches from it" },
           { id: "b", label: "Desires about strangers are always weaker than desires about oneself" },
           { id: "c", label: "You cannot desire an outcome you will never learn about" },
           { id: "d", label: "Altruistic desires benefit the desirer more than selfish ones" },
@@ -1140,7 +1140,7 @@ const philosophy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the resonance constraint's role in defending objective lists?",
         choices: [
-          { id: "a", label: "Nothing benefits you unless it engages you, which excludes the crudest paternalism" },
+          { id: "a", label: "Nothing benefits you unless it engages you" },
           { id: "b", label: "It establishes which goods belong on the list by democratic agreement" },
           { id: "c", label: "It permits overriding someone's preferences when experts disagree with them" },
           { id: "d", label: "It ranks the list's items by how strongly people typically desire them" },
