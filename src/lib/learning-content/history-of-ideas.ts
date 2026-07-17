@@ -57,7 +57,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Why does the history of ideas treat 'progress' as an invention rather than an obvious fact?",
         choices: [
-          { id: "a", label: "Because it is a specific historical belief, not a universal human assumption — many cultures held cyclical or backward-looking views" },
+          { id: "a", label: "A historical belief; others saw time as cyclical" },
           { id: "b", label: "Because progress has never actually happened" },
           { id: "c", label: "Because all cultures have always believed in it" },
           { id: "d", label: "Because it was invented in ancient Greece" },
@@ -70,7 +70,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         prompt: "When did the modern idea of progress crystallise, and why?",
         choices: [
           { id: "a", label: "In the ancient world, due to religion" },
-          { id: "b", label: "In the 18th-century Enlightenment, buoyed by scientific success and confidence in human reason" },
+          { id: "b", label: "In the 18th-century Enlightenment" },
           { id: "c", label: "In the Middle Ages, due to feudalism" },
           { id: "d", label: "In the 20th century, after the World Wars" },
         ],
@@ -81,7 +81,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why did the Second World War and the Holocaust so damage the idea of progress?",
         choices: [
-          { id: "a", label: "They showed that scientific and cultural advancement does not automatically bring moral progress, and can serve barbarism" },
+          { id: "a", label: "Advancement does not bring moral progress" },
           { id: "b", label: "They proved technology had stopped advancing" },
           { id: "c", label: "They showed progress was purely economic" },
           { id: "d", label: "They had no effect on the idea" },
@@ -93,7 +93,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What challenge does environmental crisis pose to the idea of progress?",
         choices: [
-          { id: "a", label: "That progress in one dimension, like industry, can mean catastrophe in another, like the environment" },
+          { id: "a", label: "Progress in industry can be catastrophe elsewhere" },
           { id: "b", label: "That the environment is unrelated to progress" },
           { id: "c", label: "That progress is always environmentally beneficial" },
           { id: "d", label: "That technology has no effect on nature" },
@@ -105,7 +105,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What does thinking critically about the idea of progress involve?",
         choices: [
-          { id: "a", label: "Noticing the hidden assumption and asking: progress toward what, by whose standard, and at what cost?" },
+          { id: "a", label: "Progress toward what, at what cost?" },
           { id: "b", label: "Rejecting all improvements as illusions" },
           { id: "c", label: "Assuming newer is always better" },
           { id: "d", label: "Ignoring the concept entirely" },
@@ -126,7 +126,7 @@ const historyOfIdeas: AuthoredLesson[] = [
     estimatedMinutes: 9,
     deck: "Everyone claims to be for liberty — which is exactly the problem, because they mean different things by it. The history of ideas reveals that 'freedom' is not one concept but several, and much political conflict is really a clash between rival understandings of what being free actually means.",
     keyTerms: [
-      { label: "Negative liberty", value: "Freedom as the absence of interference — being left alone to act." },
+      { label: "Negative liberty", value: "Freedom as absence of interference." },
       { label: "Positive liberty", value: "Freedom as self-mastery or self-rule — the capacity to be one's own master." },
       { label: "Isaiah Berlin", value: "The philosopher whose 'Two Concepts of Liberty' framed the modern debate." },
       { label: "Non-domination", value: "The republican view that freedom means not being subject to arbitrary power." },
@@ -172,7 +172,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is 'negative liberty' in Berlin's analysis?",
         choices: [
-          { id: "a", label: "Freedom as the absence of interference — being left alone to act" },
+          { id: "a", label: "Freedom as absence of interference" },
           { id: "b", label: "Freedom as self-mastery and controlling your own life" },
           { id: "c", label: "A harmful or undesirable kind of freedom" },
           { id: "d", label: "Freedom granted only by the state" },
@@ -185,7 +185,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         prompt: "What is 'positive liberty'?",
         choices: [
           { id: "a", label: "Simply being left alone" },
-          { id: "b", label: "Freedom as self-mastery — actually being in control of your life and able to act on your genuine goals" },
+          { id: "b", label: "Freedom as self-mastery over your own life" },
           { id: "c", label: "Freedom that is always good" },
           { id: "d", label: "The absence of any government" },
         ],
@@ -196,7 +196,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why do negative and positive liberty lead to different politics?",
         choices: [
-          { id: "a", label: "Negative liberty favours a minimal state; positive liberty may require state action to give people the real capacity to be free" },
+          { id: "a", label: "Negative wants a small state; positive, action" },
           { id: "b", label: "They lead to identical policies" },
           { id: "c", label: "Both require abolishing government" },
           { id: "d", label: "Neither has any political implication" },
@@ -208,7 +208,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What was Berlin's famous warning about positive liberty?",
         choices: [
-          { id: "a", label: "That the idea of 'true' self-mastery can be twisted to justify coercing people 'for their own good'" },
+          { id: "a", label: "Self-mastery can justify coercion" },
           { id: "b", label: "That positive liberty is always harmless" },
           { id: "c", label: "That it is identical to negative liberty" },
           { id: "d", label: "That it requires no state at all" },
@@ -220,7 +220,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What does the republican idea of liberty as 'non-domination' add?",
         choices: [
-          { id: "a", label: "That freedom means not being subject to arbitrary power, even if no one is currently interfering" },
+          { id: "a", label: "Freedom as not being subject to arbitrary power" },
           { id: "b", label: "That freedom is only about being left alone right now" },
           { id: "c", label: "That freedom requires an absolute ruler" },
           { id: "d", label: "That domination is a form of freedom" },
@@ -288,7 +288,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         prompt: "What is the central insight of the history of the self?",
         choices: [
           { id: "a", label: "That the self is fixed and identical across all cultures and times" },
-          { id: "b", label: "That the idea of the self has changed dramatically over history, so the modern self is partly a cultural creation" },
+          { id: "b", label: "The self has changed over history and is a cultural creation" },
           { id: "c", label: "That people in the past had no inner lives at all" },
           { id: "d", label: "That the self does not exist" },
         ],
@@ -300,7 +300,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         prompt: "How did Christianity shift ideas of the self?",
         choices: [
           { id: "a", label: "It abolished the idea of the soul" },
-          { id: "b", label: "It intensified focus on the individual's inner life — conscience, the soul's state, and self-examination" },
+          { id: "b", label: "It deepened focus on the inner life" },
           { id: "c", label: "It located identity purely in social role" },
           { id: "d", label: "It had no effect on the self" },
         ],
@@ -312,7 +312,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         prompt: "What did Descartes' 'I think, therefore I am' locate at the centre of the self?",
         choices: [
           { id: "a", label: "The body" },
-          { id: "b", label: "The thinking, self-aware mind — a rational consciousness certain of its own existence" },
+          { id: "b", label: "The self-aware thinking mind" },
           { id: "c", label: "The community" },
           { id: "d", label: "Social status" },
         ],
@@ -323,7 +323,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What did the Romantic movement contribute to the modern self?",
         choices: [
-          { id: "a", label: "The ideal of a deep, unique, feeling inner self that one should discover and be true to" },
+          { id: "a", label: "A deep inner self to be true to" },
           { id: "b", label: "The idea that feelings are worthless" },
           { id: "c", label: "The rejection of all individuality" },
           { id: "d", label: "The view that the self is purely rational" },
@@ -335,7 +335,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the 'therapeutic self' that arose in the twentieth century?",
         choices: [
-          { id: "a", label: "A self understood in psychological terms — inner feelings, hidden depths, self-esteem and growth to be worked on" },
+          { id: "a", label: "A self of inner feelings, depths and growth" },
           { id: "b", label: "A self defined only by legal rights" },
           { id: "c", label: "A self with no inner life" },
           { id: "d", label: "A self identical to the ancient soul" },
@@ -403,7 +403,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         prompt: "Why did Raymond Williams call 'nature' one of the most complex words in the language?",
         choices: [
           { id: "a", label: "Because it has only one clear meaning" },
-          { id: "b", label: "Because it slides between very different senses — the physical world, an essence, an ideal, and a standard of what is right" },
+          { id: "b", label: "It slides between many senses" },
           { id: "c", label: "Because it is rarely used" },
           { id: "d", label: "Because it is a modern invention" },
         ],
@@ -414,7 +414,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the 'appeal to nature' fallacy?",
         choices: [
-          { id: "a", label: "Assuming that because something is natural it must be good, and unnatural things bad" },
+          { id: "a", label: "Assuming the natural is good, the unnatural bad" },
           { id: "b", label: "Studying the natural world scientifically" },
           { id: "c", label: "Protecting the environment" },
           { id: "d", label: "Describing what exists in nature accurately" },
@@ -426,7 +426,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why can appeals to 'human nature' be politically powerful and often conservative?",
         choices: [
-          { id: "a", label: "By declaring a behaviour or arrangement natural and inevitable, they foreclose the possibility of change and naturalise the status quo" },
+          { id: "a", label: "Calling an arrangement natural forecloses change" },
           { id: "b", label: "Because human nature is a settled scientific fact" },
           { id: "c", label: "Because they always argue for radical change" },
           { id: "d", label: "Because they have no rhetorical effect" },
@@ -438,7 +438,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How did the Romantic movement change the ideal of wild nature?",
         choices: [
-          { id: "a", label: "It reversed older fear of the wild, idealising untamed nature as sublime, pure and spiritually restorative" },
+          { id: "a", label: "It reversed fear of the wild into reverence" },
           { id: "b", label: "It saw nature as purely hostile and to be conquered" },
           { id: "c", label: "It ignored nature entirely" },
           { id: "d", label: "It treated nature as merely a resource" },
@@ -450,7 +450,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What critical questions should you ask when someone appeals to what is 'natural'?",
         choices: [
-          { id: "a", label: "Which sense of nature is meant, is it describing or prescribing, and does naturalness actually establish value?" },
+          { id: "a", label: "Describing nature, or prescribing?" },
           { id: "b", label: "Only whether the speaker likes nature" },
           { id: "c", label: "Whether nature exists at all" },
           { id: "d", label: "Nothing; 'natural' always means good" },
@@ -517,7 +517,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Why is 'civilisation' described as more than a neutral, descriptive term?",
         choices: [
-          { id: "a", label: "Because it carries an evaluative ranking, defining a 'superior' society against 'barbarism' or 'savagery'" },
+          { id: "a", label: "It ranks a 'superior' society against 'savagery'" },
           { id: "b", label: "Because it only describes ancient societies" },
           { id: "c", label: "Because it has no meaning at all" },
           { id: "d", label: "Because it applies only to cities" },
@@ -529,7 +529,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How did the concept of civilisation serve the 'civilising mission' of empire?",
         choices: [
-          { id: "a", label: "By casting colonised peoples as backward and in need of uplift, reframing conquest as a moral duty rather than theft" },
+          { id: "a", label: "It framed conquest as uplift" },
           { id: "b", label: "By proving all cultures were equal" },
           { id: "c", label: "By discouraging any conquest" },
           { id: "d", label: "By having no role in empire" },
@@ -541,7 +541,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What did Norbert Elias's 'The Civilizing Process' argue?",
         choices: [
-          { id: "a", label: "That standards of manners and self-restraint changed over centuries as a traceable historical process, not a fixed pinnacle" },
+          { id: "a", label: "Manners changed as a historical process" },
           { id: "b", label: "That civilisation is natural and universal" },
           { id: "c", label: "That manners never change" },
           { id: "d", label: "That civilisation requires empire" },
@@ -553,7 +553,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How is the word 'civilised' used to include and exclude within societies?",
         choices: [
-          { id: "a", label: "As a term of prestige that marks 'us' as refined and 'them' as crude, denying others full standing" },
+          { id: "a", label: "It marks 'us' as refined and 'them' as crude" },
           { id: "b", label: "As a purely neutral classification with no social effect" },
           { id: "c", label: "Only ever between nations, never within them" },
           { id: "d", label: "To treat all groups as equals" },
@@ -565,7 +565,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What does using the concept of civilisation 'critically' involve?",
         choices: [
-          { id: "a", label: "Being alert to when it smuggles in a ranking, and asking whose standards define the 'civilised' and whom it excludes" },
+          { id: "a", label: "Asking whose standards define the 'civilised'" },
           { id: "b", label: "Abandoning the word completely in all contexts" },
           { id: "c", label: "Assuming 'civilised' always means good" },
           { id: "d", label: "Ignoring how the word is used" },
@@ -632,7 +632,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Why has reason been held up as the defining human faculty?",
         choices: [
-          { id: "a", label: "Because it allows moving beyond instinct and superstition toward understanding grounded in evidence and argument" },
+          { id: "a", label: "It moves beyond superstition toward evidence" },
           { id: "b", label: "Because it is shared equally with all animals" },
           { id: "c", label: "Because it requires no thought" },
           { id: "d", label: "Because it opposes all knowledge" },
@@ -644,7 +644,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What did Enlightenment thinkers believe reason could do?",
         choices: [
-          { id: "a", label: "Freed from superstition and blind tradition, discover truth and guide humanity toward progress" },
+          { id: "a", label: "Reason, free of superstition, guides" },
           { id: "b", label: "Nothing of value" },
           { id: "c", label: "Only serve the church" },
           { id: "d", label: "Replace all human emotion permanently" },
@@ -656,7 +656,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How has the sharp opposition between reason and emotion been challenged?",
         choices: [
-          { id: "a", label: "Modern psychology and neuroscience suggest emotion and reason are intertwined, with emotion often essential to good judgement" },
+          { id: "a", label: "Emotion and reason are intertwined, not opposed" },
           { id: "b", label: "By proving emotion does not exist" },
           { id: "c", label: "By showing reason is always wrong" },
           { id: "d", label: "By confirming emotion is merely an obstacle" },
@@ -668,7 +668,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What did the Romantic movement argue against the exaltation of reason?",
         choices: [
-          { id: "a", label: "That emotion, imagination and intuition are sources of truth and value that cold reason cannot reach" },
+          { id: "a", label: "Emotion and intuition reach truths reason cannot" },
           { id: "b", label: "That reason should be worshipped even more" },
           { id: "c", label: "That feelings are worthless" },
           { id: "d", label: "That reason and emotion are identical" },
@@ -680,7 +680,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What was the Frankfurt School's critique of 'instrumental reason'?",
         choices: [
-          { id: "a", label: "That reason reduced to calculating efficient means, indifferent to whether the ends are good, can serve horror and domination" },
+          { id: "a", label: "Reason as mere efficient means can serve horror" },
           { id: "b", label: "That reason is always benign" },
           { id: "c", label: "That efficiency guarantees good outcomes" },
           { id: "d", label: "That reason should be abandoned for superstition" },
@@ -748,7 +748,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         prompt: "What is the counterintuitive claim about nations in the history of ideas?",
         choices: [
           { id: "a", label: "That nations have always existed exactly as they are now" },
-          { id: "b", label: "That the modern nation is a relatively recent creation, mostly of the 18th and 19th centuries" },
+          { id: "b", label: "The nation is a recent, 18th-19th century creation" },
           { id: "c", label: "That nations are purely biological" },
           { id: "d", label: "That national identity is meaningless" },
         ],
@@ -760,7 +760,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         prompt: "What did Benedict Anderson mean by calling the nation an 'imagined community'?",
         choices: [
           { id: "a", label: "That the nation is fake and has no real effects" },
-          { id: "b", label: "That members will never meet most fellow-members yet imagine a deep communion as one people" },
+          { id: "b", label: "Members never meet yet imagine one people" },
           { id: "c", label: "That nations exist only in fiction" },
           { id: "d", label: "That only small groups form nations" },
         ],
@@ -771,7 +771,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How did 'print capitalism' help make nations possible, according to Anderson?",
         choices: [
-          { id: "a", label: "Mass newspapers and books in shared languages let dispersed people imagine themselves as one reading public and community" },
+          { id: "a", label: "Shared print imagined one community" },
           { id: "b", label: "It abolished all languages" },
           { id: "c", label: "It prevented communication between people" },
           { id: "d", label: "It had no effect on national feeling" },
@@ -783,7 +783,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What did Eric Hobsbawm mean by the 'invention of tradition'?",
         choices: [
-          { id: "a", label: "That many seemingly ancient national customs and symbols were actually created in the modern era to foster national feeling" },
+          { id: "a", label: "Many 'ancient' customs were invented" },
           { id: "b", label: "That traditions never change" },
           { id: "c", label: "That all traditions are genuinely ancient" },
           { id: "d", label: "That nations have no traditions" },
@@ -795,7 +795,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Why is the nation described as a profoundly ambivalent idea?",
         choices: [
-          { id: "a", label: "The same national solidarity can underpin democracy and mutual obligation or curdle into exclusion, xenophobia and aggression" },
+          { id: "a", label: "Solidarity can build or curdle" },
           { id: "b", label: "Because it has no effect on history" },
           { id: "c", label: "Because it is always purely benign" },
           { id: "d", label: "Because it is always purely destructive" },
@@ -862,7 +862,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is surprising about the origin of the word 'meritocracy'?",
         choices: [
-          { id: "a", label: "It was coined by Michael Young in 1958 as a satirical warning, not a compliment" },
+          { id: "a", label: "Coined by Michael Young in 1958 as satire" },
           { id: "b", label: "It is an ancient Greek term" },
           { id: "c", label: "It was invented to praise aristocracy" },
           { id: "d", label: "It has no known origin" },
@@ -874,7 +874,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does the role of luck complicate the claim that the successful 'deserve' their rewards?",
         choices: [
-          { id: "a", label: "Because talent is largely inherited luck, and effort and character are shaped by upbringing and circumstance" },
+          { id: "a", label: "Talent is inherited luck; effort is shaped by circumstance" },
           { id: "b", label: "Because luck plays no role in success" },
           { id: "c", label: "Because everyone has identical talents" },
           { id: "d", label: "Because merit is purely genetic and therefore deserved" },
@@ -886,7 +886,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why do critics argue real societies are less meritocratic than they claim?",
         choices: [
-          { id: "a", label: "Because what counts as 'merit' is defined by the already-advantaged and often correlates with privileged backgrounds" },
+          { id: "a", label: "'Merit' is defined by the already-advantaged" },
           { id: "b", label: "Because merit is impossible to reward at all" },
           { id: "c", label: "Because talent does not exist" },
           { id: "d", label: "Because birth is the only fair basis for status" },
@@ -898,7 +898,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is Sandel's 'tyranny of merit'?",
         choices: [
-          { id: "a", label: "The harm of the belief that success is deserved: arrogance in winners and a demoralising sense of deserved failure in others" },
+          { id: "a", label: "Believing success is deserved breeds arrogance and shame" },
           { id: "b", label: "The rule of the most talented, which is always beneficial" },
           { id: "c", label: "A system with no rewards for ability" },
           { id: "d", label: "The claim that merit should count for nothing" },
@@ -910,7 +910,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the 'mature view' of meritocracy that the critique points toward?",
         choices: [
-          { id: "a", label: "Keep the fairness of judging by relevant ability, but reject the myth that success is wholly earned and deserved" },
+          { id: "a", label: "Judge by ability but reject the myth of deserved success" },
           { id: "b", label: "Abandon ability entirely and return to inherited privilege" },
           { id: "c", label: "Believe fully that winners deserve everything" },
           { id: "d", label: "Reward people purely at random" },
@@ -977,7 +977,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Why is authenticity described as a historically distinctive ideal?",
         choices: [
-          { id: "a", label: "Because earlier frameworks centred on duty, role or community, not on expressing a unique inner self" },
+          { id: "a", label: "Earlier frameworks centred on duty, not the inner self" },
           { id: "b", label: "Because it has existed unchanged in all cultures" },
           { id: "c", label: "Because no one has ever valued it" },
           { id: "d", label: "Because it means the same as sincerity" },
@@ -989,7 +989,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is Trilling's distinction between sincerity and authenticity?",
         choices: [
-          { id: "a", label: "Sincerity is being true to others (honest in social relations); authenticity is being true to yourself regardless of others" },
+          { id: "a", label: "Sincerity is true to others; authenticity, true to self" },
           { id: "b", label: "They mean exactly the same thing" },
           { id: "c", label: "Sincerity is about self-expression; authenticity is about honesty to others" },
           { id: "d", label: "Both are about deceiving others" },
@@ -1001,7 +1001,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What assumption about the self does authenticity rest on, and why is it questioned?",
         choices: [
-          { id: "a", label: "That there is a single fixed 'true self' to discover — questioned because the self may be created through choices, or be many selves" },
+          { id: "a", label: "That one fixed true self waits to be found" },
           { id: "b", label: "That the self does not exist at all" },
           { id: "c", label: "That everyone has an identical self" },
           { id: "d", label: "That the self is purely biological" },
@@ -1013,7 +1013,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the paradox of 'manufactured authenticity'?",
         choices: [
-          { id: "a", label: "Authenticity, supposedly the opposite of artifice, is deliberately produced and sold as a marketing performance" },
+          { id: "a", label: "Authenticity is manufactured and sold" },
           { id: "b", label: "Authenticity cannot be marketed at all" },
           { id: "c", label: "Brands never claim to be authentic" },
           { id: "d", label: "Authenticity has no commercial value" },
@@ -1025,7 +1025,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the thoughtful way to engage with the ideal of authenticity?",
         choices: [
-          { id: "a", label: "Value genuine integrity and self-honesty while seeing through staged, commercial performances of authenticity" },
+          { id: "a", label: "Prize integrity over staged authenticity" },
           { id: "b", label: "Accept every authenticity claim at face value" },
           { id: "c", label: "Reject all honesty as pointless" },
           { id: "d", label: "Assume the true self is always obvious and fixed" },
@@ -1093,7 +1093,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         prompt: "What does 'modernity' refer to?",
         choices: [
           { id: "a", label: "Simply the most recent few years" },
-          { id: "b", label: "A specific historical condition produced by industrialisation, science, bureaucracy and constant change" },
+          { id: "b", label: "Made by industry and constant change" },
           { id: "c", label: "Any advanced technology" },
           { id: "d", label: "The ancient world" },
         ],
@@ -1104,7 +1104,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What did Weber mean by 'rationalisation'?",
         choices: [
-          { id: "a", label: "The spreading dominance of efficiency, calculation and impersonal rules over more and more areas of life" },
+          { id: "a", label: "Efficiency and impersonal rules spreading" },
           { id: "b", label: "The act of making excuses" },
           { id: "c", label: "The return to traditional religion" },
           { id: "d", label: "The rejection of all rules" },
@@ -1116,7 +1116,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What did Weber fear with his image of the 'iron cage'?",
         choices: [
-          { id: "a", label: "That relentless rationalisation traps and diminishes people, reducing them to cogs in impersonal systems" },
+          { id: "a", label: "Rationalisation reduces people to cogs" },
           { id: "b", label: "That bureaucracy would disappear entirely" },
           { id: "c", label: "That efficiency has no benefits at all" },
           { id: "d", label: "That tradition would return and dominate" },
@@ -1128,7 +1128,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is 'disenchantment', and what is its double-edged nature?",
         choices: [
-          { id: "a", label: "The draining of magic and inherent meaning from a scientific world — liberating from superstition, but leaving a void of shared meaning" },
+          { id: "a", label: "Magic drained from the world" },
           { id: "b", label: "The return of magic to the world" },
           { id: "c", label: "A purely positive gain with no cost" },
           { id: "d", label: "The rejection of all science" },
@@ -1140,7 +1140,7 @@ const historyOfIdeas: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What did Marx's phrase 'all that is solid melts into air' capture about modernity?",
         choices: [
-          { id: "a", label: "Its relentless, permanent change, where every certainty is constantly overturned and the only constant is change itself" },
+          { id: "a", label: "Change as the only constant" },
           { id: "b", label: "That modern society is completely stable" },
           { id: "c", label: "That nothing ever changes" },
           { id: "d", label: "That solids literally evaporate" },
