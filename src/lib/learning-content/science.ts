@@ -94,7 +94,7 @@ const science: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why did physicists doubt the OPERA faster-than-light neutrino result before any error was found?",
         choices: [
-          { id: "a", label: "The prior against violating relativity was so low that one anomalous timing could not shift the posterior" },
+          { id: "a", label: "The prior against violating relativity was too low for one timing to shift" },
           { id: "b", label: "The measurement fell below the five-sigma threshold conventionally required in particle physics" },
           { id: "c", label: "The collaboration had a documented history of timing errors in its previous published results" },
           { id: "d", label: "Faster-than-light travel is logically incoherent, so no experimental result could ever support it" },
@@ -106,7 +106,7 @@ const science: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Why does evidence compound faster across independent replications than within a single study?",
         choices: [
-          { id: "a", label: "Independent likelihood ratios multiply, so several replications move the posterior far more than one study can" },
+          { id: "a", label: "Independent likelihood ratios multiply, so replications compound" },
           { id: "b", label: "Replications use larger samples, so their individual p-values are necessarily smaller" },
           { id: "c", label: "Repetition raises the prior for the hypothesis before each subsequent study is conducted" },
           { id: "d", label: "Independent studies eliminate measurement error entirely once three or more agree" },
@@ -185,7 +185,7 @@ const science: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why did Popper regard a theory that fits every possible observation as weak?",
         choices: [
-          { id: "a", label: "It forbids nothing, so it tells you nothing about which state of affairs actually obtains" },
+          { id: "a", label: "It forbids nothing, so it tells you nothing about the world" },
           { id: "b", label: "It requires more auxiliary assumptions than a theory making narrow predictions" },
           { id: "c", label: "It cannot be expressed with sufficient precision to permit quantitative testing" },
           { id: "d", label: "It will eventually be contradicted once enough observations have accumulated" },
@@ -221,7 +221,7 @@ const science: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What qualification do later philosophers add to Popper's account?",
         choices: [
-          { id: "a", label: "Tests rely on background assumptions, so a failure may be blamed on those rather than the core theory" },
+          { id: "a", label: "Failure can always be blamed on background assumptions instead" },
           { id: "b", label: "Falsification is impossible in principle because no observation is ever fully theory-neutral" },
           { id: "c", label: "Scientific theories should in fact be retained regardless of how many predictions fail" },
           { id: "d", label: "Demarcation is unnecessary because pseudoscience makes no testable claims whatsoever" },
@@ -300,7 +300,7 @@ const science: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is the thesis not an argument that theories cannot be tested?",
         choices: [
-          { id: "a", label: "It shows refutation requires disciplined judgement rather than deduction, not that evidence is powerless" },
+          { id: "a", label: "Refutation needs disciplined judgement, not that evidence is powerless" },
           { id: "b", label: "It applies only to theories in physics, where auxiliary assumptions are unusually numerous" },
           { id: "c", label: "It concerns the logic of confirmation rather than the logic of refutation" },
           { id: "d", label: "It was refuted once Popper demonstrated that risky predictions are genuinely possible" },
@@ -336,7 +336,7 @@ const science: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What breaks the tie when evidence underdetermines theory choice?",
         choices: [
-          { id: "a", label: "Epistemic virtues — fruitfulness, unification, independently supported auxiliaries, absence of gerrymandering" },
+          { id: "a", label: "Epistemic virtues: fruitfulness, unification, no gerrymandering" },
           { id: "b", label: "Strict logical entailment from the accumulated observational record" },
           { id: "c", label: "Priority of publication, since the earliest adequate theory is conventionally retained" },
           { id: "d", label: "Nothing does; theory choice at that point is a purely social negotiation" },
@@ -415,7 +415,7 @@ const science: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is 'reverse causation'?",
         choices: [
-          { id: "a", label: "The causal arrow runs the opposite way — the presumed effect is in fact the cause" },
+          { id: "a", label: "The causal arrow runs the other way round" },
           { id: "b", label: "A third variable produces both of the correlated quantities independently" },
           { id: "c", label: "An association that arises purely by chance among many measured variables" },
           { id: "d", label: "A relationship that reverses direction as the sample size increases" },
@@ -439,7 +439,7 @@ const science: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What makes a randomised controlled experiment the strongest tool for establishing causation?",
         choices: [
-          { id: "a", label: "Manipulating the suspected cause while randomising rules out confounding and reverse causation" },
+          { id: "a", label: "Randomised manipulation rules out confounding and reverse causation" },
           { id: "b", label: "It produces larger effect sizes than observational designs studying the same question" },
           { id: "c", label: "It removes the need to specify a mechanism linking the intervention to the outcome" },
           { id: "d", label: "It guarantees the finding will generalise to populations outside the study sample" },
@@ -451,7 +451,7 @@ const science: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "When experiments are impossible, how is a causal case built instead?",
         choices: [
-          { id: "a", label: "Consistency across studies, dose-response, a plausible mechanism, and the cause preceding the effect" },
+          { id: "a", label: "Consistency, dose-response, mechanism, and cause preceding effect" },
           { id: "b", label: "By collecting a sufficiently large observational sample that confounding averages out" },
           { id: "c", label: "By demonstrating the correlation persists across several different statistical models" },
           { id: "d", label: "By establishing that no alternative explanation has yet been proposed in the literature" },
@@ -518,7 +518,7 @@ const science: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is publication bias not primarily a problem of fraud?",
         choices: [
-          { id: "a", label: "It aggregates from reasonable decisions by authors, reviewers and editors who find positive results more interesting" },
+          { id: "a", label: "It aggregates from reasonable decisions all along the chain" },
           { id: "b", label: "Fraud is detected by peer review, whereas publication bias operates after a paper is accepted" },
           { id: "c", label: "It arises from statistical artefacts in how effect sizes are computed rather than from conduct" },
           { id: "d", label: "It affects only industry-funded research, where commercial incentives distort reporting" },
@@ -530,7 +530,7 @@ const science: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why can meta-analysis make publication bias more dangerous rather than less?",
         choices: [
-          { id: "a", label: "Pooling biased studies estimates the biased mean more precisely, lending authority to a wrong number" },
+          { id: "a", label: "Pooling biased studies estimates the biased mean more precisely" },
           { id: "b", label: "Combining studies with different populations introduces heterogeneity that inflates the effect" },
           { id: "c", label: "Meta-analytic methods weight small studies more heavily than large ones by construction" },
           { id: "d", label: "The pooling process discards the individual study data needed to detect the bias" },
@@ -554,7 +554,7 @@ const science: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the principal limitation of funnel-plot diagnostics?",
         choices: [
-          { id: "a", label: "Asymmetry has other causes, and the tests are weakest when studies are few — exactly when bias matters most" },
+          { id: "a", label: "Asymmetry has other causes, and the tests are weakest when studies are few" },
           { id: "b", label: "They require access to the raw participant data, which is rarely available to reviewers" },
           { id: "c", label: "They can only be applied to randomised trials and not to observational studies" },
           { id: "d", label: "They detect selective analysis but are insensitive to selective publication" },
@@ -566,7 +566,7 @@ const science: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why do registered reports attack publication bias at its root?",
         choices: [
-          { id: "a", label: "Acceptance is granted on the protocol before results exist, decoupling publication from outcome" },
+          { id: "a", label: "Acceptance is granted on the protocol, before any results exist" },
           { id: "b", label: "They require authors to publish every study they begin, including abandoned ones" },
           { id: "c", label: "They mandate larger samples, so null results become statistically informative" },
           { id: "d", label: "They replace peer review with automated statistical screening of the analysis" },
@@ -633,7 +633,7 @@ const science: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does the force of replication depend on independence?",
         choices: [
-          { id: "a", label: "Different labs with their own materials rule out luck and one team's local quirks as explanations" },
+          { id: "a", label: "Different labs with their own materials rule out one team's quirks" },
           { id: "b", label: "Independent teams are more likely to use larger samples than the original investigators" },
           { id: "c", label: "Only researchers unconnected to the original study are permitted to publish replications" },
           { id: "d", label: "Independence guarantees the replication will use an identical protocol to the original" },
@@ -657,7 +657,7 @@ const science: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How does p-hacking generate findings that later fail to replicate?",
         choices: [
-          { id: "a", label: "Analysing data many ways until something crosses the threshold finds noise, which will not recur" },
+          { id: "a", label: "Analysing many ways until something crosses finds noise, not signal" },
           { id: "b", label: "It inflates sample sizes artificially, producing significance where no effect is present" },
           { id: "c", label: "It substitutes Bayesian for frequentist analysis without declaring the change of framework" },
           { id: "d", label: "It relies on measurement instruments that drift systematically across the study period" },
@@ -669,7 +669,7 @@ const science: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is the replication crisis also evidence of science working?",
         choices: [
-          { id: "a", label: "It was discovered by scientists testing their own field's findings and reporting the failures honestly" },
+          { id: "a", label: "Scientists tested their own field and reported the failures honestly" },
           { id: "b", label: "It demonstrated that the affected fields had been using invalid statistical methods throughout" },
           { id: "c", label: "It showed that peer review reliably catches unreliable findings before publication" },
           { id: "d", label: "It confirmed that non-replication is confined to a small number of fraudulent laboratories" },
@@ -784,7 +784,7 @@ const science: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is p-hacking?",
         choices: [
-          { id: "a", label: "Analysing data many ways until something passes the threshold, then reporting it as planned" },
+          { id: "a", label: "Analysing many ways until something passes, then reporting it as planned" },
           { id: "b", label: "Deliberately fabricating data values so that the analysis reaches significance" },
           { id: "c", label: "Selecting a statistical test after inspecting the distribution of the outcome variable" },
           { id: "d", label: "Combining several underpowered studies to reach a significant pooled estimate" },
@@ -796,7 +796,7 @@ const science: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What should confidence in a finding rest on beyond a significant p-value?",
         choices: [
-          { id: "a", label: "Effect size, confidence intervals, study quality and whether the result replicates" },
+          { id: "a", label: "Effect size, confidence intervals, quality, and replication" },
           { id: "b", label: "Whether the p-value falls substantially below the conventional 0.05 threshold" },
           { id: "c", label: "Whether the finding was published in a journal with a high impact factor" },
           { id: "d", label: "Whether the result is consistent with the prevailing theory in the field" },
@@ -863,7 +863,7 @@ const science: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What does Box's 'all models are wrong, but some are useful' actually assert?",
         choices: [
-          { id: "a", label: "Since every model omits detail, the right test is fitness for purpose rather than truth" },
+          { id: "a", label: "Every model omits detail, so the test is fitness for purpose" },
           { id: "b", label: "Models should be discarded once their predictions are found to deviate from observation" },
           { id: "c", label: "A model becomes correct once enough of the omitted detail has been reincorporated" },
           { id: "d", label: "Simpler models are always preferable to complex ones regardless of the application" },
@@ -887,7 +887,7 @@ const science: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does every model have a domain beyond which it fails?",
         choices: [
-          { id: "a", label: "Its simplifications are assumptions, and it becomes unreliable where they cease to hold" },
+          { id: "a", label: "Its simplifications are assumptions, unreliable where they fail" },
           { id: "b", label: "Accumulated rounding error eventually dominates any extended computation" },
           { id: "c", label: "Models are calibrated to historical data and cannot address novel conditions" },
           { id: "d", label: "The complexity of reality grows faster than any model can be extended" },
@@ -899,7 +899,7 @@ const science: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the error of 'mistaking the map for the territory'?",
         choices: [
-          { id: "a", label: "Treating a model's outputs as literal reality without regard to its assumptions and limits" },
+          { id: "a", label: "Treating a model's outputs as literal reality regardless of limits" },
           { id: "b", label: "Choosing a model whose level of abstraction is too coarse for the question asked" },
           { id: "c", label: "Comparing two models that were built for entirely different purposes" },
           { id: "d", label: "Refusing to use any model on the grounds that all are simplifications" },
@@ -990,7 +990,7 @@ const science: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What does Hamilton's rule state?",
         choices: [
-          { id: "a", label: "Altruism spreads when relatedness times benefit to the recipient exceeds cost to the actor" },
+          { id: "a", label: "Altruism spreads when relatedness times benefit exceeds cost" },
           { id: "b", label: "Altruism spreads whenever the benefit to the group exceeds the cost to the individual" },
           { id: "c", label: "Altruism persists only where reciprocation from the recipient is reliably enforced" },
           { id: "d", label: "Altruism arises when the actor's reproductive value has already declined to zero" },
@@ -1014,7 +1014,7 @@ const science: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the contemporary view of multilevel selection versus inclusive fitness?",
         choices: [
-          { id: "a", label: "They are largely intertranslatable descriptions, so the dispute is often about which illuminates more" },
+          { id: "a", label: "They are largely intertranslatable, so the dispute is about emphasis" },
           { id: "b", label: "Multilevel selection has been formally refuted and retains only historical interest" },
           { id: "c", label: "Inclusive fitness applies to invertebrates while multilevel selection applies to vertebrates" },
           { id: "d", label: "The two make sharply different empirical predictions that experiments have now resolved" },
@@ -1026,7 +1026,7 @@ const science: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "In levels-of-selection terms, what is cancer?",
         choices: [
-          { id: "a", label: "A somatic lineage defecting from multicellular cooperation and reverting to its own replication" },
+          { id: "a", label: "A somatic lineage defecting from multicellular cooperation" },
           { id: "b", label: "A failure of the immune system to eliminate cells carrying damaged genetic material" },
           { id: "c", label: "An accumulation of mutations with no analogue in evolutionary cooperation theory" },
           { id: "d", label: "A group-selected adaptation that limits organismal lifespan to benefit the population" },
@@ -1093,7 +1093,7 @@ const science: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What does 'normal science' consist of in Kuhn's account?",
         choices: [
-          { id: "a", label: "Solving the puzzles a paradigm defines and extending it, rather than questioning its framework" },
+          { id: "a", label: "Solving the puzzles the paradigm defines, not questioning it" },
           { id: "b", label: "Systematically testing the foundational assumptions on which the current paradigm rests" },
           { id: "c", label: "The routine replication of previously published results to confirm their reliability" },
           { id: "d", label: "Research conducted before a field has settled on any shared theoretical framework" },
@@ -1105,7 +1105,7 @@ const science: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does a single anomaly rarely overturn a paradigm?",
         choices: [
-          { id: "a", label: "A productive paradigm has earned trust, so an isolated puzzle is assumed to be resolvable within it" },
+          { id: "a", label: "A productive paradigm has earned trust, so puzzles look resolvable" },
           { id: "b", label: "Anomalies are usually suppressed by journals committed to the prevailing framework" },
           { id: "c", label: "Individual anomalies are almost always traced to instrumentation error on investigation" },
           { id: "d", label: "Paradigms are formulated so as to be logically compatible with any possible observation" },
@@ -1117,7 +1117,7 @@ const science: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What did Kuhn mean by claiming competing paradigms are 'incommensurable'?",
         choices: [
-          { id: "a", label: "They differ so deeply in assumptions and standards that no common measure fully translates between them" },
+          { id: "a", label: "They differ so deeply that no common measure fully translates" },
           { id: "b", label: "They make contradictory predictions that cannot both be true of the same phenomena" },
           { id: "c", label: "They are formulated in different mathematical languages requiring specialist translation" },
           { id: "d", label: "They cannot be held simultaneously by any individual scientist during a career" },
@@ -1129,7 +1129,7 @@ const science: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the principal criticism of Kuhn's stronger claims?",
         choices: [
-          { id: "a", label: "Incommensurability is overstated; paradigms can be compared, and new ones win by explaining more" },
+          { id: "a", label: "Incommensurability is overstated; new paradigms win by explaining more" },
           { id: "b", label: "Normal science does not exist, since researchers constantly test foundational assumptions" },
           { id: "c", label: "Anomalies never accumulate, because paradigms absorb them faster than they arise" },
           { id: "d", label: "Scientific revolutions are far more frequent than his historical account allowed" },
@@ -1141,7 +1141,7 @@ const science: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the transferable lesson of Kuhn's account beyond science?",
         choices: [
-          { id: "a", label: "Treat persistent anomalies your framework cannot explain as signals rather than nuisances" },
+          { id: "a", label: "Treat persistent anomalies as signals rather than nuisances" },
           { id: "b", label: "Adopt new frameworks quickly, since resistance to change is always irrational" },
           { id: "c", label: "Avoid committing to any framework, since all will eventually be overthrown" },
           { id: "d", label: "Judge competing views by how many facts each can accommodate" },
