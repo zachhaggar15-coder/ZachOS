@@ -57,7 +57,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What are the three forces of Clausewitz's primary trinity?",
         choices: [
-          { id: "a", label: "Primordial violence and hatred; chance and creativity; subordination to rational policy" },
+          { id: "a", label: "Violence and hatred; chance; subordination to policy" },
           { id: "b", label: "The people, the army and its commander, and the government" },
           { id: "c", label: "Offence, defence and the culminating point between them" },
           { id: "d", label: "Ends, ways and means as the components of strategy" },
@@ -69,7 +69,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is 'war is the continuation of policy' misleading in isolation?",
         choices: [
-          { id: "a", label: "It reduces to one magnet a definition that suspends war between three" },
+          { id: "a", label: "It collapses to one what should hang between three" },
           { id: "b", label: "It was a provisional formulation Clausewitz later retracted" },
           { id: "c", label: "It applies only to defensive wars fought by established states" },
           { id: "d", label: "It describes what war should be rather than what it is" },
@@ -81,7 +81,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does real war never reach the absolute?",
         choices: [
-          { id: "a", label: "Reason stops at limited objectives and friction makes unlimited escalation unexecutable" },
+          { id: "a", label: "Reason caps aims, and friction blocks total escalation" },
           { id: "b", label: "International law prohibits the levels of violence absolute war requires" },
           { id: "c", label: "Absolute war is logically incoherent rather than merely unattainable" },
           { id: "d", label: "Combatants lack the passion needed to sustain unlimited escalation" },
@@ -93,7 +93,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is van Creveld's non-trinitarian argument?",
         choices: [
-          { id: "a", label: "The trinity presupposes the state, but modern conflict is waged by non-state actors for non-policy ends" },
+          { id: "a", label: "The trinity assumes a state; modern war often lacks one" },
           { id: "b", label: "Chance has been eliminated from war by modern surveillance technology" },
           { id: "c", label: "Passion no longer motivates combatants in professional volunteer armies" },
           { id: "d", label: "Policy has become the only force operating in contemporary conflict" },
@@ -105,7 +105,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the strongest rebuttal to that critique?",
         choices: [
-          { id: "a", label: "It attacks the secondary trinity; passion, chance and instrumentality are all present in insurgency" },
+          { id: "a", label: "It hits the secondary trinity, present in insurgency too" },
           { id: "b", label: "Non-state conflicts are too rare to require a separate theory of war" },
           { id: "c", label: "Van Creveld misread Clausewitz's German text in translation" },
           { id: "d", label: "Insurgencies eventually form states, restoring the trinity's applicability" },
@@ -126,7 +126,7 @@ const militaryStrategy: AuthoredLesson[] = [
     estimatedMinutes: 9,
     deck: "Not all targets are equal. Somewhere in any opponent lies the hub on which their whole capacity to resist depends — the thing that, if it collapses, brings everything else down with it. Finding this 'centre of gravity' is one of the deepest problems in strategy, because getting it wrong wastes your strength on the merely visible.",
     keyTerms: [
-      { label: "Centre of gravity", value: "The source of an opponent's power on which their whole system depends." },
+      { label: "Centre of gravity", value: "The source their whole power depends on." },
       { label: "Schwerpunkt", value: "The focal point where effort is concentrated to decisive effect." },
       { label: "Critical vulnerability", value: "A weak point through which the centre of gravity can be reached." },
       { label: "Concentration", value: "Focusing force against the decisive point rather than dispersing it." },
@@ -172,7 +172,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is a 'centre of gravity' in Clausewitz's sense?",
         choices: [
-          { id: "a", label: "The source of an opponent's power on which their whole system depends" },
+          { id: "a", label: "The source their whole power depends on" },
           { id: "b", label: "The geographic centre of the battlefield" },
           { id: "c", label: "The heaviest weapon an army has" },
           { id: "d", label: "The physical balance point of a tank" },
@@ -184,7 +184,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is it dangerous to assume the centre of gravity is always the enemy's army?",
         choices: [
-          { id: "a", label: "Because it may be political, moral or economic — like an alliance or a population's support — so you can win battles yet lose the war" },
+          { id: "a", label: "It may be political, not a force to destroy" },
           { id: "b", label: "Because armies never matter in war" },
           { id: "c", label: "Because the army is always the weakest point" },
           { id: "d", label: "Because centres of gravity do not exist" },
@@ -196,7 +196,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is a 'critical vulnerability'?",
         choices: [
-          { id: "a", label: "A weak point through which the centre of gravity can be reached and attacked" },
+          { id: "a", label: "A weak point reaching the centre" },
           { id: "b", label: "The strongest part of the enemy's defences" },
           { id: "c", label: "The commander's personal flaw" },
           { id: "d", label: "A type of weapon" },
@@ -208,7 +208,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What does the centre-of-gravity concept imply about concentrating force?",
         choices: [
-          { id: "a", label: "Mass strength against the one decisive point rather than spreading it thin everywhere" },
+          { id: "a", label: "Mass at the decisive point, not everywhere" },
           { id: "b", label: "Distribute force evenly across the whole front" },
           { id: "c", label: "Always keep all forces in reserve" },
           { id: "d", label: "Attack every point simultaneously" },
@@ -220,7 +220,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is the centre of gravity called an analytical tool rather than a formula?",
         choices: [
-          { id: "a", label: "Because identifying the true centre of gravity is genuinely hard, may shift, and concentrating against the wrong one can be disastrous" },
+          { id: "a", label: "The true centre is hard to find" },
           { id: "b", label: "Because it always gives a guaranteed answer" },
           { id: "c", label: "Because it is never useful" },
           { id: "d", label: "Because enemies have no sources of strength" },
@@ -287,7 +287,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does an offensive weaken as it advances?",
         choices: [
-          { id: "a", label: "Supply lengthens, ground must be garrisoned, and forces tire — all consequences of advancing itself" },
+          { id: "a", label: "Supply lengthens and forces tire — from advancing itself" },
           { id: "b", label: "Attacking troops suffer higher casualty rates than defending ones per engagement" },
           { id: "c", label: "Commanders lose situational awareness the further they move from headquarters" },
           { id: "d", label: "Morale declines once the initial objectives have been captured" },
@@ -299,7 +299,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What defines the culminating point?",
         choices: [
-          { id: "a", label: "Where the attacker's declining strength meets the defender's rising strength and superiority is gone" },
+          { id: "a", label: "Where the attacker's edge meets the defender's rise" },
           { id: "b", label: "The furthest point reached before a formal ceasefire is negotiated" },
           { id: "c", label: "The moment supply lines are physically severed by enemy action" },
           { id: "d", label: "The point at which the original campaign objective has been achieved" },
@@ -311,7 +311,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is the culminating point so hard to recognise in the moment?",
         choices: [
-          { id: "a", label: "It arrives while the attacker is still taking ground and every visible indicator says continue" },
+          { id: "a", label: "It arrives while the attacker still seems to be winning" },
           { id: "b", label: "It can only be calculated after the counterattack has already begun" },
           { id: "c", label: "Intelligence about enemy reserves is systematically unavailable at that stage" },
           { id: "d", label: "Commanders are trained to ignore logistical constraints during an offensive" },
@@ -335,7 +335,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How does culmination support Clausewitz's claim that defence is the stronger form?",
         choices: [
-          { id: "a", label: "The defender is buying the attacker's culmination, then counterattacking once the curves cross" },
+          { id: "a", label: "The defender buys culmination, then counterattacks" },
           { id: "b", label: "Defensive positions are physically harder to destroy than attacking formations" },
           { id: "c", label: "Defenders can always choose the ground on which a battle is fought" },
           { id: "d", label: "Defence requires fewer troops, so it is cheaper to sustain indefinitely" },
@@ -402,7 +402,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "How does deterrence differ from defence?",
         choices: [
-          { id: "a", label: "Deterrence prevents an action from being attempted; defence resists an attack once it comes" },
+          { id: "a", label: "Deterrence prevents; defence resists the attack" },
           { id: "b", label: "They are identical" },
           { id: "c", label: "Deterrence only works after a war starts" },
           { id: "d", label: "Defence forces an adversary to act" },
@@ -414,7 +414,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What are the three ingredients a threat needs to deter?",
         choices: [
-          { id: "a", label: "Capability, credibility and communication" },
+          { id: "a", label: "Capability, credibility, communication" },
           { id: "b", label: "Speed, secrecy and surprise" },
           { id: "c", label: "Money, manpower and morale" },
           { id: "d", label: "Defence, attack and retreat" },
@@ -426,7 +426,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is credibility usually the hardest ingredient of deterrence?",
         choices: [
-          { id: "a", label: "Because an adversary may doubt you would really carry out a threat given the costs to yourself, and will probe that doubt" },
+          { id: "a", label: "The enemy may doubt your resolve" },
           { id: "b", label: "Because capability is impossible to obtain" },
           { id: "c", label: "Because threats cannot be communicated" },
           { id: "d", label: "Because deterrence is purely physical" },
@@ -438,7 +438,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the logic of mutually assured destruction (MAD)?",
         choices: [
-          { id: "a", label: "If any nuclear attack guarantees devastating retaliation, a first strike is suicidal, so neither side attacks" },
+          { id: "a", label: "Guaranteed retaliation makes a first strike suicidal" },
           { id: "b", label: "Whichever side strikes first automatically wins" },
           { id: "c", label: "Nuclear weapons make defence easy" },
           { id: "d", label: "Deterrence requires actually using the weapons" },
@@ -450,7 +450,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why can deterrence fail through miscalculation?",
         choices: [
-          { id: "a", label: "Because each side may misread the other's resolve or cross a line they did not realise was there" },
+          { id: "a", label: "Each may misread resolve or cross an unseen line" },
           { id: "b", label: "Because deterrence always works automatically" },
           { id: "c", label: "Because adversaries are always perfectly rational" },
           { id: "d", label: "Because communication is never needed" },
@@ -517,7 +517,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "How does manoeuvre differ from attrition?",
         choices: [
-          { id: "a", label: "Manoeuvre defeats the enemy's ability and will to fight through movement; attrition grinds them down by direct destruction" },
+          { id: "a", label: "Manoeuvre moves; attrition destroys" },
           { id: "b", label: "Manoeuvre uses more firepower than attrition" },
           { id: "c", label: "They are two words for the same approach" },
           { id: "d", label: "Attrition avoids the enemy's strength" },
@@ -529,7 +529,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What did Liddell Hart argue with his 'indirect approach'?",
         choices: [
-          { id: "a", label: "That striking where the enemy is unprepared unravels their resistance, while a direct head-on attack consolidates it" },
+          { id: "a", label: "Strike where unprepared; a head-on attack unites them" },
           { id: "b", label: "That frontal assaults on the strongest point are always best" },
           { id: "c", label: "That movement never matters" },
           { id: "d", label: "That numbers alone decide every battle" },
@@ -541,7 +541,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the idea behind Boyd's 'OODA loop'?",
         choices: [
-          { id: "a", label: "Cycling through Observe–Orient–Decide–Act faster than the enemy so they are perpetually reacting to a situation that no longer exists" },
+          { id: "a", label: "Looping OODA faster than the enemy" },
           { id: "b", label: "A formation for tanks" },
           { id: "c", label: "A way to count enemy forces" },
           { id: "d", label: "A supply-management technique" },
@@ -553,7 +553,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is the German Blitzkrieg of 1940 a classic example of manoeuvre defeating attrition?",
         choices: [
-          { id: "a", label: "Fast armoured columns dislocated and paralysed a larger French army whose command could not cope with the tempo" },
+          { id: "a", label: "Fast columns paralysed a slower army" },
           { id: "b", label: "The Germans simply had far more soldiers" },
           { id: "c", label: "The French had no army at all" },
           { id: "d", label: "It relied purely on frontal assault" },
@@ -565,7 +565,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is manoeuvre not a guaranteed 'magic key' to victory?",
         choices: [
-          { id: "a", label: "It depends on mobility, communications and a dislocatable enemy; against dug-in or dispersed foes, attrition may be unavoidable" },
+          { id: "a", label: "Dug-in foes force attrition instead" },
           { id: "b", label: "Because movement is always impossible" },
           { id: "c", label: "Because attrition always wins" },
           { id: "d", label: "Because speed never helps" },
@@ -632,7 +632,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the purpose of military intelligence?",
         choices: [
-          { id: "a", label: "To gather and analyse information that reduces a commander's uncertainty about the enemy and situation" },
+          { id: "a", label: "To cut the commander's uncertainty" },
           { id: "b", label: "To increase the confusion of one's own forces" },
           { id: "c", label: "To replace the need for any soldiers" },
           { id: "d", label: "To guarantee certainty about the future" },
@@ -644,7 +644,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is analysis, not collection, where raw data becomes actionable intelligence?",
         choices: [
-          { id: "a", label: "Because a pile of facts is useless until it is interpreted into an assessment of what the enemy can and will do" },
+          { id: "a", label: "Facts are useless until read as enemy intent" },
           { id: "b", label: "Because collecting information is impossible" },
           { id: "c", label: "Because analysis means simply storing the data" },
           { id: "d", label: "Because the enemy provides the analysis" },
@@ -656,7 +656,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why are many intelligence failures actually failures of interpretation rather than collection?",
         choices: [
-          { id: "a", label: "Because the vital signal was often present but not recognised amid the noise, or was dismissed due to preconceptions" },
+          { id: "a", label: "The signal was there but lost in noise or dismissed" },
           { id: "b", label: "Because the information was never gathered at all" },
           { id: "c", label: "Because intelligence is always perfectly clear" },
           { id: "d", label: "Because enemies never hide anything" },
@@ -668,7 +668,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What does Operation Fortitude before D-Day illustrate?",
         choices: [
-          { id: "a", label: "The power of deception — feeding false information to convince the enemy the invasion would come at the wrong place" },
+          { id: "a", label: "Deception, convincing the enemy of the wrong place" },
           { id: "b", label: "That intelligence is never used in real war" },
           { id: "c", label: "That collection is more important than analysis" },
           { id: "d", label: "That the Germans had no intelligence service" },
@@ -680,7 +680,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Why can trusting intelligence naively be worse than having none?",
         choices: [
-          { id: "a", label: "Because a thinking enemy may have planted false information, and convenient intelligence can be a deliberate trap" },
+          { id: "a", label: "A thinker may plant convenient intelligence" },
           { id: "b", label: "Because intelligence is always completely accurate" },
           { id: "c", label: "Because more information always paralyses decisions" },
           { id: "d", label: "Because enemies never try to deceive" },
@@ -747,7 +747,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is the civil-military problematique structurally unresolvable?",
         choices: [
-          { id: "a", label: "The strength that defeats external enemies is the same strength that could defeat the government" },
+          { id: "a", label: "The strength that beats enemies can beat the government" },
           { id: "b", label: "Soldiers are systematically more authoritarian than the civilians they protect" },
           { id: "c", label: "Militaries inevitably grow larger than the states funding them can control" },
           { id: "d", label: "Civilians lack the technical knowledge to evaluate any military decision" },
@@ -759,7 +759,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is Huntington's objective control?",
         choices: [
-          { id: "a", label: "Maximising professional autonomy, whose ethic includes political neutrality and subordination" },
+          { id: "a", label: "Maximising autonomy, whose ethic includes subordination" },
           { id: "b", label: "Placing civilian officials inside the command structure to monitor decisions" },
           { id: "c", label: "Limiting the military's size so it cannot threaten the government" },
           { id: "d", label: "Requiring officers to obtain civilian approval for tactical decisions" },
@@ -771,7 +771,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why did Huntington regard subjective control as self-defeating?",
         choices: [
-          { id: "a", label: "Politicising the military inserts it into politics rather than removing it, and costs competence" },
+          { id: "a", label: "Politicising it inserts it into politics and costs skill" },
           { id: "b", label: "Loyalty tests are impossible to administer to large standing armies" },
           { id: "c", label: "Political officers eventually side with the military against the government" },
           { id: "d", label: "Subjective control was never attempted by any actual regime" },
@@ -783,7 +783,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What does Feaver's agency theory identify as the real question?",
         choices: [
-          { id: "a", label: "Working versus shirking — an agent with private information slow-rolling or narrowing the menu" },
+          { id: "a", label: "Working versus shirking by an informed agent" },
           { id: "b", label: "Whether the military will stage a coup against the civilian government" },
           { id: "c", label: "How large a defence budget the civilian principal should approve" },
           { id: "d", label: "Whether officers should be permitted to vote in national elections" },
@@ -795,7 +795,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the price of coup-proofing measures?",
         choices: [
-          { id: "a", label: "The regime buys internal security with external weakness, often discovering the cost in combat" },
+          { id: "a", label: "It buys internal security with external weakness" },
           { id: "b", label: "They are prohibitively expensive to maintain over long periods" },
           { id: "c", label: "They provoke the coups they were designed to prevent" },
           { id: "d", label: "They require constitutional changes that are politically difficult" },
@@ -862,7 +862,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the crucial error a strong power makes in an asymmetric conflict?",
         choices: [
-          { id: "a", label: "Assuming the weaker actor will fight the same kind of war, where the strong side's advantages would be decisive" },
+          { id: "a", label: "Assuming the weak fight the strong's war" },
           { id: "b", label: "Believing the weaker actor has no support" },
           { id: "c", label: "Using too little firepower" },
           { id: "d", label: "Refusing to fight at all" },
@@ -874,7 +874,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What characterises guerrilla warfare?",
         choices: [
-          { id: "a", label: "Small mobile bands using hit-and-run raids and ambushes, avoiding decisive battle" },
+          { id: "a", label: "Small bands raiding, avoiding battle" },
           { id: "b", label: "Large armies meeting in open battle" },
           { id: "c", label: "Holding fixed ground at all costs" },
           { id: "d", label: "Relying entirely on air power" },
@@ -886,7 +886,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why did Mao say the guerrilla 'must move amongst the people as a fish swims in the sea'?",
         choices: [
-          { id: "a", label: "Because the population provides concealment, food, recruits and intelligence, making the guerrilla hard to find and defeat" },
+          { id: "a", label: "The people hide and supply the guerrilla" },
           { id: "b", label: "Because guerrillas prefer to fight near water" },
           { id: "c", label: "Because civilians are irrelevant to guerrilla war" },
           { id: "d", label: "Because it describes a naval tactic" },
@@ -898,7 +898,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How does the weaker side typically 'win' an asymmetric war?",
         choices: [
-          { id: "a", label: "By enduring, making the war long and costly, and outlasting the stronger side's will to continue" },
+          { id: "a", label: "By outlasting the stronger side's will to continue" },
           { id: "b", label: "By winning a single decisive conventional battle" },
           { id: "c", label: "By matching the strong side's firepower" },
           { id: "d", label: "By capturing the enemy capital quickly" },
@@ -910,7 +910,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why can overwhelming firepower be counterproductive for the stronger side?",
         choices: [
-          { id: "a", label: "Because collateral damage among civilians drives the population toward the insurgents, strengthening the enemy" },
+          { id: "a", label: "Civilian harm aids the insurgents" },
           { id: "b", label: "Because firepower is always ineffective" },
           { id: "c", label: "Because it wins the war too quickly" },
           { id: "d", label: "Because insurgents have more firepower" },
@@ -977,7 +977,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is operational art, and where does it sit among the levels of war?",
         choices: [
-          { id: "a", label: "The middle level, arranging battles into campaigns that achieve strategic objectives, linking tactics to strategy" },
+          { id: "a", label: "The level linking battles into campaigns" },
           { id: "b", label: "The lowest level, concerned only with winning individual firefights" },
           { id: "c", label: "The political level of war aims" },
           { id: "d", label: "A synonym for tactics" },
@@ -989,7 +989,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What does the Vietnam exchange ('You never defeated us on the battlefield' — 'That is irrelevant') illustrate?",
         choices: [
-          { id: "a", label: "That tactical victories can fail to translate into strategic success, so you can win battles yet lose the war" },
+          { id: "a", label: "Tactical wins may not yield strategic success" },
           { id: "b", label: "That the Americans lost every battle" },
           { id: "c", label: "That battles are the only thing that matters" },
           { id: "d", label: "That strategy is unnecessary" },
@@ -1001,7 +1001,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is a 'campaign' in operational art?",
         choices: [
-          { id: "a", label: "A connected series of operations, sequenced in time and space to achieve an operational objective serving the strategy" },
+          { id: "a", label: "Sequenced operations serving strategy" },
           { id: "b", label: "A single isolated battle" },
           { id: "c", label: "A political advertising effort" },
           { id: "d", label: "The overall aim of the entire war" },
@@ -1013,7 +1013,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How does designing a campaign require 'reasoning backwards'?",
         choices: [
-          { id: "a", label: "From the strategic goal to the conditions and operational objectives needed, then to the sequence of actions that would achieve them" },
+          { id: "a", label: "From the goal back to the actions that achieve it" },
           { id: "b", label: "By fighting battles in reverse chronological order" },
           { id: "c", label: "By ignoring the strategic goal entirely" },
           { id: "d", label: "By starting with tactics and hoping they add up" },
@@ -1025,7 +1025,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the enduring value of the concept of operational art?",
         choices: [
-          { id: "a", label: "It forces the constant question of how each action contributes to the goal, connecting means to ends" },
+          { id: "a", label: "It keeps asking how each act serves the goal" },
           { id: "b", label: "It proves battles do not matter" },
           { id: "c", label: "It removes the need for strategy" },
           { id: "d", label: "It focuses only on the immediate fight" },
@@ -1092,7 +1092,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What are rules of engagement (ROE)?",
         choices: [
-          { id: "a", label: "Directives defining when, where and how military force may be used in an operation" },
+          { id: "a", label: "Rules for when and how force may be used" },
           { id: "b", label: "The overall political aims of a war" },
           { id: "c", label: "A type of weapon system" },
           { id: "d", label: "The schedule for troop movements" },
@@ -1104,7 +1104,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What does the principle of 'proportionality' in the laws of war require?",
         choices: [
-          { id: "a", label: "That harm caused, especially to civilians, must not be excessive relative to the military advantage sought" },
+          { id: "a", label: "Harm must not be excessive to the advantage sought" },
           { id: "b", label: "That both sides must have equal numbers of soldiers" },
           { id: "c", label: "That force must always be maximised" },
           { id: "d", label: "That every target be attacked equally" },
@@ -1116,7 +1116,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why can restraint be a part of strategy, not just an ethical constraint, in counterinsurgency?",
         choices: [
-          { id: "a", label: "Because the population's support is the objective, and excessive force drives civilians toward the insurgents" },
+          { id: "a", label: "Support is the objective, and force drives it away" },
           { id: "b", label: "Because restraint always wins conventional battles" },
           { id: "c", label: "Because insurgents respect restraint and surrender" },
           { id: "d", label: "Because firepower is never available" },
@@ -1128,7 +1128,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the 'strategic corporal' phenomenon?",
         choices: [
-          { id: "a", label: "A single junior soldier's action can have strategic or geopolitical consequences in the age of global media" },
+          { id: "a", label: "A junior act can have strategic effect" },
           { id: "b", label: "Corporals now command entire armies" },
           { id: "c", label: "Strategy is decided only by generals" },
           { id: "d", label: "Junior soldiers never affect outcomes" },
@@ -1140,7 +1140,7 @@ const militaryStrategy: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What tension do restrictive rules of engagement create?",
         choices: [
-          { id: "a", label: "Protecting civilians and legitimacy can put one's own soldiers at greater risk in ambiguous situations" },
+          { id: "a", label: "Shielding civilians can put one's own troops at risk" },
           { id: "b", label: "They make soldiers completely safe with no downside" },
           { id: "c", label: "They have no effect on soldiers at all" },
           { id: "d", label: "They always guarantee victory" },
