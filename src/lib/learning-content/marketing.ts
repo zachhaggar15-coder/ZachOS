@@ -57,7 +57,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What does the double jeopardy law state?",
         choices: [
-          { id: "a", label: "Small brands have both fewer buyers and lower loyalty among those buyers" },
+          { id: "a", label: "Small brands: fewer buyers and less loyalty" },
           { id: "b", label: "Small brands have fewer buyers but compensate with higher loyalty" },
           { id: "c", label: "Large brands sacrifice loyalty as they broaden their appeal" },
           { id: "d", label: "Brands lose share twice as fast as they gain it in mature categories" },
@@ -69,7 +69,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does the law suggest loyalty is an effect rather than a cause of size?",
         choices: [
-          { id: "a", label: "Large brands are bought more per buyer because they are available and salient, not more loved" },
+          { id: "a", label: "Big brands win on availability, not love" },
           { id: "b", label: "Loyal customers are more likely to recommend a brand, driving penetration" },
           { id: "c", label: "Loyalty metrics are measured inaccurately in small brands' customer bases" },
           { id: "d", label: "Small brands deliberately restrict repeat purchase to maintain exclusivity" },
@@ -93,7 +93,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is the Dirichlet model's success deflationary for marketing?",
         choices: [
-          { id: "a", label: "It predicts loyalty metrics from share alone, so those metrics reveal nothing about the marketing" },
+          { id: "a", label: "Loyalty follows from share, revealing nothing" },
           { id: "b", label: "It shows that advertising has no measurable effect on any brand outcome" },
           { id: "c", label: "It requires data most brands are unable to collect reliably" },
           { id: "d", label: "It only fits categories where a single brand dominates the market" },
@@ -105,7 +105,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the fairest criticism of the framework?",
         choices: [
-          { id: "a", label: "It generalises less cleanly beyond mature repertoire categories to subscriptions, luxury and B2B" },
+          { id: "a", label: "It fits repertoire markets better than subscriptions" },
           { id: "b", label: "The underlying data was collected only in a single national market" },
           { id: "c", label: "The observed regularities disappear once category size is controlled for" },
           { id: "d", label: "The model has never been tested against actual purchase records" },
@@ -173,7 +173,7 @@ const marketing: AuthoredLesson[] = [
         prompt: "What is positioning, according to Ries and Trout?",
         choices: [
           { id: "a", label: "The physical location where a product is sold" },
-          { id: "b", label: "The distinct place a brand occupies in the customer's mind relative to competitors" },
+          { id: "b", label: "The place a brand holds versus rivals in the mind" },
           { id: "c", label: "The price of a product" },
           { id: "d", label: "The number of features a product has" },
         ],
@@ -184,7 +184,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why must a brand usually give up claiming other attributes to own one idea?",
         choices: [
-          { id: "a", label: "Because minds are overcrowded and simplify, so a single sharp association survives while a long list of virtues evaporates" },
+          { id: "a", label: "Crowded minds keep one sharp idea, not a list" },
           { id: "b", label: "Because claiming many attributes is illegal" },
           { id: "c", label: "Because customers prefer expensive products" },
           { id: "d", label: "Because features do not matter at all" },
@@ -208,7 +208,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is a brand's position described as 'relative'?",
         choices: [
-          { id: "a", label: "Because it only makes sense against a frame of reference — the competitors it is compared to" },
+          { id: "a", label: "It only makes sense against its competitors" },
           { id: "b", label: "Because it changes every day at random" },
           { id: "c", label: "Because it depends only on the product's cost" },
           { id: "d", label: "Because customers never compare brands" },
@@ -220,7 +220,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is changing an established brand position so dangerous?",
         choices: [
-          { id: "a", label: "Because you must overwrite an association already lodged in millions of minds, which is harder than establishing it" },
+          { id: "a", label: "You must overwrite an association already lodged" },
           { id: "b", label: "Because positions can never change at all" },
           { id: "c", label: "Because it always reduces the product's quality" },
           { id: "d", label: "Because customers forget brands instantly" },
@@ -287,7 +287,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the key difference between data and a customer insight?",
         choices: [
-          { id: "a", label: "Data is the observable 'what'; insight is the 'why' that explains it and points to action" },
+          { id: "a", label: "Data is the what; insight is the actionable why" },
           { id: "b", label: "Data is always wrong; insight is always right" },
           { id: "c", label: "They are the same thing" },
           { id: "d", label: "Insight is just a larger amount of data" },
@@ -299,7 +299,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is 'actionability' the sharpest test of a real insight?",
         choices: [
-          { id: "a", label: "Because a real insight is specific enough to imply a concrete move, unlike a bland truism true of everyone" },
+          { id: "a", label: "A real insight implies a move; a truism does not" },
           { id: "b", label: "Because insights must always be expensive to act on" },
           { id: "c", label: "Because actionable insights are always obvious" },
           { id: "d", label: "Because it means the insight can be ignored" },
@@ -311,7 +311,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is a 'latent need'?",
         choices: [
-          { id: "a", label: "A real need customers feel but cannot or will not clearly articulate" },
+          { id: "a", label: "A felt need customers cannot articulate" },
           { id: "b", label: "A need that does not exist" },
           { id: "c", label: "A need only competitors have" },
           { id: "d", label: "A need customers state loudly and clearly" },
@@ -323,7 +323,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does uncovering insight usually require observation, not just surveys?",
         choices: [
-          { id: "a", label: "Because what people do often contradicts what they say, and the gap between the two is where insight hides" },
+          { id: "a", label: "What people do contradicts what they say" },
           { id: "b", label: "Because surveys are illegal" },
           { id: "c", label: "Because customers always explain themselves perfectly" },
           { id: "d", label: "Because observation is cheaper" },
@@ -335,7 +335,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why should an insight be treated as a hypothesis rather than just admired?",
         choices: [
-          { id: "a", label: "Because it must be turned into a tested product or message, with the market as the final judge of whether it was correct" },
+          { id: "a", label: "The market, not the idea, is the final judge" },
           { id: "b", label: "Because insights are never reliable" },
           { id: "c", label: "Because admiring insights is forbidden" },
           { id: "d", label: "Because hypotheses cannot be tested" },
@@ -402,7 +402,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is brand equity?",
         choices: [
-          { id: "a", label: "The extra value a brand name adds to a product beyond its functional qualities" },
+          { id: "a", label: "Value a brand name adds beyond function" },
           { id: "b", label: "The cost of manufacturing a product" },
           { id: "c", label: "The number of products a company sells" },
           { id: "d", label: "The physical assets a company owns" },
@@ -414,7 +414,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Which is the foundational component of brand equity?",
         choices: [
-          { id: "a", label: "Brand awareness — whether customers recognise and recall the brand at all" },
+          { id: "a", label: "Brand awareness — recognition and recall" },
           { id: "b", label: "The price of the product" },
           { id: "c", label: "The size of the factory" },
           { id: "d", label: "The number of competitors" },
@@ -426,7 +426,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is logo recognition not the same as brand equity?",
         choices: [
-          { id: "a", label: "Because a brand can be instantly recognised yet carry negative associations that destroy value" },
+          { id: "a", label: "A brand can be well-known yet disliked" },
           { id: "b", label: "Because logos are unimportant" },
           { id: "c", label: "Because recognition guarantees loyalty" },
           { id: "d", label: "Because equity means only being famous" },
@@ -438,7 +438,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is brand loyalty considered the most valuable component of equity?",
         choices: [
-          { id: "a", label: "Because loyal customers are cheaper to keep, more forgiving, and often advocates who recruit others" },
+          { id: "a", label: "Loyal customers are cheaper and recruit others" },
           { id: "b", label: "Because loyal customers pay nothing" },
           { id: "c", label: "Because loyalty removes the need for a product" },
           { id: "d", label: "Because loyal customers never buy anything" },
@@ -450,7 +450,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why must brand equity be guarded carefully once built?",
         choices: [
-          { id: "a", label: "Because it is slow to build through consistency but can be quickly damaged by a failure that betrays customers' trust" },
+          { id: "a", label: "Slow to build, quickly broken by one betrayal" },
           { id: "b", label: "Because equity increases automatically forever" },
           { id: "c", label: "Because equity is easy to rebuild after damage" },
           { id: "d", label: "Because equity does not depend on perceptions" },
@@ -517,7 +517,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does last-click attribution systematically mislead?",
         choices: [
-          { id: "a", label: "It credits whoever intercepted the customer nearest purchase, regardless of whether they caused it" },
+          { id: "a", label: "It credits whoever was nearest the purchase" },
           { id: "b", label: "It undercounts conversions that occur across multiple devices" },
           { id: "c", label: "It applies equal weight to every touchpoint in the customer journey" },
           { id: "d", label: "It cannot track customers who use ad-blocking software" },
@@ -541,7 +541,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is retargeting's reported performance a selection effect?",
         choices: [
-          { id: "a", label: "It targets people who already visited and were more likely to buy, then claims their purchases" },
+          { id: "a", label: "It targets likely buyers, then claims them" },
           { id: "b", label: "It reaches customers multiple times, inflating the impression count" },
           { id: "c", label: "It is measured over shorter attribution windows than other channels" },
           { id: "d", label: "It shows ads only to customers who have already completed a purchase" },
@@ -553,7 +553,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is MMM's principal structural weakness?",
         choices: [
-          { id: "a", label: "Spend across channels is highly collinear, making contributions hard to separate statistically" },
+          { id: "a", label: "Channel spend is collinear, hard to separate" },
           { id: "b", label: "It requires individual-level tracking that privacy regulation now prohibits" },
           { id: "c", label: "It cannot incorporate offline channels into the model at all" },
           { id: "d", label: "It produces results too granular to inform channel-level budgeting" },
@@ -565,7 +565,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does a broken method survive its own well-known diagnosis?",
         choices: [
-          { id: "a", label: "Nobody in the chain is rewarded for the honest number, and testing means withholding spend" },
+          { id: "a", label: "Nobody is rewarded for the honest number" },
           { id: "b", label: "Incrementality cannot be measured with any available technique" },
           { id: "c", label: "Platforms legally prohibit advertisers from running holdout experiments" },
           { id: "d", label: "Marketers are generally unaware that attribution differs from causation" },
@@ -632,7 +632,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the core finding of pricing psychology?",
         choices: [
-          { id: "a", label: "People judge prices relative to reference points and are heavily swayed by how a price is framed" },
+          { id: "a", label: "People judge prices against reference points" },
           { id: "b", label: "People always calculate value with perfect rationality" },
           { id: "c", label: "The objective number is all that matters" },
           { id: "d", label: "Lower prices always increase sales" },
@@ -644,7 +644,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How does the 'was £100, now £60' tactic work?",
         choices: [
-          { id: "a", label: "The struck-through price acts as an anchor, framing £60 as a large saving even if the item was rarely worth £100" },
+          { id: "a", label: "The old price anchors, making £60 feel a bargain" },
           { id: "b", label: "It proves the item is high quality" },
           { id: "c", label: "It has no effect on perception" },
           { id: "d", label: "It always reflects the true original price" },
@@ -656,7 +656,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Why does charm pricing (£9.99 rather than £10) work?",
         choices: [
-          { id: "a", label: "Because we read left to right and weight the first digit, so £9.99 registers as meaningfully cheaper" },
+          { id: "a", label: "We weight the first digit, so £9.99 feels cheaper" },
           { id: "b", label: "Because £9.99 is genuinely much cheaper than £10" },
           { id: "c", label: "Because customers dislike round numbers for no reason" },
           { id: "d", label: "Because it is required by law" },
@@ -668,7 +668,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the point of a 'decoy' option in pricing?",
         choices: [
-          { id: "a", label: "It is not meant to sell, but to make another option look better by comparison" },
+          { id: "a", label: "It exists to make another option look better" },
           { id: "b", label: "It is the option most customers should buy" },
           { id: "c", label: "It is always the cheapest choice" },
           { id: "d", label: "It replaces the need for other options" },
@@ -680,7 +680,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why can a price that is too low sometimes reduce sales?",
         choices: [
-          { id: "a", label: "Because price signals quality, so a very low price can suggest the product is inferior or suspect" },
+          { id: "a", label: "A very low price can signal poor quality" },
           { id: "b", label: "Because low prices are illegal" },
           { id: "c", label: "Because customers always want to pay more" },
           { id: "d", label: "Because low prices never affect perception" },
@@ -747,7 +747,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the central claim of the Jobs to Be Done theory?",
         choices: [
-          { id: "a", label: "People 'hire' products to make progress — to get a 'job' done in their situation" },
+          { id: "a", label: "People hire products to get a job done" },
           { id: "b", label: "People buy products mainly for their features" },
           { id: "c", label: "People choose products based only on their demographics" },
           { id: "d", label: "People buy whatever is cheapest" },
@@ -759,7 +759,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What did the milkshake study reveal about why lone morning commuters bought milkshakes?",
         choices: [
-          { id: "a", label: "The job was to stay occupied and full during a long, one-handed drive — not merely to enjoy a treat" },
+          { id: "a", label: "To stay occupied on a long one-handed drive" },
           { id: "b", label: "They were chosen purely for flavour" },
           { id: "c", label: "Demographics fully explained the purchases" },
           { id: "d", label: "They competed only with other milkshakes" },
@@ -771,7 +771,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What are the three dimensions most jobs have?",
         choices: [
-          { id: "a", label: "Functional, emotional and social" },
+          { id: "a", label: "Functional, emotional, social" },
           { id: "b", label: "Cheap, fast and reliable" },
           { id: "c", label: "Awareness, interest and action" },
           { id: "d", label: "Product, price and place" },
@@ -783,7 +783,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How does JTBD redraw the competitive map?",
         choices: [
-          { id: "a", label: "Your real competitors are anything that could do the same job, including doing nothing or a different kind of solution" },
+          { id: "a", label: "Anything doing the same job, including doing nothing" },
           { id: "b", label: "Your only competitors are products in your exact category" },
           { id: "c", label: "There are no competitors once you know the job" },
           { id: "d", label: "Competition depends only on price" },
@@ -795,7 +795,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why can two products doing the same functional task satisfy very different jobs?",
         choices: [
-          { id: "a", label: "Because the emotional and social dimensions differ — a fast meal is fuel, fine dining is celebration or status" },
+          { id: "a", label: "A fast meal is fuel; fine dining is status" },
           { id: "b", label: "Because function is the only thing that ever matters" },
           { id: "c", label: "Because they always have identical customers" },
           { id: "d", label: "Because jobs never vary" },
@@ -862,7 +862,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is retrieval a more fundamental contest than persuasion?",
         choices: [
-          { id: "a", label: "A brand not retrieved is never evaluated, so its argument is never heard" },
+          { id: "a", label: "Unretrieved, a brand is never evaluated" },
           { id: "b", label: "Buyers distrust advertising claims and discount them heavily" },
           { id: "c", label: "Persuasive messages are more expensive to produce than memorable ones" },
           { id: "d", label: "Retrieval determines price sensitivity, which decides most purchases" },
@@ -874,7 +874,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What are category entry points?",
         choices: [
-          { id: "a", label: "The cues — occasion, need, mood, place — that trigger retrieval of a brand from memory" },
+          { id: "a", label: "The cues that trigger recall of a brand" },
           { id: "b", label: "The demographic segments through which a brand first acquires buyers" },
           { id: "c", label: "The retail channels in which a category is initially distributed" },
           { id: "d", label: "The price thresholds at which buyers begin considering a category" },
@@ -886,7 +886,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why can relentless single-message consistency backfire?",
         choices: [
-          { id: "a", label: "It builds one strong link while leaving the brand unretrievable at every other entry point" },
+          { id: "a", label: "One strong link leaves other cues dead" },
           { id: "b", label: "Repetition causes buyers to become fatigued and discount the message" },
           { id: "c", label: "Single messages cannot be adapted across different media channels" },
           { id: "d", label: "Consistency prevents a brand from responding to competitor claims" },
@@ -898,7 +898,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What distinguishes distinctiveness from differentiation?",
         choices: [
-          { id: "a", label: "Distinctiveness is instant recognisability; differentiation is a claim to be meaningfully better" },
+          { id: "a", label: "Distinctiveness is recognisability; differentiation, a claim" },
           { id: "b", label: "Distinctiveness applies to packaging while differentiation applies to advertising" },
           { id: "c", label: "Distinctiveness is measured by recall and differentiation by purchase intent" },
           { id: "d", label: "Distinctiveness is achieved through price and differentiation through quality" },
@@ -910,7 +910,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the self-fulfilling worry about the framework?",
         choices: [
-          { id: "a", label: "If everyone stops attempting differentiation, buyers perceiving no differences becomes true by construction" },
+          { id: "a", label: "Stop differentiating and sameness becomes real" },
           { id: "b", label: "Brands adopting the framework will converge on identical distinctive assets" },
           { id: "c", label: "Measuring mental availability changes the memory structures being measured" },
           { id: "d", label: "Buyers who learn about the framework will resist retrieval-based marketing" },
@@ -932,7 +932,7 @@ const marketing: AuthoredLesson[] = [
     deck: "Businesses obsess over winning new customers, but the quiet secret of durable success is keeping the ones they have. Retention — turning a first purchase into an ongoing relationship — is usually far cheaper than acquisition and far more profitable, which is why the smartest companies treat keeping customers as seriously as getting them.",
     keyTerms: [
       { label: "Retention", value: "Keeping existing customers so they continue to buy over time." },
-      { label: "Churn", value: "The rate at which customers stop buying or cancel." },
+      { label: "Churn", value: "The rate customers stop buying." },
       { label: "Customer lifetime value", value: "The total worth of a customer over the whole relationship." },
       { label: "Acquisition vs retention", value: "The cost of winning a new customer versus keeping an existing one." },
     ],
@@ -977,7 +977,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is customer retention?",
         choices: [
-          { id: "a", label: "A business's ability to keep its existing customers buying over time" },
+          { id: "a", label: "Keeping existing customers buying over time" },
           { id: "b", label: "The process of acquiring new customers" },
           { id: "c", label: "The total number of products in stock" },
           { id: "d", label: "The price charged to first-time buyers" },
@@ -989,7 +989,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is 'churn'?",
         choices: [
-          { id: "a", label: "The rate at which customers stop buying or cancel" },
+          { id: "a", label: "The rate customers stop buying" },
           { id: "b", label: "The rate at which new products launch" },
           { id: "c", label: "The profit margin on a sale" },
           { id: "d", label: "The speed of delivery" },
@@ -1001,7 +1001,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is retention usually more profitable than acquisition?",
         choices: [
-          { id: "a", label: "Keeping a happy existing customer costs far less than winning a stranger, and they buy more, forgive more and recommend you" },
+          { id: "a", label: "Keeping a customer costs less and earns more" },
           { id: "b", label: "Because existing customers pay higher prices by law" },
           { id: "c", label: "Because acquisition is always free" },
           { id: "d", label: "Because retained customers never buy again" },
@@ -1013,7 +1013,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why can no loyalty scheme retain fundamentally dissatisfied customers?",
         choices: [
-          { id: "a", label: "Because the foundation of retention is a product genuinely worth coming back to; delivering value comes first" },
+          { id: "a", label: "Retention rests on a product worth returning to" },
           { id: "b", label: "Because loyalty schemes are illegal" },
           { id: "c", label: "Because dissatisfied customers always stay anyway" },
           { id: "d", label: "Because schemes work only on new customers" },
@@ -1025,7 +1025,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What distinguishes healthy retention from the 'retention trap'?",
         choices: [
-          { id: "a", label: "Retention through value keeps customers who want to stay; retention through captivity traps them until an easier alternative appears" },
+          { id: "a", label: "Value keeps willing customers; captivity traps them" },
           { id: "b", label: "There is no difference between them" },
           { id: "c", label: "Captivity always produces loyal advocates" },
           { id: "d", label: "Value-based retention is always more expensive to the customer" },
@@ -1092,7 +1092,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "How does category design differ from ordinary competition?",
         choices: [
-          { id: "a", label: "It creates a new category and frame rather than competing to be the best answer to a known question" },
+          { id: "a", label: "It creates a new category rather than competing" },
           { id: "b", label: "It only lowers prices within an existing category" },
           { id: "c", label: "It copies the market leader exactly" },
           { id: "d", label: "It avoids marketing altogether" },
@@ -1104,7 +1104,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the difference between competing on 'better' and on 'different'?",
         choices: [
-          { id: "a", label: "'Better' accepts the existing frame and fights within it; 'different' changes the frame so old comparisons no longer apply" },
+          { id: "a", label: "'Better' fights the old frame; 'different' changes it" },
           { id: "b", label: "They mean exactly the same thing" },
           { id: "c", label: "'Different' means having a lower price" },
           { id: "d", label: "'Better' means creating a new category" },
@@ -1116,7 +1116,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is a 'category king'?",
         choices: [
-          { id: "a", label: "The company that defines and dominates a new category, capturing a disproportionate share of its value" },
+          { id: "a", label: "The firm that defines and dominates a new category" },
           { id: "b", label: "The cheapest company in a market" },
           { id: "c", label: "The oldest company in an industry" },
           { id: "d", label: "A company that never advertises" },
@@ -1128,7 +1128,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does category design centre on 'framing the problem'?",
         choices: [
-          { id: "a", label: "Because it must change how people think, helping them see a need they had not named so the solution feels obvious" },
+          { id: "a", label: "It must reveal a need people had not named" },
           { id: "b", label: "Because framing has nothing to do with customers" },
           { id: "c", label: "Because it only involves setting a price" },
           { id: "d", label: "Because customers already understand every new category" },
@@ -1140,7 +1140,7 @@ const marketing: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What distinguishes true category design from mere marketing spin?",
         choices: [
-          { id: "a", label: "A genuinely new, useful frame for a real problem backed by a solution that delivers — not a buzzword on an old product" },
+          { id: "a", label: "A genuinely new, useful frame with a real solution" },
           { id: "b", label: "Using the most impressive-sounding jargon" },
           { id: "c", label: "Renaming an existing category" },
           { id: "d", label: "Being first, which always guarantees success" },
