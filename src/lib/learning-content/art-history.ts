@@ -185,7 +185,7 @@ const artHistory: AuthoredLesson[] = [
         prompt: "What is an 'attribute' in iconography?",
         choices: [
           { id: "a", label: "A distinctive quality of the paint's surface texture" },
-          { id: "b", label: "An object identifying a figure, as a wheel does St Catherine" },
+          { id: "b", label: "An object identifying a figure, like a saint's wheel" },
           { id: "c", label: "The artist's own signature on the work" },
           { id: "d", label: "The market price attached to the artwork" },
         ],
@@ -530,7 +530,7 @@ const artHistory: AuthoredLesson[] = [
         prompt: "What is humanism, the intellectual engine of the Renaissance?",
         choices: [
           { id: "a", label: "A wholesale rejection of all learning" },
-          { id: "b", label: "Prizing human reason and worldly life, drawn from the classics" },
+          { id: "b", label: "Prizing human reason and worldly life" },
           { id: "c", label: "The revived worship of the ancient gods" },
           { id: "d", label: "A style devoted only to landscape painting" },
         ],
@@ -553,7 +553,7 @@ const artHistory: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is Vasari's Lives of the Artists significant?",
         choices: [
-          { id: "a", label: "It cast artists as heroes, inventing art history" },
+          { id: "a", label: "It cast artists as heroes" },
           { id: "b", label: "It served as a manual for mixing paint" },
           { id: "c", label: "It insisted artists should stay anonymous" },
           { id: "d", label: "It set itself against the classical revival" },
@@ -565,7 +565,7 @@ const artHistory: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is a fair criticism of the Renaissance 'rebirth' narrative?",
         choices: [
-          { id: "a", label: "It dismissed the Middle Ages and flattered itself" },
+          { id: "a", label: "It flattered itself over the Middle Ages" },
           { id: "b", label: "That it produced no art of any importance" },
           { id: "c", label: "That it overlooked ancient Greece and Rome" },
           { id: "d", label: "That it attracted no wealthy patrons at all" },
@@ -669,7 +669,7 @@ const artHistory: AuthoredLesson[] = [
         prompt: "What did the critic Clement Greenberg argue each art should do?",
         choices: [
           { id: "a", label: "Go back to imitating the natural world" },
-          { id: "b", label: "Purify to what is unique to its medium — flatness" },
+          { id: "b", label: "Purify to the medium's essence — flatness" },
           { id: "c", label: "Fuse all the separate media into one" },
           { id: "d", label: "Abandon the use of colour entirely" },
         ],
@@ -680,7 +680,7 @@ const artHistory: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What ethos, captured by Ezra Pound's 'make it new', united the modernist movements?",
         choices: [
-          { id: "a", label: "Prizing originality and rupture with tradition" },
+          { id: "a", label: "Prizing originality and rupture" },
           { id: "b", label: "A drive to preserve every past style unchanged" },
           { id: "c", label: "A firm rejection of all experiment" },
           { id: "d", label: "A focus solely on commercial gain" },
@@ -759,7 +759,7 @@ const artHistory: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is provenance central to detecting forgeries?",
         choices: [
-          { id: "a", label: "A convincing ownership chain lends authenticity, so forgers fake it" },
+          { id: "a", label: "A convincing chain lends authenticity, so forgers fake it" },
           { id: "b", label: "Because forgeries always betray themselves in the image" },
           { id: "c", label: "Because provenance is irrelevant to authenticity" },
           { id: "d", label: "Because forgers never trouble with ownership records" },
@@ -784,7 +784,7 @@ const artHistory: AuthoredLesson[] = [
         prompt: "How does provenance underpin restitution debates over objects like the Benin Bronzes?",
         choices: [
           { id: "a", label: "It bears no relevance to where objects belong" },
-          { id: "b", label: "How it left home shows if it was bought, given or seized" },
+          { id: "b", label: "How it left home shows how it was taken" },
           { id: "c", label: "It shows museums always acquired objects fairly" },
           { id: "d", label: "It applies to paintings but never to artefacts" },
         ],
@@ -875,7 +875,7 @@ const artHistory: AuthoredLesson[] = [
         prompt: "What are a medium's 'affordances'?",
         choices: [
           { id: "a", label: "How much the raw materials happen to cost" },
-          { id: "b", label: "What the medium makes easy, and what it resists" },
+          { id: "b", label: "What the medium eases, and what it resists" },
           { id: "c", label: "The fixed size an artwork is obliged to be" },
           { id: "d", label: "The number of colours a work may use" },
         ],
@@ -886,7 +886,7 @@ const artHistory: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does oil paint allow effects that fresco cannot?",
         choices: [
-          { id: "a", label: "Oil dries slowly, allowing blending and soft transitions" },
+          { id: "a", label: "Oil dries slowly, allowing soft blending" },
           { id: "b", label: "Because oil sets on wet plaster within hours" },
           { id: "c", label: "Because oil paint cannot hold colour well" },
           { id: "d", label: "Because oil can only be worked on walls" },
@@ -977,7 +977,7 @@ const artHistory: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Why is a museum described as 'never neutral'?",
         choices: [
-          { id: "a", label: "Its choices of what to show assert what matters" },
+          { id: "a", label: "Its choices of what to show assert value" },
           { id: "b", label: "Because museums show everything ever made" },
           { id: "c", label: "Because visitors pay no heed to labels" },
           { id: "d", label: "Because art carries no meaning at all" },
@@ -990,7 +990,7 @@ const artHistory: AuthoredLesson[] = [
         prompt: "How do museums help create a self-fulfilling 'canon'?",
         choices: [
           { id: "a", label: "By showing a random selection each day" },
-          { id: "b", label: "An artist shown is valued; one omitted vanishes" },
+          { id: "b", label: "An artist shown is valued; one omitted fades" },
           { id: "c", label: "By declining to collect any art at all" },
           { id: "d", label: "By treating every artist exactly alike" },
         ],
@@ -1014,7 +1014,7 @@ const artHistory: AuthoredLesson[] = [
         prompt: "How can 'framing' change the meaning of the same object?",
         choices: [
           { id: "a", label: "It cannot: an object holds one fixed meaning" },
-          { id: "b", label: "Labels can make it a masterpiece, a specimen, or loot" },
+          { id: "b", label: "Labels frame it as masterpiece or loot" },
           { id: "c", label: "Only the sheer size of the object matters" },
           { id: "d", label: "Framing means nothing but the picture frame" },
         ],
@@ -1025,7 +1025,7 @@ const artHistory: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is at the heart of repatriation debates over museum objects?",
         choices: [
-          { id: "a", label: "Whether museums built on plunder should return heritage" },
+          { id: "a", label: "Whether museums built on plunder should give back" },
           { id: "b", label: "Whether museums ought to raise their entry fees" },
           { id: "c", label: "Whether works should be cleaned more often" },
           { id: "d", label: "Whether wall labels should be made larger" },
