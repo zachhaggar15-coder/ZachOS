@@ -57,7 +57,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What problem was The New Rhetoric written to solve?",
         choices: [
-          { id: "a", label: "If value judgements are not truth-apt, value disputes are settled by force rather than reason" },
+          { id: "a", label: "If values aren't truth-apt, force settles disputes" },
           { id: "b", label: "Classical rhetoric had been forgotten and needed restoring to the curriculum" },
           { id: "c", label: "Formal logic contained a paradox that undermined deductive proof" },
           { id: "d", label: "Audiences had become too fragmented for mass persuasion to work" },
@@ -69,7 +69,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does making the audience the standard create an immediate problem?",
         choices: [
-          { id: "a", label: "If adherence is the test, a demagogue with a stadium has out-argued a philosopher" },
+          { id: "a", label: "If adherence is the test, the demagogue wins" },
           { id: "b", label: "Audiences cannot reliably be surveyed for their actual reactions" },
           { id: "c", label: "Different audiences would rank the same argument identically" },
           { id: "d", label: "It makes argumentation indistinguishable from formal demonstration" },
@@ -81,7 +81,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "How does the universal audience distinguish convincing from persuading?",
         choices: [
-          { id: "a", label: "Addressing no one in particular forces you to drop every appeal that works only on someone" },
+          { id: "a", label: "Addressing no one drops every partial appeal" },
           { id: "b", label: "It surveys a representative sample of the population's actual views" },
           { id: "c", label: "It requires arguments to be stated in formally valid syllogisms" },
           { id: "d", label: "It ranks audiences by their competence to judge the question" },
@@ -93,7 +93,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How does Perelman answer the charge that arguers just construct an audience that agrees with them?",
         choices: [
-          { id: "a", label: "He concedes it is situated but notes the construction must be stated, and often fails once it is" },
+          { id: "a", label: "It is situated, but stating it exposes its failures" },
           { id: "b", label: "He argues the universal audience is derived from objective features of reason" },
           { id: "c", label: "He denies that arguers have any influence over the construction" },
           { id: "d", label: "He restricts the test to audiences with formal philosophical training" },
@@ -105,7 +105,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is dissociation double-edged?",
         choices: [
-          { id: "a", label: "The appearance-reality split drives philosophy and also rescues doctrines from their record" },
+          { id: "a", label: "The appearance-reality split both drives and rescues" },
           { id: "b", label: "It clarifies concepts for experts while confusing lay audiences" },
           { id: "c", label: "It works only for moral concepts and fails for empirical ones" },
           { id: "d", label: "It resolves contradictions but always at the cost of precision" },
@@ -172,7 +172,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What does Kunda's account say the bias operates on?",
         choices: [
-          { id: "a", label: "The inputs — which evidence is scrutinised and which memories are retrieved — rather than the logic" },
+          { id: "a", label: "The inputs — what evidence is weighed — not the logic" },
           { id: "b", label: "The logical steps, which are systematically distorted toward the wanted conclusion" },
           { id: "c", label: "The willingness to state conclusions publicly rather than to hold them" },
           { id: "d", label: "The emotional response to evidence, before any reasoning occurs" },
@@ -184,7 +184,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What did Kahan's skin cream versus gun control experiment show?",
         choices: [
-          { id: "a", label: "The highly numerate became more polarised, with the group gap widest among the best at maths" },
+          { id: "a", label: "The most numerate became the most polarised" },
           { id: "b", label: "Numeracy protected against political bias when the data were identical" },
           { id: "c", label: "Participants performed equally badly on both versions of the problem" },
           { id: "d", label: "Political framing made everyone equally unable to compute the answer" },
@@ -196,7 +196,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does Kahan argue identity-protective cognition is individually rational?",
         choices: [
-          { id: "a", label: "Being wrong costs nothing personally, while dissenting from your community costs standing" },
+          { id: "a", label: "Being wrong is cheap; dissenting costs standing" },
           { id: "b", label: "Group beliefs are usually more accurate than individual judgements" },
           { id: "c", label: "Identity provides a reliable heuristic when evidence is ambiguous" },
           { id: "d", label: "Rational agents should defer to their community on technical questions" },
@@ -208,7 +208,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What does the argumentative theory explain that a truth-seeking model cannot?",
         choices: [
-          { id: "a", label: "People are bad at finding flaws in their own arguments and good at finding them in others'" },
+          { id: "a", label: "We miss our own flaws but catch others'" },
           { id: "b", label: "People reason more accurately when the stakes are higher" },
           { id: "c", label: "Confirmation bias disappears in expert populations" },
           { id: "d", label: "Groups consistently reason worse than their individual members" },
@@ -220,7 +220,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does knowing about motivated reasoning fail to protect you from it?",
         choices: [
-          { id: "a", label: "From inside there is nothing to detect — the reasoning felt like reasoning" },
+          { id: "a", label: "Nothing to detect: it felt like reasoning" },
           { id: "b", label: "The knowledge is too abstract to recall in the moment of judgement" },
           { id: "c", label: "People forget the concept unless it is repeatedly reinforced" },
           { id: "d", label: "Awareness reduces the bias but only for low-stakes questions" },
@@ -299,7 +299,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does arguing at quality fail when the real disagreement is at definition?",
         choices: [
-          { id: "a", label: "Arguments at a later question presuppose an answer to an earlier one that is not settled" },
+          { id: "a", label: "Later questions assume an earlier one unsettled" },
           { id: "b", label: "Questions of quality are inherently more subjective than questions of definition" },
           { id: "c", label: "Definitional disputes cannot be resolved by evidence of any kind" },
           { id: "d", label: "Quality arguments require a shared moral framework that rarely exists" },
@@ -311,7 +311,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What signals that you are arguing below your opponent's stasis?",
         choices: [
-          { id: "a", label: "They keep conceding your evidence without changing position" },
+          { id: "a", label: "They concede evidence but do not move" },
           { id: "b", label: "They respond with personal attacks rather than substance" },
           { id: "c", label: "They demand increasingly specific forms of proof" },
           { id: "d", label: "They restate their original position in different words" },
@@ -323,7 +323,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What does a party's choice of stasis reveal?",
         choices: [
-          { id: "a", label: "Each retreat concedes the ground behind it, so their position is readable from where they stand" },
+          { id: "a", label: "Each retreat concedes the ground behind it" },
           { id: "b", label: "Which rhetorical training their advocate received" },
           { id: "c", label: "Whether they are arguing in good faith or bad faith" },
           { id: "d", label: "How much evidence they have gathered in preparation" },
@@ -335,7 +335,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is procedure not merely a technicality?",
         choices: [
-          { id: "a", label: "Different forums apply different standards and reach different answers on identical facts" },
+          { id: "a", label: "Different forums reach different answers on the same facts" },
           { id: "b", label: "Procedural rules are harder to change than substantive ones" },
           { id: "c", label: "Courts prioritise procedural questions over substantive ones" },
           { id: "d", label: "Procedural objections are the only ones that cannot be rebutted" },
@@ -402,7 +402,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is kairos?",
         choices: [
-          { id: "a", label: "The opportune moment and fitting occasion for persuasion — saying the right thing at the right time" },
+          { id: "a", label: "The right thing said at the right moment" },
           { id: "b", label: "Persuasion through emotion" },
           { id: "c", label: "The credibility of the speaker" },
           { id: "d", label: "The logical structure of an argument" },
@@ -414,7 +414,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "How did the Greeks distinguish 'kairos' from 'chronos'?",
         choices: [
-          { id: "a", label: "Chronos is sequential clock time; kairos is the right or opportune moment, a qualitative sense of timing" },
+          { id: "a", label: "Chronos is clock time; kairos is the opportune moment" },
           { id: "b", label: "They mean exactly the same thing" },
           { id: "c", label: "Kairos is clock time; chronos is the opportune moment" },
           { id: "d", label: "Both refer only to the future" },
@@ -426,7 +426,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why can the same argument succeed at one moment and fail at another?",
         choices: [
-          { id: "a", label: "Because persuasion depends on the situation — an argument may fall flat when things seem fine but become compelling after a crisis makes people receptive" },
+          { id: "a", label: "An argument that falls flat can compel after a crisis" },
           { id: "b", label: "Because arguments change their content over time" },
           { id: "c", label: "Because timing never affects persuasion" },
           { id: "d", label: "Because audiences are always identical" },
@@ -438,7 +438,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does kairos have a dynamic, opportunistic quality?",
         choices: [
-          { id: "a", label: "Because events open windows in which certain arguments become powerful, and these openings can be seized or missed as they often close" },
+          { id: "a", label: "Windows open, to seize or miss" },
           { id: "b", label: "Because opportune moments never arise" },
           { id: "c", label: "Because timing is fixed and unchanging" },
           { id: "d", label: "Because content never matters" },
@@ -450,7 +450,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What does the 'fittingness' aspect of kairos require?",
         choices: [
-          { id: "a", label: "Matching the whole character of the message — tone, style, evidence, appeals — to the specific occasion and audience" },
+          { id: "a", label: "Matching tone, style and appeals to the occasion" },
           { id: "b", label: "Using the identical approach in every setting" },
           { id: "c", label: "Ignoring the audience entirely" },
           { id: "d", label: "Only ever using logical arguments" },
@@ -471,7 +471,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
     estimatedMinutes: 8,
     deck: "You can describe the same operation as having a '90% survival rate' or a '10% death rate' — identical facts, opposite feelings. Framing is the power to shape how something is understood by choosing what to emphasise and what context to place it in. It is one of the most powerful and least visible tools of persuasion.",
     keyTerms: [
-      { label: "Framing", value: "Shaping interpretation by selecting which aspects to emphasise and what context to invoke." },
+      { label: "Framing", value: "Selecting what to emphasise to shape reading." },
       { label: "Selection and salience", value: "Choosing what to include and make prominent, and what to omit." },
       { label: "Gain vs loss framing", value: "Presenting the same outcome in terms of what is gained or what is lost." },
       { label: "Reframing", value: "Changing how an issue is understood by shifting its frame." },
@@ -517,7 +517,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is framing?",
         choices: [
-          { id: "a", label: "Shaping interpretation by selecting which aspects to emphasise and what context to invoke" },
+          { id: "a", label: "Selecting what to emphasise to shape reading" },
           { id: "b", label: "Stating outright falsehoods" },
           { id: "c", label: "Using only emotional appeals" },
           { id: "d", label: "Timing a message correctly" },
@@ -529,7 +529,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why do a '90% survival rate' and a '10% mortality rate' produce different responses?",
         choices: [
-          { id: "a", label: "The facts are identical but the frame differs, and the frame changes the response" },
+          { id: "a", label: "Same facts, different frame, different response" },
           { id: "b", label: "The survival rate describes a different treatment" },
           { id: "c", label: "One of the figures is false" },
           { id: "d", label: "Framing never affects judgement" },
@@ -541,7 +541,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is much political debate really a 'battle over framing'?",
         choices: [
-          { id: "a", label: "Because whoever's frame dominates how an issue is understood has largely won the argument before specifics are debated" },
+          { id: "a", label: "Winning the frame wins the argument in advance" },
           { id: "b", label: "Because framing is irrelevant to politics" },
           { id: "c", label: "Because all frames lead to the same conclusion" },
           { id: "d", label: "Because facts alone decide every debate" },
@@ -553,7 +553,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Why does 'loss framing' tend to provoke a stronger reaction than 'gain framing'?",
         choices: [
-          { id: "a", label: "Because people are loss-averse, feeling losses more intensely than equivalent gains" },
+          { id: "a", label: "Loss aversion: losses hurt more than gains" },
           { id: "b", label: "Because gains are always larger than losses" },
           { id: "c", label: "Because losses are always false" },
           { id: "d", label: "Because framing has no effect on decisions" },
@@ -565,7 +565,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the practical defence against manipulative framing?",
         choices: [
-          { id: "a", label: "Becoming aware of the frame and deliberately reframing — considering the same facts under a different frame" },
+          { id: "a", label: "Spot the frame and deliberately reframe" },
           { id: "b", label: "Ignoring all information" },
           { id: "c", label: "Accepting the first frame you encounter" },
           { id: "d", label: "Assuming framing never occurs" },
@@ -586,7 +586,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
     estimatedMinutes: 9,
     deck: "Most everyday arguments leave something out — an assumption so obvious, or so convenient, that it is never spoken but simply assumed. Aristotle called this the enthymeme, and it is the real engine of persuasion: an argument the audience helps complete, which is exactly why it works, and exactly where hidden assumptions hide.",
     keyTerms: [
-      { label: "Enthymeme", value: "An argument with an unstated premise that the audience supplies." },
+      { label: "Enthymeme", value: "An argument whose missing premise the audience supplies." },
       { label: "The rhetorical syllogism", value: "Aristotle's term for the enthymeme as reasoning suited to persuasion." },
       { label: "Unstated premise", value: "The assumption left implicit because the audience already shares or will supply it." },
       { label: "Audience participation", value: "The way the audience completes the argument, deepening its persuasive grip." },
@@ -632,7 +632,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is an enthymeme?",
         choices: [
-          { id: "a", label: "An argument with an unstated premise that the audience supplies" },
+          { id: "a", label: "An argument whose missing premise the audience supplies" },
           { id: "b", label: "An argument in which every premise is stated explicitly" },
           { id: "c", label: "A purely emotional appeal" },
           { id: "d", label: "A logical fallacy" },
@@ -644,7 +644,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does audience participation make the enthymeme so persuasive?",
         choices: [
-          { id: "a", label: "When the audience supplies the missing premise themselves, the conclusion feels more like their own realisation than an external claim" },
+          { id: "a", label: "A supplied premise feels like one's own" },
           { id: "b", label: "Because it states every premise fully" },
           { id: "c", label: "Because it removes the need for any premises" },
           { id: "d", label: "Because audiences ignore incomplete arguments" },
@@ -656,7 +656,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is leaving a premise unstated powerful beyond mere brevity?",
         choices: [
-          { id: "a", label: "Because an unstated premise escapes scrutiny, doing its work invisibly while a stated one could be challenged" },
+          { id: "a", label: "An unstated premise works unseen" },
           { id: "b", label: "Because unstated premises are always true" },
           { id: "c", label: "Because it makes arguments longer" },
           { id: "d", label: "Because audiences never notice arguments" },
@@ -668,7 +668,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does the same enthymeme persuade one audience but fall flat with another?",
         choices: [
-          { id: "a", label: "Because it works only if the audience actually holds the unstated premise it relies on them to supply" },
+          { id: "a", label: "It works only if the audience holds the premise" },
           { id: "b", label: "Because arguments change their words for each audience" },
           { id: "c", label: "Because all audiences share the same beliefs" },
           { id: "d", label: "Because enthymemes never depend on the audience" },
@@ -680,7 +680,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What critical-thinking move does the enthymeme teach?",
         choices: [
-          { id: "a", label: "Uncovering the unstated premise by asking what would have to be true, but is not stated, for the argument to work" },
+          { id: "a", label: "Ask what unstated thing must be true" },
           { id: "b", label: "Accepting every argument as complete" },
           { id: "c", label: "Ignoring the conclusion" },
           { id: "d", label: "Adding more emotional appeals" },
@@ -747,7 +747,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is a fallacy?",
         choices: [
-          { id: "a", label: "A pattern of reasoning that appears to support its conclusion but does not really do so" },
+          { id: "a", label: "Reasoning that seems to support but does not" },
           { id: "b", label: "Any argument you disagree with" },
           { id: "c", label: "A statement that is factually false" },
           { id: "d", label: "A strong, valid argument" },
@@ -759,7 +759,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the 'straw man' fallacy?",
         choices: [
-          { id: "a", label: "Misrepresenting an opponent's argument as a weaker version, then attacking the distortion" },
+          { id: "a", label: "Attacking a weakened version of the argument" },
           { id: "b", label: "Attacking the person instead of the argument" },
           { id: "c", label: "Presenting only two options as if they were the only ones" },
           { id: "d", label: "Citing an irrelevant authority" },
@@ -771,7 +771,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Why is an 'ad hominem' attack fallacious?",
         choices: [
-          { id: "a", label: "Because a person's flaws are usually irrelevant to whether their argument is sound; a claim can be true regardless of who makes it" },
+          { id: "a", label: "Flaws don't bear on an argument's truth" },
           { id: "b", label: "Because people should never be criticised" },
           { id: "c", label: "Because it engages directly with the argument" },
           { id: "d", label: "Because it always uses evidence" },
@@ -783,7 +783,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "When does 'slippery slope' reasoning become a fallacy?",
         choices: [
-          { id: "a", label: "When the chain of inevitable consequences is merely asserted rather than shown to follow" },
+          { id: "a", label: "The chain of consequences is asserted, not shown" },
           { id: "b", label: "Whenever consequences are mentioned at all" },
           { id: "c", label: "Only when it is true" },
           { id: "d", label: "Never; it is always fallacious" },
@@ -795,7 +795,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the 'fallacy fallacy' — a key caution about spotting fallacies?",
         choices: [
-          { id: "a", label: "Concluding that because an argument is fallacious, its conclusion must be false — when it might still be true for other reasons" },
+          { id: "a", label: "Calling a conclusion false as its argument fails" },
           { id: "b", label: "That fallacies never exist" },
           { id: "c", label: "That every argument contains a fallacy" },
           { id: "d", label: "That naming a fallacy always wins the debate" },
@@ -862,7 +862,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the burden of proof?",
         choices: [
-          { id: "a", label: "The obligation to support a claim with evidence or reasons" },
+          { id: "a", label: "The duty to back a claim with reasons" },
           { id: "b", label: "The obligation to disprove every claim you hear" },
           { id: "c", label: "The weight of a legal document" },
           { id: "d", label: "The requirement to always agree" },
@@ -874,7 +874,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "According to the guiding principle, who bears the burden of proof?",
         choices: [
-          { id: "a", label: "The person making the positive claim — 'he who asserts must prove'" },
+          { id: "a", label: "Whoever asserts must prove it" },
           { id: "b", label: "The person who doubts the claim" },
           { id: "c", label: "Whoever speaks last" },
           { id: "d", label: "Nobody" },
@@ -886,7 +886,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does placing the burden on the asserter follow from a feature of logic?",
         choices: [
-          { id: "a", label: "Because it is often impossible to prove a negative, so demanding disproof would let anyone assert anything and demand acceptance" },
+          { id: "a", label: "Can't prove a negative, so anything goes" },
           { id: "b", label: "Because asserters are always right" },
           { id: "c", label: "Because doubters have more evidence" },
           { id: "d", label: "Because negatives are always easy to prove" },
@@ -898,7 +898,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is illegitimate 'burden-shifting'?",
         choices: [
-          { id: "a", label: "Making a claim and demanding opponents disprove it, treating the absence of disproof as vindication" },
+          { id: "a", label: "Demanding others disprove your claim" },
           { id: "b", label: "Providing strong evidence for your claim" },
           { id: "c", label: "Withholding belief until evidence is offered" },
           { id: "d", label: "Asking a fair question" },
@@ -910,7 +910,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What does 'extraordinary claims require extraordinary evidence' add to the burden of proof?",
         choices: [
-          { id: "a", label: "The more a claim departs from the established or the more consequential it is, the stronger the evidence needed to meet the burden" },
+          { id: "a", label: "Bigger or stranger claims need stronger evidence" },
           { id: "b", label: "That all claims need identical evidence" },
           { id: "c", label: "That extraordinary claims need no evidence" },
           { id: "d", label: "That evidence is never required" },
@@ -977,7 +977,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What does it mean to 'steelman' an argument?",
         choices: [
-          { id: "a", label: "To construct the strongest, most charitable version of a position you disagree with before responding" },
+          { id: "a", label: "Build the strongest version of a view before replying" },
           { id: "b", label: "To attack the weakest version of an opponent's argument" },
           { id: "c", label: "To refuse to engage with opposing views" },
           { id: "d", label: "To agree with everything an opponent says" },
@@ -989,7 +989,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is defeating a straw man version of a view worthless for testing your own position?",
         choices: [
-          { id: "a", label: "Because beating a weak, distorted version proves nothing about the real view and can leave false confidence" },
+          { id: "a", label: "Beating a weak version proves nothing and misleads" },
           { id: "b", label: "Because straw men are always true" },
           { id: "c", label: "Because it takes too long" },
           { id: "d", label: "Because it engages the strongest argument" },
@@ -1001,7 +1001,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How does steelmanning help you learn and improve your thinking?",
         choices: [
-          { id: "a", label: "Grappling with the strongest opposing view forces deep understanding and often reveals genuine merits or the need to refine your own view" },
+          { id: "a", label: "Facing the strongest view deepens understanding" },
           { id: "b", label: "It confirms you were right all along" },
           { id: "c", label: "It lets you ignore opposing considerations" },
           { id: "d", label: "It has no effect on your understanding" },
@@ -1013,7 +1013,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is a good sign that you have steelmanned a view well?",
         choices: [
-          { id: "a", label: "Its advocates would recognise and accept your version as a fair, even flattering, statement of their case" },
+          { id: "a", label: "Its advocates would accept your version as fair" },
           { id: "b", label: "Its advocates would be offended by your version" },
           { id: "c", label: "You have made it as weak as possible" },
           { id: "d", label: "You have ignored what they actually argued" },
@@ -1025,7 +1025,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why are steelmanning's real costs ultimately worth paying?",
         choices: [
-          { id: "a", label: "Because the goal of thinking well is holding accurate beliefs, and only testing them against the best opposing case reveals whether they are true" },
+          { id: "a", label: "The best opposing case tests belief" },
           { id: "b", label: "Because it guarantees you always win arguments" },
           { id: "c", label: "Because it avoids all effort" },
           { id: "d", label: "Because truth does not matter" },
@@ -1092,7 +1092,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is narrative persuasion?",
         choices: [
-          { id: "a", label: "Changing beliefs and attitudes through story rather than explicit argument and evidence" },
+          { id: "a", label: "Changing minds through story, not argument" },
           { id: "b", label: "Persuasion using only statistics" },
           { id: "c", label: "Persuasion through the speaker's credentials" },
           { id: "d", label: "Refusing to tell any stories" },
@@ -1104,7 +1104,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is 'transportation' in narrative persuasion?",
         choices: [
-          { id: "a", label: "The experience of being absorbed into a story, which lowers resistance to its message" },
+          { id: "a", label: "Absorption in a story lowers resistance" },
           { id: "b", label: "The way stories are physically distributed" },
           { id: "c", label: "Moving an audience to a new location" },
           { id: "d", label: "A logical fallacy" },
@@ -1116,7 +1116,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why can a story succeed in persuading where a direct argument fails?",
         choices: [
-          { id: "a", label: "Because an explicit claim triggers our critical faculties and counterarguments, while an absorbing story bypasses that scrutiny" },
+          { id: "a", label: "A claim is scrutinised; a story slips past" },
           { id: "b", label: "Because stories contain no message" },
           { id: "c", label: "Because arguments are always false" },
           { id: "d", label: "Because audiences dislike stories" },
@@ -1128,7 +1128,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How does narrative connect to the 'identifiable victim' effect?",
         choices: [
-          { id: "a", label: "A story about a specific person is vivid and moving where a statistic about many is abstract and forgettable" },
+          { id: "a", label: "One vivid person moves us where a statistic does not" },
           { id: "b", label: "Statistics move us more than individual stories" },
           { id: "c", label: "Stories cannot feature people" },
           { id: "d", label: "Narrative avoids all emotion" },
@@ -1140,7 +1140,7 @@ const rhetoricArgumentation: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is narrative persuasion's power 'double-edged'?",
         choices: [
-          { id: "a", label: "The same lowering of critical defences that conveys truths and empathy also lets false or misleading narratives persuade more than true arguments" },
+          { id: "a", label: "Lowered defences carry falsehoods too" },
           { id: "b", label: "Because stories can never be false" },
           { id: "c", label: "Because narrative has no effect on belief" },
           { id: "d", label: "Because only statistics can mislead" },
