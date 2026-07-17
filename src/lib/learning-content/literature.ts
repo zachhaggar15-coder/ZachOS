@@ -57,7 +57,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is the hermeneutic circle productive rather than vicious?",
         choices: [
-          { id: "a", label: "A provisional grasp of the whole guides reading the parts, which then revises the whole, iteratively" },
+          { id: "a", label: "The whole guides the parts, which revise the whole" },
           { id: "b", label: "The parts can eventually be understood independently of the whole" },
           { id: "c", label: "The circle only affects religious and classical texts, not modern ones" },
           { id: "d", label: "Sufficient scholarship eventually establishes a foundation to build from" },
@@ -69,7 +69,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What does Gadamer claim about prejudice?",
         choices: [
-          { id: "a", label: "Pre-judgements constitute the horizon that makes anything intelligible, so they enable understanding" },
+          { id: "a", label: "Pre-judgements form the horizon that enables understanding" },
           { id: "b", label: "Prejudice can be eliminated through sufficiently rigorous method" },
           { id: "c", label: "Prejudice is harmless provided the interpreter declares it in advance" },
           { id: "d", label: "Prejudice affects interpretation of others' cultures but not one's own" },
@@ -81,7 +81,7 @@ const literature: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What does 'fusion of horizons' describe?",
         choices: [
-          { id: "a", label: "Interpreter and text meeting so both are altered, arriving where neither started" },
+          { id: "a", label: "Interpreter and text meet and both are altered" },
           { id: "b", label: "The interpreter setting aside their frame to enter the text's world" },
           { id: "c", label: "Two scholars reconciling their competing readings of a work" },
           { id: "d", label: "A text's meaning converging on a single stable interpretation over time" },
@@ -93,7 +93,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What distinguishes a productive prejudice from a blind one?",
         choices: [
-          { id: "a", label: "Whether the text can resist it and force revision, or nothing could disturb it" },
+          { id: "a", label: "Whether the text can resist and force revision" },
           { id: "b", label: "Whether it was acquired through scholarship or through personal experience" },
           { id: "c", label: "Whether the interpreter is conscious of holding it" },
           { id: "d", label: "Whether it is shared by other readers in the same tradition" },
@@ -105,7 +105,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the structural vulnerability of the hermeneutics of suspicion?",
         choices: [
-          { id: "a", label: "Treating the text's resistance as further concealment means it cannot be corrected by the text" },
+          { id: "a", label: "Calling resistance concealment makes it uncorrectable" },
           { id: "b", label: "It requires biographical information about authors that is often unavailable" },
           { id: "c", label: "It applies only to texts written under conditions of political repression" },
           { id: "d", label: "It cannot account for texts that openly declare their ideological commitments" },
@@ -172,7 +172,7 @@ const literature: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What distinguishes free indirect discourse from indirect speech?",
         choices: [
-          { id: "a", label: "It drops the reporting clause and keeps the character's idiom in the narrator's grammar" },
+          { id: "a", label: "It keeps the character's idiom in the narrator's grammar" },
           { id: "b", label: "It uses quotation marks to preserve the character's exact wording" },
           { id: "c", label: "It shifts into present tense to convey immediacy of thought" },
           { id: "d", label: "It is spoken aloud by the character rather than merely thought" },
@@ -184,7 +184,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is Emma's opening sentence an example of the technique's power?",
         choices: [
-          { id: "a", label: "It sounds like narratorial assessment while being substantially Emma's estimate of herself" },
+          { id: "a", label: "It sounds like the narrator but is Emma's self-estimate" },
           { id: "b", label: "It explicitly warns the reader that Emma's judgement is unreliable" },
           { id: "c", label: "It uses direct quotation to establish Emma's characteristic idiom" },
           { id: "d", label: "It withholds information the narrator possesses to create suspense" },
@@ -196,7 +196,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is the irony sharper than narratorial commentary would be?",
         choices: [
-          { id: "a", label: "The reader inhabits the delusion first, so cannot condescend to it afterwards" },
+          { id: "a", label: "You inhabit the delusion, so cannot condescend" },
           { id: "b", label: "Commentary would be too explicit for contemporary literary conventions" },
           { id: "c", label: "The narrator's silence leaves the moral judgement genuinely open" },
           { id: "d", label: "Irony requires that the character remain unaware throughout the novel" },
@@ -208,7 +208,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What does Banfield's 'unspeakable sentences' thesis claim?",
         choices: [
-          { id: "a", label: "These sentences represent consciousness directly with no narrator present, so no speaker can be assigned" },
+          { id: "a", label: "They show consciousness with no narrator to assign" },
           { id: "b", label: "The sentences are ungrammatical and could not occur in ordinary usage" },
           { id: "c", label: "Both narrator and character are present, making the sentence inherently ironic" },
           { id: "d", label: "The technique cannot be used for characters whose thoughts are inarticulate" },
@@ -220,7 +220,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What epistemological tool does the technique give fiction?",
         choices: [
-          { id: "a", label: "The unreliable interior — a judgement wearing authoritative grammar that the reader must calibrate" },
+          { id: "a", label: "A judgement in authoritative grammar the reader must calibrate" },
           { id: "b", label: "The ability to present multiple characters' thoughts simultaneously" },
           { id: "c", label: "A method for concealing plot information until a revelation" },
           { id: "d", label: "A way of establishing the historical accuracy of a narrator's account" },
@@ -287,7 +287,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is Barthes's actual objection to appealing to the author?",
         choices: [
-          { id: "a", label: "It functions as a stopping rule, closing the text by furnishing a final signified" },
+          { id: "a", label: "It is a stopping rule giving a final signified" },
           { id: "b", label: "Authors routinely misremember or misrepresent their own intentions" },
           { id: "c", label: "Biographical information about most authors is unavailable to scholars" },
           { id: "d", label: "Authors have no legal claim over interpretations of their published work" },
@@ -299,7 +299,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the decisive half of Wimsatt and Beardsley's argument?",
         choices: [
-          { id: "a", label: "Relevance — an unintended effect is still in the poem, and an intended one the poem lacks is not rescued" },
+          { id: "a", label: "Relevance — what is in the poem, intended or not" },
           { id: "b", label: "Availability — the author's intention cannot usually be discovered" },
           { id: "c", label: "That authors deliberately conceal their intentions from readers" },
           { id: "d", label: "That poems have no determinate meaning independent of readers" },
@@ -311,7 +311,7 @@ const literature: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the 'scriptor' in Barthes's account?",
         choices: [
-          { id: "a", label: "A writer existing only in the act of writing, assembling circulating language rather than originating meaning" },
+          { id: "a", label: "A writer assembling circulating language, not originating it" },
           { id: "b", label: "The implied narrator distinct from the historical person who wrote" },
           { id: "c", label: "A collaborative author whose work cannot be attributed to one person" },
           { id: "d", label: "The reader, who produces the text's meaning through interpretation" },
@@ -323,7 +323,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is Hirsch's strongest objection?",
         choices: [
-          { id: "a", label: "Without intention there is no criterion distinguishing interpretation from invention" },
+          { id: "a", label: "Without intention, reading cannot be told from invention" },
           { id: "b", label: "Authors have a moral right to control how their work is read" },
           { id: "c", label: "Readers lack the training to interpret texts without guidance" },
           { id: "d", label: "Texts have no meaning at all until an author confirms one" },
@@ -357,7 +357,7 @@ const literature: AuthoredLesson[] = [
     deck: "Irony is the art of meaning more, or other, than you say. It runs on a gap — between words and intent, between what a character knows and what we know, between what is expected and what occurs — and learning to spot those gaps is learning to read for a text's sharpest, most sophisticated effects.",
     keyTerms: [
       { label: "Verbal irony", value: "Saying one thing while meaning another, often the opposite." },
-      { label: "Dramatic irony", value: "When the audience knows something a character does not." },
+      { label: "Dramatic irony", value: "When we know what a character does not." },
       { label: "Situational irony", value: "When the outcome is the opposite of what was expected or intended." },
       { label: "Irony vs sarcasm", value: "Sarcasm is pointed, mocking verbal irony aimed at a target." },
     ],
@@ -402,7 +402,7 @@ const literature: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What underlies all forms of irony?",
         choices: [
-          { id: "a", label: "A gap or discrepancy — between what is said and meant, known and unknown, or expected and actual" },
+          { id: "a", label: "A gap of saying and meaning" },
           { id: "b", label: "A rhyme scheme" },
           { id: "c", label: "A happy ending" },
           { id: "d", label: "A first-person narrator" },
@@ -415,7 +415,7 @@ const literature: AuthoredLesson[] = [
         prompt: "What is dramatic irony?",
         choices: [
           { id: "a", label: "Saying the opposite of what you mean" },
-          { id: "b", label: "When the audience knows something a character does not" },
+          { id: "b", label: "When we know what a character does not" },
           { id: "c", label: "When the outcome is the opposite of what was expected" },
           { id: "d", label: "A very theatrical style of acting" },
         ],
@@ -426,7 +426,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why do Oedipus's confident vows to find the guilty man carry such devastating weight?",
         choices: [
-          { id: "a", label: "Because the audience knows he himself is the culprit he is hunting, while he does not" },
+          { id: "a", label: "The audience knows he hunts himself; he does not" },
           { id: "b", label: "Because he is speaking in verse" },
           { id: "c", label: "Because the audience does not understand the plot" },
           { id: "d", label: "Because he is being sarcastic" },
@@ -438,7 +438,7 @@ const literature: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is situational irony?",
         choices: [
-          { id: "a", label: "When the outcome contradicts what was expected or intended" },
+          { id: "a", label: "When the outcome defies what was expected" },
           { id: "b", label: "When a narrator addresses the reader directly" },
           { id: "c", label: "When two characters argue" },
           { id: "d", label: "When a poem uses a strict meter" },
@@ -450,7 +450,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How can irony function as a whole authorial stance, especially in satire?",
         choices: [
-          { id: "a", label: "By maintaining a knowing distance that lets the gap between pretension and reality expose folly" },
+          { id: "a", label: "A knowing distance lets folly expose itself" },
           { id: "b", label: "By explaining every joke to the reader" },
           { id: "c", label: "By removing all meaning from the text" },
           { id: "d", label: "By making the narrator omniscient" },
@@ -471,7 +471,7 @@ const literature: AuthoredLesson[] = [
     estimatedMinutes: 8,
     deck: "The moment you know a story is a detective novel, a romance or a horror film, you already know a great deal about it. Genre is the invisible contract between writer and reader — a set of shared conventions that shapes expectations, and that the best works both rely on and deliberately break.",
     keyTerms: [
-      { label: "Genre", value: "A category of text defined by shared conventions of form, content and style." },
+      { label: "Genre", value: "A class of text sharing conventions." },
       { label: "Convention", value: "A feature readers expect of a genre, like a mystery's final revelation." },
       { label: "Genre as contract", value: "The shared expectations that let a genre signal how it should be read." },
       { label: "Subverting genre", value: "Deliberately breaking conventions to create meaning or surprise." },
@@ -517,7 +517,7 @@ const literature: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is a genre?",
         choices: [
-          { id: "a", label: "A category of text defined by shared conventions of form, content and style" },
+          { id: "a", label: "A class of text sharing conventions" },
           { id: "b", label: "The length of a book" },
           { id: "c", label: "The name of the author" },
           { id: "d", label: "A single unique story with no relatives" },
@@ -529,7 +529,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is genre usefully understood as a 'contract' between writer and reader?",
         choices: [
-          { id: "a", label: "Because signalling its genre tells the reader how to read it and what to expect, doing much of the communicating" },
+          { id: "a", label: "Signalling genre tells the reader how to read it" },
           { id: "b", label: "Because writers must legally follow it" },
           { id: "c", label: "Because it fixes the price of the book" },
           { id: "d", label: "Because it prevents any originality" },
@@ -541,7 +541,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does subverting a genre convention depend on the reader knowing that convention?",
         choices: [
-          { id: "a", label: "Because you cannot meaningfully break a rule the reader does not recognise, so the subversion relies on the genre framework" },
+          { id: "a", label: "You cannot break a rule the reader does not know" },
           { id: "b", label: "Because conventions are legally binding" },
           { id: "c", label: "Because readers never notice conventions" },
           { id: "d", label: "Because subversion requires ignoring the genre entirely" },
@@ -553,7 +553,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How can the same event mean different things across genres?",
         choices: [
-          { id: "a", label: "A death is tragic in a tragedy, a puzzle in a detective story, and a comic pratfall in a farce" },
+          { id: "a", label: "A death reads differently by genre" },
           { id: "b", label: "Events always mean exactly the same thing" },
           { id: "c", label: "Genre has no effect on meaning" },
           { id: "d", label: "Only the plot summary matters" },
@@ -565,7 +565,7 @@ const literature: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the more useful stance on the 'genre fiction versus literary fiction' hierarchy?",
         choices: [
-          { id: "a", label: "Treat genre as a neutral descriptor; what matters is what a work does with its conventions, since 'literary fiction' is itself a genre" },
+          { id: "a", label: "What a work does with convention matters" },
           { id: "b", label: "Genre fiction is always inferior" },
           { id: "c", label: "Literary fiction has no conventions" },
           { id: "d", label: "Only genre fiction has value" },
@@ -586,7 +586,7 @@ const literature: AuthoredLesson[] = [
     estimatedMinutes: 9,
     deck: "No text is an island. Every story is written in a language shaped by other stories, echoing, borrowing from and arguing with what came before. Intertextuality is the idea that texts are woven from other texts — and that meaning often lives in the relationships between them, not just inside any one.",
     keyTerms: [
-      { label: "Intertextuality", value: "The shaping of a text's meaning by its relationships to other texts." },
+      { label: "Intertextuality", value: "Meaning shaped by ties to other texts." },
       { label: "Allusion", value: "A deliberate reference to another text, work or story." },
       { label: "Retelling / rewriting", value: "A work that reimagines an earlier story from a new angle." },
       { label: "The literary conversation", value: "The idea that texts continually respond to and revise one another." },
@@ -632,7 +632,7 @@ const literature: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is intertextuality?",
         choices: [
-          { id: "a", label: "The shaping of a text's meaning by its relationships to other texts" },
+          { id: "a", label: "Meaning shaped by ties to other texts" },
           { id: "b", label: "The study of a single text in complete isolation" },
           { id: "c", label: "The grammar rules of a language" },
           { id: "d", label: "The biography of an author" },
@@ -644,7 +644,7 @@ const literature: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is an allusion?",
         choices: [
-          { id: "a", label: "A deliberate reference to another text, inviting the reader to bring its associations" },
+          { id: "a", label: "A nod to another text" },
           { id: "b", label: "A grammatical error" },
           { id: "c", label: "The main plot of a story" },
           { id: "d", label: "A type of rhyme" },
@@ -656,7 +656,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does Wide Sargasso Sea depend on Jane Eyre for its meaning?",
         choices: [
-          { id: "a", label: "Because it rewrites Brontë's novel from the perspective of its silenced 'madwoman', so its meaning arises from the dialogue with the source" },
+          { id: "a", label: "It rewrites Brontë from the silenced woman's view" },
           { id: "b", label: "Because it is a direct sequel with new characters" },
           { id: "c", label: "Because it has no connection to any earlier text" },
           { id: "d", label: "Because it copies Jane Eyre word for word" },
@@ -668,7 +668,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How does intertextuality challenge the idea of the author as a solitary genius?",
         choices: [
-          { id: "a", label: "By showing writers always work with inherited texts, forms and conventions rather than creating from nothing" },
+          { id: "a", label: "Writers work from inherited texts" },
           { id: "b", label: "By proving authors do not exist" },
           { id: "c", label: "By claiming all books are identical" },
           { id: "d", label: "By arguing readers cannot understand texts" },
@@ -680,7 +680,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Beyond spotting references, what does reading intertextually really involve?",
         choices: [
-          { id: "a", label: "Asking what the relationship between texts means — how the new work uses, transforms or challenges the old" },
+          { id: "a", label: "How the new work uses or challenges the old" },
           { id: "b", label: "Ticking off as many allusions as possible" },
           { id: "c", label: "Ignoring all other texts" },
           { id: "d", label: "Reading only the newest work" },
@@ -702,7 +702,7 @@ const literature: AuthoredLesson[] = [
     deck: "Why do we willingly watch stories that end in ruin? For two and a half thousand years, tragedy has taken audiences through downfall and loss and left them, strangely, moved and clarified rather than merely depressed. Understanding how it works is understanding one of art's deepest and most enduring designs.",
     keyTerms: [
       { label: "Tragedy", value: "A serious drama tracing the downfall of a protagonist through error, fate or flaw." },
-      { label: "Hamartia", value: "The error or flaw that leads to the tragic hero's downfall." },
+      { label: "Hamartia", value: "The flaw that brings the hero down." },
       { label: "Catharsis", value: "The emotional release or clarification the audience feels through pity and fear." },
       { label: "Hubris", value: "Overweening pride that provokes a fall, a common tragic error." },
     ],
@@ -748,7 +748,7 @@ const literature: AuthoredLesson[] = [
         prompt: "What is 'hamartia' in Aristotle's analysis of tragedy?",
         choices: [
           { id: "a", label: "The happy resolution of the plot" },
-          { id: "b", label: "The error or flaw that leads to the tragic hero's downfall" },
+          { id: "b", label: "The flaw that brings the hero down" },
           { id: "c", label: "The chorus's commentary" },
           { id: "d", label: "The setting of the play" },
         ],
@@ -759,7 +759,7 @@ const literature: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is catharsis, Aristotle's answer to why we value watching suffering?",
         choices: [
-          { id: "a", label: "The purging or clarification of pity and fear that leaves the audience moved rather than merely upset" },
+          { id: "a", label: "A purging of pity and fear" },
           { id: "b", label: "The hero's realisation of their mistake" },
           { id: "c", label: "The reversal of fortune in the plot" },
           { id: "d", label: "The pride that causes a downfall" },
@@ -771,7 +771,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why are the most devastating tragedies said to fuse peripeteia and anagnorisis?",
         choices: [
-          { id: "a", label: "Because the hero's moment of recognising the truth coincides with their reversal from good fortune to ruin" },
+          { id: "a", label: "Recognition strikes as fortune falls" },
           { id: "b", label: "Because the play ends happily" },
           { id: "c", label: "Because the hero never learns anything" },
           { id: "d", label: "Because the audience leaves early" },
@@ -783,7 +783,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How did Arthur Miller's Death of a Salesman change the tradition of tragedy?",
         choices: [
-          { id: "a", label: "By making a tragic hero of an ordinary man, arguing the common person can be a fit subject for tragedy" },
+          { id: "a", label: "By making an ordinary man a tragic hero" },
           { id: "b", label: "By insisting only kings can be tragic heroes" },
           { id: "c", label: "By removing all suffering from the form" },
           { id: "d", label: "By setting it in ancient Greece" },
@@ -795,7 +795,7 @@ const literature: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What distinguishes tragedy from a story of mere random misfortune?",
         choices: [
-          { id: "a", label: "It is a structured confrontation staged so the downfall carries meaning and dignity" },
+          { id: "a", label: "A staged confrontation giving the fall meaning" },
           { id: "b", label: "It is simply any story with a sad ending" },
           { id: "c", label: "It always has a happy resolution" },
           { id: "d", label: "It avoids the subject of death" },
@@ -863,7 +863,7 @@ const literature: AuthoredLesson[] = [
         prompt: "Why did modernist writers turn to fragmented form?",
         choices: [
           { id: "a", label: "Because they lacked the skill to write coherent narratives" },
-          { id: "b", label: "Because a smooth, linear narrative felt like a lie about a world shattered by war and lost certainties" },
+          { id: "b", label: "A smooth narrative felt like a lie after the war" },
           { id: "c", label: "Because publishers demanded shorter chapters" },
           { id: "d", label: "Because readers preferred confusion" },
         ],
@@ -874,7 +874,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How does the difficulty of Eliot's The Waste Land relate to its meaning?",
         choices: [
-          { id: "a", label: "Its disjointedness enacts post-war cultural fragmentation, making the reader labour to assemble coherence" },
+          { id: "a", label: "Its disjointedness enacts post-war fragmentation" },
           { id: "b", label: "Its difficulty is an accident with no meaning" },
           { id: "c", label: "It is actually a simple, linear poem" },
           { id: "d", label: "The fragments have no connection to its themes" },
@@ -886,7 +886,7 @@ const literature: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What does 'stream of consciousness' attempt to render?",
         choices: [
-          { id: "a", label: "The continuous, associative, fragmentary flow of a character's inner thoughts and impressions" },
+          { id: "a", label: "A character's flowing inner thoughts" },
           { id: "b", label: "A strictly chronological account of events" },
           { id: "c", label: "The narrator's moral judgements only" },
           { id: "d", label: "Dialogue between two characters" },
@@ -898,7 +898,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the key interpretive move when facing a difficult modernist work?",
         choices: [
-          { id: "a", label: "Treat the difficulty as meaningful design and ask what experience the broken form creates" },
+          { id: "a", label: "Treat the difficulty as design with a purpose" },
           { id: "b", label: "Dismiss it as wilfully obscure and stop reading" },
           { id: "c", label: "Assume all difficulty is a mistake" },
           { id: "d", label: "Rewrite it as a linear story" },
@@ -910,7 +910,7 @@ const literature: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What conviction about reality underlies modernist inward fragmentation?",
         choices: [
-          { id: "a", label: "That reality is filtered through individual, fragmented consciousness rather than a stable external order" },
+          { id: "a", label: "Reality is filtered through fragmented consciousness" },
           { id: "b", label: "That reality is perfectly orderly and linear" },
           { id: "c", label: "That the mind thinks in tidy, organised sentences" },
           { id: "d", label: "That consciousness cannot be represented at all" },
@@ -977,7 +977,7 @@ const literature: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What are the two directions in which postcolonial reading works?",
         choices: [
-          { id: "a", label: "Re-examining colonisers' literature for how it represented the colonised, and studying writing by colonised peoples who reclaim their stories" },
+          { id: "a", label: "Reclaiming colonised voices" },
           { id: "b", label: "Analysing only ancient Greek texts" },
           { id: "c", label: "Studying only the grammar of colonial languages" },
           { id: "d", label: "Ranking authors by nationality" },
@@ -989,7 +989,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What did Edward Said argue in Orientalism?",
         choices: [
-          { id: "a", label: "That Western representations of the 'Orient' as backward were bound up with power and helped justify colonial domination" },
+          { id: "a", label: "Western images of the 'Orient' served colonial power" },
           { id: "b", label: "That the East and West are identical" },
           { id: "c", label: "That representation is always neutral" },
           { id: "d", label: "That colonialism had no effect on literature" },
@@ -1001,7 +1001,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What was Achebe's critique of Conrad's Heart of Darkness?",
         choices: [
-          { id: "a", label: "That even this anti-imperial novel reduces Africa to a backdrop and denies Africans full humanity and voice" },
+          { id: "a", label: "It makes Africa a voiceless backdrop" },
           { id: "b", label: "That it was too sympathetic to Africans" },
           { id: "c", label: "That it was set in the wrong century" },
           { id: "d", label: "That it had no European characters" },
@@ -1013,7 +1013,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What question does Spivak's 'Can the Subaltern Speak?' raise?",
         choices: [
-          { id: "a", label: "Whether the most marginalised can be heard on their own terms, or whether even sympathetic representation speaks for them" },
+          { id: "a", label: "Whether the marginalised speak for themselves" },
           { id: "b", label: "Whether literature should exist at all" },
           { id: "c", label: "Whether colonisers wrote good novels" },
           { id: "d", label: "Whether all languages are the same" },
@@ -1025,7 +1025,7 @@ const literature: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Why is the choice of language a charged issue for postcolonial writers?",
         choices: [
-          { id: "a", label: "Writing in the coloniser's language reaches a wide audience but is also the tongue of domination, prompting debate over indigenous languages" },
+          { id: "a", label: "The coloniser's tongue is also domination" },
           { id: "b", label: "Because language has no political dimension" },
           { id: "c", label: "Because only one language exists" },
           { id: "d", label: "Because postcolonial writers never use English" },
@@ -1092,7 +1092,7 @@ const literature: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is meter in poetry?",
         choices: [
-          { id: "a", label: "The organised pattern of stressed and unstressed syllables that gives verse its rhythm" },
+          { id: "a", label: "The stress pattern giving rhythm" },
           { id: "b", label: "The rhyme scheme at the end of lines" },
           { id: "c", label: "The number of stanzas in a poem" },
           { id: "d", label: "The subject matter of the poem" },
@@ -1105,7 +1105,7 @@ const literature: AuthoredLesson[] = [
         prompt: "What is an iamb?",
         choices: [
           { id: "a", label: "A stressed syllable followed by an unstressed one" },
-          { id: "b", label: "An unstressed syllable followed by a stressed one (da-DUM)" },
+          { id: "b", label: "An unstressed then stressed syllable" },
           { id: "c", label: "Two stressed syllables" },
           { id: "d", label: "A line with no rhythm" },
         ],
@@ -1116,7 +1116,7 @@ const literature: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is iambic pentameter?",
         choices: [
-          { id: "a", label: "Five iambs per line — the dominant meter of English poetry" },
+          { id: "a", label: "Five iambs per line" },
           { id: "b", label: "A poem with exactly five lines" },
           { id: "c", label: "Five rhyming words per stanza" },
           { id: "d", label: "A meter with no stresses" },
@@ -1128,7 +1128,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why are departures from the metrical pattern so important?",
         choices: [
-          { id: "a", label: "Because breaking an established rhythm jolts the reader and can emphasise a word or enact a meaning" },
+          { id: "a", label: "A broken rhythm jolts and stresses a word" },
           { id: "b", label: "Because they are always mistakes" },
           { id: "c", label: "Because meter should never vary" },
           { id: "d", label: "Because they remove all meaning" },
@@ -1140,7 +1140,7 @@ const literature: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What does it mean to say meter is 'form doing the work of meaning'?",
         choices: [
-          { id: "a", label: "The rhythm itself reinforces sense, creates tension or lends memorability — how a line moves is part of what it means" },
+          { id: "a", label: "How a line moves is part of what it means" },
           { id: "b", label: "Meter is purely decorative and separate from meaning" },
           { id: "c", label: "Only the literal words carry meaning" },
           { id: "d", label: "Rhythm has no effect on the reader" },
