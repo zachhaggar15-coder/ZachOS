@@ -57,7 +57,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What problem was Gramsci's concept of hegemony designed to solve?",
         choices: [
-          { id: "a", label: "Why workers in advanced societies did not revolt, and some supported fascism" },
+          { id: "a", label: "Why workers did not revolt, and some backed fascism" },
           { id: "b", label: "Why capitalist economies produce recurring crises of overproduction" },
           { id: "c", label: "How a vanguard party should be organised for a seizure of power" },
           { id: "d", label: "Why colonial states required more coercion than European ones" },
@@ -69,7 +69,7 @@ const politics: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What distinguishes hegemony from domination?",
         choices: [
-          { id: "a", label: "Hegemony is leadership secured through consent; domination is coercion held in reserve" },
+          { id: "a", label: "Hegemony is rule by consent; domination is coercion" },
           { id: "b", label: "Hegemony operates internationally while domination operates within states" },
           { id: "c", label: "Hegemony is exercised by elites, domination by state bureaucracies" },
           { id: "d", label: "Hegemony describes economic power, domination describes political power" },
@@ -81,7 +81,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does Gramsci locate hegemony in civil society rather than the state?",
         choices: [
-          { id: "a", label: "Schools, media and churches transmit a worldview while appearing to do something else" },
+          { id: "a", label: "Schools and media transmit a worldview covertly" },
           { id: "b", label: "State institutions are too weak to shape belief in modern societies" },
           { id: "c", label: "Civil society is where economic production actually takes place" },
           { id: "d", label: "The state is constitutionally barred from influencing public opinion" },
@@ -93,7 +93,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does the claim that hegemony requires real concessions give the concept teeth?",
         choices: [
-          { id: "a", label: "It explains why reforms are both genuine and stabilising, and predicts loss of consent without them" },
+          { id: "a", label: "It shows reforms are genuine yet stabilising" },
           { id: "b", label: "It shows that concessions are always withdrawn once consent is secured" },
           { id: "c", label: "It proves that material interests are irrelevant to political stability" },
           { id: "d", label: "It demonstrates that subordinate groups are never genuinely deceived" },
@@ -105,7 +105,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What does the war of position strategy require, and why?",
         choices: [
-          { id: "a", label: "Building a rival common sense across institutions first, since culture would reconstitute the old order" },
+          { id: "a", label: "Build a rival common sense across institutions first" },
           { id: "b", label: "Concentrating force on the state apparatus at a moment of maximum weakness" },
           { id: "c", label: "Withdrawing from civil institutions to avoid being co-opted by them" },
           { id: "d", label: "Winning parliamentary majorities before attempting cultural change" },
@@ -128,7 +128,7 @@ const politics: AuthoredLesson[] = [
     keyTerms: [
       { label: "Legitimacy", value: "The quality that makes people accept authority as rightful and obey willingly." },
       { label: "Power vs authority", value: "The ability to compel, versus the recognised right to be obeyed." },
-      { label: "Weber's three types", value: "Traditional, charismatic and legal-rational grounds for legitimate authority." },
+      { label: "Weber's three types", value: "Traditional, charismatic, legal grounds for legitimate authority." },
       { label: "Consent and performance", value: "Legitimacy based on agreement, and on delivering results." },
     ],
     sections: [
@@ -172,7 +172,7 @@ const politics: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is legitimacy in politics?",
         choices: [
-          { id: "a", label: "The widely shared belief that authority has a rightful claim to be obeyed, so people comply willingly" },
+          { id: "a", label: "A shared belief that authority is rightful" },
           { id: "b", label: "The amount of military force a government has" },
           { id: "c", label: "The size of a country's economy" },
           { id: "d", label: "The number of laws a government passes" },
@@ -184,7 +184,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why can no regime rule for long by force alone?",
         choices: [
-          { id: "a", label: "Because there are too many citizens and too few enforcers, so order depends on most people obeying voluntarily" },
+          { id: "a", label: "Too few enforcers for pure force" },
           { id: "b", label: "Because force is always illegal" },
           { id: "c", label: "Because citizens enjoy being coerced" },
           { id: "d", label: "Because legitimacy is unnecessary" },
@@ -196,7 +196,7 @@ const politics: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What are Weber's three types of legitimate authority?",
         choices: [
-          { id: "a", label: "Traditional, charismatic and legal-rational" },
+          { id: "a", label: "Traditional, charismatic, legal" },
           { id: "b", label: "Democratic, socialist and liberal" },
           { id: "c", label: "Hard, soft and smart" },
           { id: "d", label: "Local, national and global" },
@@ -208,7 +208,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the basis of 'legal-rational' authority?",
         choices: [
-          { id: "a", label: "A belief in the rightfulness of impersonal rules and procedures, so people obey the office, not the person" },
+          { id: "a", label: "Impersonal rules: obey the office" },
           { id: "b", label: "Devotion to an inspiring individual leader" },
           { id: "c", label: "Long-established custom and tradition" },
           { id: "d", label: "Fear of punishment alone" },
@@ -220,7 +220,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why do revolutions often occur when a regime loses legitimacy, even if it retains coercive force?",
         choices: [
-          { id: "a", label: "Because once people stop accepting its authority, soldiers and officials stop obeying and its apparent power evaporates" },
+          { id: "a", label: "Lose acceptance and officials stop obeying" },
           { id: "b", label: "Because losing legitimacy makes a regime richer" },
           { id: "c", label: "Because force always guarantees survival" },
           { id: "d", label: "Because legitimacy has no effect on stability" },
@@ -287,7 +287,7 @@ const politics: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the difference between despotic and infrastructural power?",
         choices: [
-          { id: "a", label: "What elites can do without negotiation, versus the capacity to actually implement decisions across society" },
+          { id: "a", label: "What elites can do unopposed, versus what they can implement" },
           { id: "b", label: "Power exercised by the executive, versus power exercised by the legislature" },
           { id: "c", label: "Power over foreign states, versus power over the domestic population" },
           { id: "d", label: "Legally authorised power, versus power exercised outside the constitution" },
@@ -299,7 +299,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why did states impose permanent surnames and standardised measures?",
         choices: [
-          { id: "a", label: "Infrastructural power requires that the state can see — liabilities must attach to identifiable persons" },
+          { id: "a", label: "The state must see: duties must attach to identifiable persons" },
           { id: "b", label: "Local customary systems were genuinely less accurate than standardised ones" },
           { id: "c", label: "Standardisation was demanded by populations seeking equal treatment" },
           { id: "d", label: "They were adopted to facilitate trade rather than administration" },
@@ -311,7 +311,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why can despotic and infrastructural power act as substitutes rather than complements?",
         choices: [
-          { id: "a", label: "Arbitrary seizure teaches people to hide assets, making the tax base less visible still" },
+          { id: "a", label: "Seizure teaches people to hide assets from view" },
           { id: "b", label: "States have fixed budgets and must choose which capacity to fund" },
           { id: "c", label: "Officials trained in coercion cannot be retrained for administration" },
           { id: "d", label: "International law prohibits states from developing both simultaneously" },
@@ -323,7 +323,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What does Scott's work suggest about high modernist projects?",
         choices: [
-          { id: "a", label: "They fail when discarded local knowledge turns out to have been load-bearing" },
+          { id: "a", label: "Discarded local knowledge turns out to be load-bearing" },
           { id: "b", label: "They fail because planners lacked sufficient computational capacity" },
           { id: "c", label: "They succeed wherever infrastructural power is sufficiently high" },
           { id: "d", label: "They demonstrate that legibility is unnecessary for governance" },
@@ -335,7 +335,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why did twentieth-century totalitarianism require both kinds of power?",
         choices: [
-          { id: "a", label: "Modern administrative reach was built first for benign purposes, then the limits on despotic use were removed" },
+          { id: "a", label: "Reach was built for benign ends, then its limits removed" },
           { id: "b", label: "Despotic power alone is sufficient, but was politically unpopular" },
           { id: "c", label: "Infrastructural power was invented specifically by totalitarian regimes" },
           { id: "d", label: "The two powers only became technically compatible in the twentieth century" },
@@ -402,7 +402,7 @@ const politics: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What does independence of irrelevant alternatives require?",
         choices: [
-          { id: "a", label: "The group's ranking of two options depends only on how individuals rank those two" },
+          { id: "a", label: "A pair's group ranking depends only on that pair" },
           { id: "b", label: "Irrelevant candidates should be excluded from the ballot before voting" },
           { id: "c", label: "Voters must rank every available option rather than abstaining" },
           { id: "d", label: "The rule must produce the same result regardless of the number of voters" },
@@ -414,7 +414,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What does a Condorcet cycle demonstrate?",
         choices: [
-          { id: "a", label: "Majority preference can loop, so whoever controls the order of votes controls the outcome" },
+          { id: "a", label: "Majorities can loop, so agenda control decides" },
           { id: "b", label: "Voters frequently hold inconsistent preferences between options" },
           { id: "c", label: "Three-candidate elections are inherently less accurate than two-candidate ones" },
           { id: "d", label: "Majority rule requires an odd number of voters to produce a result" },
@@ -426,7 +426,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What does Gibbard–Satterthwaite establish about strategic voting?",
         choices: [
-          { id: "a", label: "Every non-dictatorial rule with three or more outcomes is manipulable, so it is structural rather than a defect" },
+          { id: "a", label: "Every such rule is manipulable, so it is structural" },
           { id: "b", label: "Strategic voting occurs only under plurality and instant-runoff systems" },
           { id: "c", label: "Voters who vote strategically systematically make themselves worse off" },
           { id: "d", label: "Manipulation can be eliminated by keeping individual ballots secret" },
@@ -438,7 +438,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why do real democracies function rather than cycling permanently?",
         choices: [
-          { id: "a", label: "Preferences are often approximately single-peaked, which escapes the theorem's domain condition" },
+          { id: "a", label: "Preferences are often single-peaked, escaping the theorem" },
           { id: "b", label: "Political parties suppress the cycles through coalition agreements" },
           { id: "c", label: "Cycles are mathematically possible but have never been observed" },
           { id: "d", label: "Constitutional courts resolve cycles when they arise" },
@@ -450,7 +450,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the mature reading of what Arrow proved?",
         choices: [
-          { id: "a", label: "'Fair' is several jointly unsatisfiable properties, so design is about which failure you can live with" },
+          { id: "a", label: "'Fair' is several clashing properties; design picks the failure" },
           { id: "b", label: "Democracy is incoherent and collective decisions are meaningless" },
           { id: "c", label: "All voting systems are equally defective in practice" },
           { id: "d", label: "A perfect voting system exists but has not yet been discovered" },
@@ -517,7 +517,7 @@ const politics: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the foundational belief of liberalism?",
         choices: [
-          { id: "a", label: "That individuals have inherent worth and rights, and political arrangements exist to protect their freedom" },
+          { id: "a", label: "Rights come first; politics protects them" },
           { id: "b", label: "That the community always outweighs the individual" },
           { id: "c", label: "That rulers have a divine right to absolute power" },
           { id: "d", label: "That the state should control every aspect of life" },
@@ -529,7 +529,7 @@ const politics: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What did John Locke argue about rights and government?",
         choices: [
-          { id: "a", label: "That people have natural rights and governments exist to secure them, drawing legitimacy from consent" },
+          { id: "a", label: "Natural rights, secured by consent" },
           { id: "b", label: "That governments grant rights and can freely withdraw them" },
           { id: "c", label: "That individuals have no rights against the state" },
           { id: "d", label: "That kings rule by divine right" },
@@ -541,7 +541,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why do liberals insist that government power be limited?",
         choices: [
-          { id: "a", label: "Because power is dangerous and can be abused, threatening the individual freedom liberalism exists to protect" },
+          { id: "a", label: "Power abused threatens freedom" },
           { id: "b", label: "Because government should do nothing at all" },
           { id: "c", label: "Because only kings should hold power" },
           { id: "d", label: "Because limits make government more efficient" },
@@ -553,7 +553,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the difference between negative and positive liberty?",
         choices: [
-          { id: "a", label: "Negative liberty is freedom from interference; positive liberty is freedom to actually achieve one's goals, which may require resources" },
+          { id: "a", label: "Freedom from interference, versus freedom to achieve" },
           { id: "b", label: "Negative liberty is bad and positive liberty is good" },
           { id: "c", label: "They mean exactly the same thing" },
           { id: "d", label: "Positive liberty means having no rights" },
@@ -565,7 +565,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is calling liberalism simply 'left-wing' a confusion?",
         choices: [
-          { id: "a", label: "Because in its proper sense liberalism is a broad tradition underlying most modern democracies across the spectrum, not one side of politics" },
+          { id: "a", label: "Liberalism underlies most democracies" },
           { id: "b", label: "Because liberalism is actually far-right" },
           { id: "c", label: "Because liberalism rejects all rights" },
           { id: "d", label: "Because liberalism opposes democracy" },
@@ -632,7 +632,7 @@ const politics: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "At its intellectual core, what is conservatism best understood as?",
         choices: [
-          { id: "a", label: "A disposition favouring caution about radical change, respect for tradition, and scepticism of schemes to remake society" },
+          { id: "a", label: "Caution about change, respect for tradition" },
           { id: "b", label: "A fixed blueprint for the ideal society" },
           { id: "c", label: "The rejection of all institutions" },
           { id: "d", label: "A demand for constant revolution" },
@@ -644,7 +644,7 @@ const politics: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What event and thinker shaped conservatism as a self-conscious tradition?",
         choices: [
-          { id: "a", label: "Edmund Burke's reaction to the French Revolution in Reflections on the Revolution in France" },
+          { id: "a", label: "Burke's reaction to the French Revolution" },
           { id: "b", label: "Karl Marx's response to industrial capitalism" },
           { id: "c", label: "John Locke's theory of natural rights" },
           { id: "d", label: "The American Constitution" },
@@ -656,7 +656,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What was Burke's core argument against wholesale, theory-driven reform?",
         choices: [
-          { id: "a", label: "That society is enormously complex accumulated experience, and confidently redesigning it from abstract theory is arrogant and dangerous" },
+          { id: "a", label: "Redesigning society from theory is dangerous" },
           { id: "b", label: "That change is always impossible" },
           { id: "c", label: "That only kings should make decisions" },
           { id: "d", label: "That tradition has no value" },
@@ -668,7 +668,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why do conservatives counsel caution before sweeping away even an imperfect institution?",
         choices: [
-          { id: "a", label: "Because it may serve purposes that are not obvious, and its removal may cause more harm than the problem it was meant to solve" },
+          { id: "a", label: "Hidden purposes; removal may harm" },
           { id: "b", label: "Because all institutions are perfect" },
           { id: "c", label: "Because change is never needed" },
           { id: "d", label: "Because reason can fully grasp society" },
@@ -680,7 +680,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Is conservatism opposed to all change?",
         choices: [
-          { id: "a", label: "No — it prefers gradual, cautious, organic change over revolutionary rupture, as Burke's own words acknowledge" },
+          { id: "a", label: "No — gradual change over rupture" },
           { id: "b", label: "Yes, it opposes any change whatsoever" },
           { id: "c", label: "Yes, it demands constant revolution" },
           { id: "d", label: "It has no view on change" },
@@ -747,7 +747,7 @@ const politics: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the starting point of socialism?",
         choices: [
-          { id: "a", label: "A moral objection to a society divided between a few who own productive resources and many who must sell their labour" },
+          { id: "a", label: "Objecting to owners profiting from labour" },
           { id: "b", label: "A defence of unregulated free markets" },
           { id: "c", label: "The belief that inequality is always natural and just" },
           { id: "d", label: "Support for hereditary monarchy" },
@@ -759,7 +759,7 @@ const politics: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What did Marx argue about capitalism?",
         choices: [
-          { id: "a", label: "That it is inherently exploitative — workers produce value but owners capture the surplus as profit — and driven by class struggle" },
+          { id: "a", label: "Owners capture the surplus workers make" },
           { id: "b", label: "That it produces perfect equality" },
           { id: "c", label: "That it should never be criticised" },
           { id: "d", label: "That class does not exist" },
@@ -771,7 +771,7 @@ const politics: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "How does reformist (social democratic) socialism differ from revolutionary socialism?",
         choices: [
-          { id: "a", label: "It seeks greater equality gradually through democracy, taming and regulating capitalism rather than overthrowing it" },
+          { id: "a", label: "Equality gradually, regulating capitalism" },
           { id: "b", label: "It seeks to abolish democracy" },
           { id: "c", label: "It rejects all public services" },
           { id: "d", label: "It is identical to revolutionary socialism" },
@@ -783,7 +783,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why do socialists see the economy as a 'structure of unequal power' rather than a neutral marketplace?",
         choices: [
-          { id: "a", label: "Because those who own capital have systematic advantages over those who only have their labour to sell" },
+          { id: "a", label: "Capital has the advantage over labour" },
           { id: "b", label: "Because all market participants are perfectly equal" },
           { id: "c", label: "Because markets do not exist" },
           { id: "d", label: "Because everyone owns the means of production" },
@@ -795,7 +795,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What enduring influence has socialism had even in societies that reject it as a whole?",
         choices: [
-          { id: "a", label: "It shaped welfare states, public services and workers' protections that most now take for granted" },
+          { id: "a", label: "It shaped welfare and worker protections" },
           { id: "b", label: "It had no effect on any modern society" },
           { id: "c", label: "It abolished all private property everywhere" },
           { id: "d", label: "It only ever produced dictatorships" },
@@ -862,7 +862,7 @@ const politics: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "How is populism best understood?",
         choices: [
-          { id: "a", label: "As a way of framing politics as a conflict between a pure 'people' and a corrupt 'elite'" },
+          { id: "a", label: "Pure 'people' versus corrupt 'elite'" },
           { id: "b", label: "As a fixed set of economic policies" },
           { id: "c", label: "As a synonym for democracy" },
           { id: "d", label: "As support for rule by experts" },
@@ -874,7 +874,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why can populism appear on both the left and the right?",
         choices: [
-          { id: "a", label: "Because it is a 'thin' ideology that attaches to fuller host ideologies, which define who counts as the 'elite'" },
+          { id: "a", label: "A thin ideology on a fuller host" },
           { id: "b", label: "Because it has no relationship to other ideologies" },
           { id: "c", label: "Because left and right are identical" },
           { id: "d", label: "Because it only ever appears on the right" },
@@ -886,7 +886,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is populism's insistence on a single 'popular will' misleading?",
         choices: [
-          { id: "a", label: "Because real societies contain many groups with legitimately different interests; 'the people' is not one thing with one will" },
+          { id: "a", label: "Many interests; no single 'people'" },
           { id: "b", label: "Because the people never have any views" },
           { id: "c", label: "Because elites do not exist" },
           { id: "d", label: "Because everyone always agrees" },
@@ -898,7 +898,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is populism's 'anti-pluralist' dangerous edge?",
         choices: [
-          { id: "a", label: "Casting opponents, dissent, courts and a free press as illegitimate obstacles to the true will of the people" },
+          { id: "a", label: "Courts and press cast as illegitimate" },
           { id: "b", label: "Encouraging more political parties" },
           { id: "c", label: "Strengthening independent courts" },
           { id: "d", label: "Welcoming all opposing views" },
@@ -910,7 +910,7 @@ const politics: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Why can't populism simply be defeated by dismissing its supporters?",
         choices: [
-          { id: "a", label: "Because it channels real grievances and failures of representation, even where its diagnosis and remedies are flawed" },
+          { id: "a", label: "It channels real grievances, however flawed" },
           { id: "b", label: "Because its supporters are always irrational" },
           { id: "c", label: "Because it has no supporters" },
           { id: "d", label: "Because it never addresses real problems" },
@@ -977,7 +977,7 @@ const politics: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the defining feature of federalism?",
         choices: [
-          { id: "a", label: "Power is constitutionally divided between central and regional governments, each with its own protected authority" },
+          { id: "a", label: "Power split between centre and regions" },
           { id: "b", label: "All power rests with a single central government" },
           { id: "c", label: "There is no central government at all" },
           { id: "d", label: "Regions can be abolished by the centre at will" },
@@ -989,7 +989,7 @@ const politics: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "How does a unitary state differ from a federal one?",
         choices: [
-          { id: "a", label: "In a unitary state ultimate power rests with the central government, and local authorities exist at its discretion" },
+          { id: "a", label: "The centre holds ultimate power" },
           { id: "b", label: "A unitary state has no government" },
           { id: "c", label: "A unitary state always has more regions" },
           { id: "d", label: "They are identical" },
@@ -1001,7 +1001,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is federalism especially valuable for large, diverse countries?",
         choices: [
-          { id: "a", label: "It lets different regions govern themselves in matters they care about, accommodating diversity within one state" },
+          { id: "a", label: "Regions self-govern within one state" },
           { id: "b", label: "It forces complete uniformity on every region" },
           { id: "c", label: "It abolishes all regional differences" },
           { id: "d", label: "It only works in tiny countries" },
@@ -1013,7 +1013,7 @@ const politics: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What does the principle of 'subsidiarity' hold?",
         choices: [
-          { id: "a", label: "That decisions should be taken at the most local level capable of handling them effectively" },
+          { id: "a", label: "Decide at the lowest capable level" },
           { id: "b", label: "That all decisions should be centralised" },
           { id: "c", label: "That regions should never have any power" },
           { id: "d", label: "That courts should make all decisions" },
@@ -1025,7 +1025,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is a genuine tension or cost of federalism?",
         choices: [
-          { id: "a", label: "Different regions may have very different laws and services, so citizens of one country are treated quite differently by location" },
+          { id: "a", label: "Regions differ, so citizens are treated unequally" },
           { id: "b", label: "It guarantees identical treatment everywhere" },
           { id: "c", label: "It always eliminates gridlock" },
           { id: "d", label: "It removes all checks on power" },
@@ -1092,7 +1092,7 @@ const politics: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What does the field of public policy study?",
         choices: [
-          { id: "a", label: "What governments actually choose to do (and not do) to address public problems, and what results" },
+          { id: "a", label: "What governments do, and its results" },
           { id: "b", label: "Only the abstract theory of political ideas" },
           { id: "c", label: "Only how elections are run" },
           { id: "d", label: "Only the personalities of politicians" },
@@ -1104,7 +1104,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the key distinction between evidence and ideology in policy?",
         choices: [
-          { id: "a", label: "Evidence can show whether a policy achieves a goal (an empirical question); ideology concerns which goals to pursue (a value question)" },
+          { id: "a", label: "Evidence tests what works; ideology sets goals" },
           { id: "b", label: "Evidence and ideology are the same thing" },
           { id: "c", label: "Ideology settles all empirical questions" },
           { id: "d", label: "Evidence can decide which values to hold" },
@@ -1116,7 +1116,7 @@ const politics: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the 'implementation gap'?",
         choices: [
-          { id: "a", label: "The difference between a policy as designed on paper and what actually happens when it meets the real world" },
+          { id: "a", label: "The gap between paper and practice" },
           { id: "b", label: "The time between two elections" },
           { id: "c", label: "The gap between two political parties" },
           { id: "d", label: "The difference between two countries' laws" },
@@ -1128,7 +1128,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is implementation so difficult?",
         choices: [
-          { id: "a", label: "It depends on many actors the policymaker does not control, with frontline discretion, limited resources and unexpected resistance" },
+          { id: "a", label: "It relies on actors beyond control" },
           { id: "b", label: "Because passing the law is the hard part" },
           { id: "c", label: "Because policies never need to be delivered" },
           { id: "d", label: "Because implementation is always automatic" },
@@ -1140,7 +1140,7 @@ const politics: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why do policies frequently produce 'unintended consequences'?",
         choices: [
-          { id: "a", label: "Because complex social systems respond to intervention in hard-to-predict ways, as people and incentives adapt unexpectedly" },
+          { id: "a", label: "Complex systems adapt unpredictably" },
           { id: "b", label: "Because policymakers plan them deliberately" },
           { id: "c", label: "Because complex systems are easy to predict" },
           { id: "d", label: "Because policies never affect behaviour" },
