@@ -58,7 +58,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What made Cressey's subjects 'trusted violators'?",
         choices: [
-          { id: "a", label: "They entered their positions in good faith and later abused them, with nothing about them having changed" },
+          { id: "a", label: "They entered in good faith and later abused the trust" },
           { id: "b", label: "They were placed in roles despite known prior offences" },
           { id: "c", label: "They violated the trust of colleagues rather than of the organisation" },
           { id: "d", label: "They were trusted by auditors who failed to detect their schemes" },
@@ -70,7 +70,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Why does Cressey specify that the financial pressure must be non-shareable?",
         choices: [
-          { id: "a", label: "The problem cannot be admitted because admitting it would destroy a status the person holds" },
+          { id: "a", label: "Admitting it would destroy a status they hold" },
           { id: "b", label: "Shared financial problems are resolved by colleagues before fraud occurs" },
           { id: "c", label: "Non-shareable problems tend to involve larger sums of money" },
           { id: "d", label: "Only secret debts create a legal motive for concealment" },
@@ -82,7 +82,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does the sequence of rationalisation matter?",
         choices: [
-          { id: "a", label: "It precedes the act — without a story consistent with being honest, the act does not occur" },
+          { id: "a", label: "It precedes the act; without the story, no act" },
           { id: "b", label: "It follows the act, which is why guilt eventually produces confessions" },
           { id: "c", label: "It develops gradually as the amounts stolen increase over time" },
           { id: "d", label: "It is constructed by defence lawyers rather than by perpetrators" },
@@ -94,7 +94,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does fraud control target opportunity rather than the other two legs?",
         choices: [
-          { id: "a", label: "Pressure is invisible by definition and rationalisation resists intervention, so only opportunity is controllable" },
+          { id: "a", label: "Only opportunity is controllable; the rest is hidden" },
           { id: "b", label: "Opportunity is the leg most strongly correlated with actual losses" },
           { id: "c", label: "Regulators require opportunity controls but not ethics programmes" },
           { id: "d", label: "Removing opportunity also removes the pressure that motivates fraud" },
@@ -106,7 +106,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What does the capability addition predict about large frauds?",
         choices: [
-          { id: "a", label: "They concentrate at the top, where controls are weakest because the controlled administer them" },
+          { id: "a", label: "They cluster at the top, where controls are weakest" },
           { id: "b", label: "They are committed by technically skilled staff in junior positions" },
           { id: "c", label: "They occur mainly in organisations without segregation of duties" },
           { id: "d", label: "They require collaboration between at least two perpetrators" },
@@ -173,7 +173,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does perimeter security fail against insiders?",
         choices: [
-          { id: "a", label: "They generate no boundary event — their credentials, access and behaviour are all genuinely legitimate" },
+          { id: "a", label: "No boundary event: credentials and access are legitimate" },
           { id: "b", label: "Perimeter controls are typically misconfigured in most organisations" },
           { id: "c", label: "Insiders know which specific controls to circumvent" },
           { id: "d", label: "The perimeter cannot distinguish between employees and contractors" },
@@ -185,7 +185,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why can monitoring not resolve the insider detection problem?",
         choices: [
-          { id: "a", label: "The signal needed is intent, and identical actions carry opposite meanings depending on it" },
+          { id: "a", label: "The needed signal is intent, which actions hide" },
           { id: "b", label: "Monitoring systems cannot process the volume of logs organisations generate" },
           { id: "c", label: "Privacy law prohibits the monitoring that would be effective" },
           { id: "d", label: "Insiders routinely disable logging before acting" },
@@ -197,7 +197,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What limits behavioural analytics against the most damaging insiders?",
         choices: [
-          { id: "a", label: "Senior roles legitimately touch everything, and a patient insider sets their own baseline" },
+          { id: "a", label: "Senior roles touch everything and set their own baseline" },
           { id: "b", label: "Senior staff are usually excluded from monitoring by policy" },
           { id: "c", label: "Analytics require more historical data than most organisations retain" },
           { id: "d", label: "Behavioural models cannot be applied to shared service accounts" },
@@ -209,7 +209,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is the critical pathway dangerous to use as a profile?",
         choices: [
-          { id: "a", label: "Disgruntlement is near-universal, so screening on it generates ruinous false positives and manufactures grievance" },
+          { id: "a", label: "Disgruntlement is universal, so screening breeds false positives" },
           { id: "b", label: "The pathway stages occur in a different order in most real cases" },
           { id: "c", label: "Insiders deliberately conceal the early stages from colleagues" },
           { id: "d", label: "The research base is drawn from too few documented cases" },
@@ -221,7 +221,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Why do exit procedures yield disproportionate protection?",
         choices: [
-          { id: "a", label: "Much data theft happens in the final weeks, when motive is highest and access is not yet revoked" },
+          { id: "a", label: "Most theft comes in the final weeks, access still live" },
           { id: "b", label: "Departing employees are more likely to be recruited by competitors" },
           { id: "c", label: "Exit interviews reliably surface prior misconduct" },
           { id: "d", label: "Revoking access removes the organisation's legal liability" },
@@ -288,7 +288,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the 'rule of reciprocity'?",
         choices: [
-          { id: "a", label: "A widespread social norm that we feel obliged to repay what others give us" },
+          { id: "a", label: "A norm that we must repay what others give" },
           { id: "b", label: "A law requiring equal payment for goods" },
           { id: "c", label: "The tendency to distrust all gifts" },
           { id: "d", label: "A rule that favours must never be repaid" },
@@ -300,7 +300,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is the 'unsolicited gift' an effective manipulation?",
         choices: [
-          { id: "a", label: "The obligation to reciprocate is triggered even by gifts we did not request, so a small gift creates debt that increases later compliance" },
+          { id: "a", label: "Even an unasked gift creates debt that raises compliance" },
           { id: "b", label: "Because people always ask for the gifts they receive" },
           { id: "c", label: "Because unsolicited gifts create no obligation" },
           { id: "d", label: "Because recipients can easily decline the feeling of debt" },
@@ -312,7 +312,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How does the 'door-in-the-face' technique exploit reciprocity?",
         choices: [
-          { id: "a", label: "A large request is refused, then a smaller one is framed as a concession, so the target feels obliged to reciprocate by accepting it" },
+          { id: "a", label: "Refuse a big ask, then a smaller one feels owed" },
           { id: "b", label: "Two identical requests are made in a row" },
           { id: "c", label: "Only a tiny request is ever made" },
           { id: "d", label: "The requester never compromises" },
@@ -324,7 +324,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "According to Cialdini, what mental shift frees you from a manipulative 'gift'?",
         choices: [
-          { id: "a", label: "Recognising that the gift is a compliance tactic rather than a genuine favour, so the reciprocity rule no longer binds you" },
+          { id: "a", label: "Seeing the gift as a tactic, not a favour" },
           { id: "b", label: "Rejecting all gifts from everyone forever" },
           { id: "c", label: "Always repaying double what you receive" },
           { id: "d", label: "Ignoring that a gift was given" },
@@ -336,7 +336,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Why is the defence NOT to reject all gifts and favours?",
         choices: [
-          { id: "a", label: "Because most reciprocity is healthy and underpins genuine cooperation; the goal is only to recognise deliberate exploitation" },
+          { id: "a", label: "Most reciprocity is healthy and fine" },
           { id: "b", label: "Because all gifts are manipulative" },
           { id: "c", label: "Because reciprocity does not exist" },
           { id: "d", label: "Because refusing gifts is illegal" },
@@ -403,7 +403,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What background assumption has synthetic media broken?",
         choices: [
-          { id: "a", label: "That producing a convincing fake required resources proportionate to its quality" },
+          { id: "a", label: "A convincing fake once needed matching resources" },
           { id: "b", label: "That most people can identify manipulated images when they concentrate" },
           { id: "c", label: "That recordings are always made with the subject's knowledge" },
           { id: "d", label: "That digital media degrades detectably each time it is copied" },
@@ -415,7 +415,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is the liar's dividend worse than being deceived by fakes?",
         choices: [
-          { id: "a", label: "No one need be deceived — awareness alone lets the guilty dismiss real recordings" },
+          { id: "a", label: "No one need be fooled; the guilty just cry fake" },
           { id: "b", label: "It affects a larger number of people than any individual fake does" },
           { id: "c", label: "It causes reputational damage that cannot be legally remedied" },
           { id: "d", label: "It makes authentic recordings technically harder to produce" },
@@ -427,7 +427,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does educating the public about deepfakes have a perverse effect?",
         choices: [
-          { id: "a", label: "Awareness is exactly what makes the 'it's a deepfake' denial credible, so it grows the dividend" },
+          { id: "a", label: "Awareness makes the 'deepfake' denial credible" },
           { id: "b", label: "It teaches potential attackers which techniques are most effective" },
           { id: "c", label: "It causes people to over-detect fakes in ordinary photographs" },
           { id: "d", label: "It reduces the audience for legitimate investigative journalism" },
@@ -439,7 +439,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does publishing an effective detector undermine it?",
         choices: [
-          { id: "a", label: "A detector is a discriminator, and training against one is the standard way to build a better generator" },
+          { id: "a", label: "A detector is a discriminator that trains a better faker" },
           { id: "b", label: "Attackers can inspect the code to find implementation bugs" },
           { id: "c", label: "Public detectors attract adversarial attention they would not otherwise get" },
           { id: "d", label: "Detection accuracy declines as more people use the same tool" },
@@ -451,7 +451,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What can provenance achieve, and what can it not?",
         choices: [
-          { id: "a", label: "It raises confidence in signed media but cannot lower it in unsigned media, which is most genuine footage" },
+          { id: "a", label: "It lifts trust in signed media, but not in unsigned" },
           { id: "b", label: "It identifies synthetic media reliably once adoption reaches a majority of devices" },
           { id: "c", label: "It replaces the need to trust institutions with cryptographic guarantees" },
           { id: "d", label: "It works retroactively on recordings made before the standard existed" },
@@ -472,7 +472,7 @@ const socialEngineering: AuthoredLesson[] = [
     estimatedMinutes: 8,
     deck: "When we don't know what to do, we look at what everyone else is doing and copy them. This 'social proof' is usually a sensible shortcut, but it can be fabricated with fake reviews, bought followers and staged crowds — and in the wrong conditions it can even lead a crowd to ignore an emergency happening right in front of them.",
     keyTerms: [
-      { label: "Social proof", value: "Treating others' behaviour as evidence of the correct way to act, especially under uncertainty." },
+      { label: "Social proof", value: "Treating others' behaviour as the right way to act." },
       { label: "Uncertainty", value: "The condition that most strengthens reliance on social proof." },
       { label: "Fabricated social proof", value: "Fake reviews, bought followers and staged popularity used to manipulate." },
       { label: "The bystander effect", value: "When the inaction of others in a crowd leads each person not to act in an emergency." },
@@ -518,7 +518,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is social proof?",
         choices: [
-          { id: "a", label: "Treating others' behaviour as evidence of the correct way to act, especially under uncertainty" },
+          { id: "a", label: "Treating others' behaviour as the right way to act" },
           { id: "b", label: "A legal document proving ownership" },
           { id: "c", label: "The tendency to always disagree with the crowd" },
           { id: "d", label: "A guarantee that popular things are good" },
@@ -530,7 +530,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Under what condition is social proof strongest?",
         choices: [
-          { id: "a", label: "Uncertainty — when we are unsure what to do and lack our own basis for deciding" },
+          { id: "a", label: "Uncertainty, when we lack our own basis to decide" },
           { id: "b", label: "When we are confident experts" },
           { id: "c", label: "When we are completely alone" },
           { id: "d", label: "When others are very different from us" },
@@ -542,7 +542,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Which is an example of fabricated social proof?",
         choices: [
-          { id: "a", label: "Fake reviews, bought followers and inflated user numbers manufacturing apparent popularity" },
+          { id: "a", label: "Fake reviews and bought followers faking popularity" },
           { id: "b", label: "An independent laboratory test" },
           { id: "c", label: "A detailed product specification" },
           { id: "d", label: "A genuinely long queue that forms by itself" },
@@ -554,7 +554,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How does social proof contribute to the 'bystander effect'?",
         choices: [
-          { id: "a", label: "In an ambiguous emergency, each person reads others' inaction as evidence that nothing is wrong, suppressing everyone's response" },
+          { id: "a", label: "Others' inaction reads as all-clear" },
           { id: "b", label: "Crowds always act faster in emergencies" },
           { id: "c", label: "People ignore what others are doing" },
           { id: "d", label: "Social proof never affects groups" },
@@ -566,7 +566,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the sensible defence against misleading social proof?",
         choices: [
-          { id: "a", label: "Notice when you are relying on it and ask whether the crowd is genuine and informed, keeping your own judgement" },
+          { id: "a", label: "Ask whether the crowd is genuine" },
           { id: "b", label: "Always ignore what everyone else does" },
           { id: "c", label: "Always follow the largest crowd" },
           { id: "d", label: "Assume popularity always means quality" },
@@ -633,7 +633,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is pretexting?",
         choices: [
-          { id: "a", label: "Creating a fabricated identity and scenario to build trust and manipulate a target into giving up information, access or cooperation" },
+          { id: "a", label: "Faking an identity and scenario to extract access" },
           { id: "b", label: "Hacking a computer system through technical exploits" },
           { id: "c", label: "Sending mass advertising emails" },
           { id: "d", label: "Publishing a research study" },
@@ -645,7 +645,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is research so valuable to a pretexter?",
         choices: [
-          { id: "a", label: "Knowing names, jargon, procedures and current events makes the fabricated role fit the target's world and withstand scrutiny" },
+          { id: "a", label: "Names and jargon armour the fake role" },
           { id: "b", label: "Because research is required by law" },
           { id: "c", label: "Because it makes the attack slower" },
           { id: "d", label: "Because pretexts work better when generic" },
@@ -657,7 +657,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does pretexting turn a target's good qualities against them?",
         choices: [
-          { id: "a", label: "Helpfulness, trust and the desire to do one's job well are exactly the traits the pretexter exploits to gain cooperation" },
+          { id: "a", label: "Helpfulness and trust are what the pretexter exploits" },
           { id: "b", label: "Because helpful people are rare" },
           { id: "c", label: "Because good qualities make people suspicious" },
           { id: "d", label: "Because it only targets dishonest people" },
@@ -669,7 +669,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What routine gap does pretexting exploit?",
         choices: [
-          { id: "a", label: "That people rarely verify claimed identities in routine interactions, and feel awkward demanding proof from a plausible person" },
+          { id: "a", label: "People rarely verify identity and feel awkward asking" },
           { id: "b", label: "That people verify every identity constantly" },
           { id: "c", label: "That claimed identities are always false" },
           { id: "d", label: "That organisations never grant access" },
@@ -681,7 +681,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the core defence against pretexting?",
         choices: [
-          { id: "a", label: "Verifying identity through independent, trusted channels before acting, in a culture that makes verification normal" },
+          { id: "a", label: "Verify identity through a separate trusted channel" },
           { id: "b", label: "Trusting anyone who seems friendly" },
           { id: "c", label: "Using the credentials the person provides" },
           { id: "d", label: "Never granting access to anyone ever" },
@@ -702,7 +702,7 @@ const socialEngineering: AuthoredLesson[] = [
     estimatedMinutes: 8,
     deck: "Phishing is social engineering at industrial scale: deceptive messages, sent in vast numbers, designed to trick recipients into clicking a link, revealing a password, or authorising a payment. It remains one of the most common and damaging cyber-attacks precisely because it targets people, not machines.",
     keyTerms: [
-      { label: "Phishing", value: "Deceptive messages designed to trick recipients into revealing data, clicking malicious links or authorising action." },
+      { label: "Phishing", value: "Deceptive messages tricking you into data or clicks." },
       { label: "Spear phishing", value: "A targeted phishing attack tailored to a specific person or organisation." },
       { label: "The lure", value: "The pretext, authority and urgency that make a phishing message compelling." },
       { label: "Verification and caution", value: "Not acting on unsolicited messages without independent checks — the core defence." },
@@ -748,7 +748,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is phishing?",
         choices: [
-          { id: "a", label: "Deceptive messages designed to trick recipients into revealing data, clicking malicious links or authorising action" },
+          { id: "a", label: "Deceptive messages tricking you into data or clicks" },
           { id: "b", label: "A technical method of breaking encryption" },
           { id: "c", label: "A type of legitimate marketing survey" },
           { id: "d", label: "A way to speed up email delivery" },
@@ -760,7 +760,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "How does 'spear phishing' differ from generic mass phishing?",
         choices: [
-          { id: "a", label: "It is targeted and tailored to a specific person or organisation, using researched details, making it far harder to spot" },
+          { id: "a", label: "Researched and tailored to one target" },
           { id: "b", label: "It is sent to more people at once" },
           { id: "c", label: "It contains no links or requests" },
           { id: "d", label: "It is always less convincing" },
@@ -772,7 +772,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is mass phishing profitable even if very few people fall for it?",
         choices: [
-          { id: "a", label: "Sending millions of messages costs almost nothing, so a tiny success rate across a huge number is still profitable" },
+          { id: "a", label: "Millions of messages cost almost nothing" },
           { id: "b", label: "Because most recipients always comply" },
           { id: "c", label: "Because each message is expensive to send" },
           { id: "d", label: "Because it targets only wealthy people" },
@@ -784,7 +784,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What combination of elements typically makes up a phishing 'lure'?",
         choices: [
-          { id: "a", label: "An authoritative-seeming source, manufactured urgency or fear, a plausible pretext, and a call to click or provide information" },
+          { id: "a", label: "Fake authority, urgency, a call to click" },
           { id: "b", label: "A relaxed tone with no request for action" },
           { id: "c", label: "A message with no sender and no links" },
           { id: "d", label: "A slow, months-long request" },
@@ -796,7 +796,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the single most protective habit against phishing?",
         choices: [
-          { id: "a", label: "Not acting on the message's own links or replies, but verifying through a separate trusted channel" },
+          { id: "a", label: "Verify through a separate channel, not its links" },
           { id: "b", label: "Clicking the link quickly to check where it goes" },
           { id: "c", label: "Replying to confirm your details" },
           { id: "d", label: "Trusting any message that looks official" },
@@ -817,7 +817,7 @@ const socialEngineering: AuthoredLesson[] = [
     estimatedMinutes: 9,
     deck: "The most valuable information is often given away for free, in friendly conversation, by people who never realise they revealed anything. Elicitation is the subtle art of extracting information without ever asking a direct question — using rapport, flattery and casual remarks so skilfully that the target volunteers what they should have kept private.",
     keyTerms: [
-      { label: "Elicitation", value: "Drawing out information through ordinary conversation, without obvious questioning." },
+      { label: "Elicitation", value: "Drawing it out in casual talk, without obvious questioning." },
       { label: "Indirect questioning", value: "Getting information without asking for it directly, so the target does not feel interrogated." },
       { label: "Rapport and flattery", value: "Building warmth and appealing to ego to make people talk more freely." },
       { label: "Information awareness", value: "Being conscious of what you reveal and to whom — the core defence." },
@@ -863,7 +863,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is elicitation?",
         choices: [
-          { id: "a", label: "Subtly drawing information out of people through ordinary conversation, without directly asking or the target realising" },
+          { id: "a", label: "Drawing it out in casual talk" },
           { id: "b", label: "Formally interrogating a suspect" },
           { id: "c", label: "Sending phishing emails in bulk" },
           { id: "d", label: "Publicly demanding information" },
@@ -875,7 +875,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is 'flattery' an effective elicitation technique?",
         choices: [
-          { id: "a", label: "Praising someone's expertise encourages them to demonstrate and elaborate, revealing information to prove their knowledge" },
+          { id: "a", label: "Praising expertise makes people reveal to prove it" },
           { id: "b", label: "Because flattery makes people suspicious and silent" },
           { id: "c", label: "Because it directly asks for the information" },
           { id: "d", label: "Because people dislike being praised" },
@@ -887,7 +887,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why do the mental defences that a direct request would trigger fail to activate during elicitation?",
         choices: [
-          { id: "a", label: "Because a friendly conversation does not feel like a threat, so the target is not on guard" },
+          { id: "a", label: "A friendly chat feels safe, so guards drop" },
           { id: "b", label: "Because targets are always careless" },
           { id: "c", label: "Because elicitation uses obvious interrogation" },
           { id: "d", label: "Because people never protect information" },
@@ -899,7 +899,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is elicitation often a reconnaissance step for a bigger attack?",
         choices: [
-          { id: "a", label: "Individually harmless details can be aggregated into a valuable whole or used to make a later pretext or phishing attack more convincing" },
+          { id: "a", label: "Harmless details aggregate into a valuable whole" },
           { id: "b", label: "Because each detail is immediately damaging on its own" },
           { id: "c", label: "Because elicitation never gathers useful information" },
           { id: "d", label: "Because attackers prefer to work slowly for no reason" },
@@ -911,7 +911,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the foundation of defence against elicitation?",
         choices: [
-          { id: "a", label: "Information awareness — staying mindful of what is sensitive and what you reveal, even in friendly conversation, and recognising the techniques" },
+          { id: "a", label: "Staying mindful of what you reveal, even in chat" },
           { id: "b", label: "Refusing to speak to anyone" },
           { id: "c", label: "Sharing everything freely to seem helpful" },
           { id: "d", label: "Assuming all conversations are harmless" },
@@ -933,7 +933,7 @@ const socialEngineering: AuthoredLesson[] = [
     deck: "Some frustrations in apps and websites are not accidents but design — deliberate tricks that nudge you into spending more, sharing more, or agreeing to things you did not intend. 'Dark patterns' are manipulative interfaces engineered to serve the business at the user's expense, and learning to spot them is a genuine consumer defence.",
     keyTerms: [
       { label: "Dark patterns", value: "Deceptive interface designs that trick users into actions against their own interests." },
-      { label: "Roach motel", value: "A design that is easy to get into (signing up) but hard to get out of (cancelling)." },
+      { label: "Roach motel", value: "Easy to sign up, hard to cancel." },
       { label: "Confirmshaming", value: "Guilt-tripping language that shames users for declining an option." },
       { label: "Misdirection and hidden costs", value: "Steering attention or concealing charges until late in a process." },
     ],
@@ -978,7 +978,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What are 'dark patterns'?",
         choices: [
-          { id: "a", label: "Interface designs deliberately crafted to trick users into actions against their own interests" },
+          { id: "a", label: "Interfaces built to trick users against their interests" },
           { id: "b", label: "Accidental design flaws with no intent behind them" },
           { id: "c", label: "Colour schemes used at night" },
           { id: "d", label: "Security features that protect users" },
@@ -990,7 +990,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the 'roach motel' dark pattern?",
         choices: [
-          { id: "a", label: "A design that is easy to get into (signing up) but hard to get out of (cancelling)" },
+          { id: "a", label: "Easy to sign up, hard to cancel" },
           { id: "b", label: "A design that shames users for declining" },
           { id: "c", label: "A design that hides all prices" },
           { id: "d", label: "A design that adds items to your basket" },
@@ -1002,7 +1002,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is 'confirmshaming'?",
         choices: [
-          { id: "a", label: "Guilt-tripping language that shames users for declining an option, like 'No thanks, I don't want to save money'" },
+          { id: "a", label: "Shaming language for declining an option" },
           { id: "b", label: "Hiding extra costs until checkout" },
           { id: "c", label: "Adding items you did not choose" },
           { id: "d", label: "Charging after a free trial silently converts" },
@@ -1014,7 +1014,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why are dark patterns so common despite eroding trust?",
         choices: [
-          { id: "a", label: "They effectively boost business metrics like sign-ups and retention, and the manipulation is subtle enough to escape notice or regulation" },
+          { id: "a", label: "They lift metrics subtly enough to escape notice" },
           { id: "b", label: "Because users prefer manipulative designs" },
           { id: "c", label: "Because they are required by law" },
           { id: "d", label: "Because they reduce company profits" },
@@ -1026,7 +1026,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the primary defence against dark patterns?",
         choices: [
-          { id: "a", label: "Awareness — recognising the named patterns as deliberate manipulation so you can spot and resist them" },
+          { id: "a", label: "Recognising the named patterns as manipulation" },
           { id: "b", label: "Always clicking the largest, most colourful button" },
           { id: "c", label: "Never reading anything before agreeing" },
           { id: "d", label: "Trusting that all interface design is neutral" },
@@ -1093,7 +1093,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the central distinction between persuasion and manipulation?",
         choices: [
-          { id: "a", label: "Persuasion respects the other person's rational agency and freedom to choose; manipulation subverts it" },
+          { id: "a", label: "Persuasion respects your agency; manipulation subverts it" },
           { id: "b", label: "Persuasion is always dishonest; manipulation is always honest" },
           { id: "c", label: "They are the same thing" },
           { id: "d", label: "Persuasion never changes behaviour" },
@@ -1105,7 +1105,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Which criterion helps distinguish ethical persuasion from manipulation?",
         choices: [
-          { id: "a", label: "Truth — ethical persuasion uses honest information and valid reasoning, while manipulation relies on deception and false cues" },
+          { id: "a", label: "Honest reasoning versus deception" },
           { id: "b", label: "Volume — louder messages are more ethical" },
           { id: "c", label: "Length — longer messages are manipulative" },
           { id: "d", label: "Speed — faster persuasion is always ethical" },
@@ -1117,7 +1117,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the 'transparency test' for distinguishing persuasion from manipulation?",
         choices: [
-          { id: "a", label: "Whether the influence would still work if the target were fully aware of what was being done" },
+          { id: "a", label: "Would it still work if the target fully knew?" },
           { id: "b", label: "Whether the message is written clearly" },
           { id: "c", label: "Whether the persuader speaks quickly" },
           { id: "d", label: "Whether the target agrees immediately" },
@@ -1129,7 +1129,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is 'manipulation is justified when the end is good' a dangerous argument?",
         choices: [
-          { id: "a", label: "It still disrespects autonomy and sets a precedent easily abused, since almost everyone believes their own ends are good" },
+          { id: "a", label: "It still disrespects autonomy" },
           { id: "b", label: "Because good ends never exist" },
           { id: "c", label: "Because manipulation always fails" },
           { id: "d", label: "Because the ends never matter at all" },
@@ -1141,7 +1141,7 @@ const socialEngineering: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How do the criteria for ethical persuasion also serve as a defence?",
         choices: [
-          { id: "a", label: "When influence relies on deception, hides its intent, pressures or exploits you, or works only unseen, those are signatures of manipulation to recognise" },
+          { id: "a", label: "Deception, pressure or secrecy signal it" },
           { id: "b", label: "They guarantee you will never be influenced" },
           { id: "c", label: "They only apply to your own conduct" },
           { id: "d", label: "They make all persuasion impossible" },
