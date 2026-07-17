@@ -58,7 +58,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is a target's upregulation in diseased tissue considered weak validation evidence?",
         choices: [
-          { id: "a", label: "Expression may be driving the disease, responding to it, or merely tracking it, and the data cannot distinguish these" },
+          { id: "a", label: "Expression may drive the disease, respond to it, or merely track it" },
           { id: "b", label: "Expression data are technically unreliable and rarely replicate between laboratories" },
           { id: "c", label: "Upregulated proteins are usually secreted and therefore inaccessible to systemic drugs" },
           { id: "d", label: "Regulators explicitly refuse to accept expression data in support of a mechanism" },
@@ -70,7 +70,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What makes Mendelian randomisation powerful for inferring causality?",
         choices: [
-          { id: "a", label: "Alleles are randomly assorted at conception, giving a lifelong natural experiment that breaks confounding" },
+          { id: "a", label: "Alleles assort randomly at conception, a natural experiment" },
           { id: "b", label: "It pools many observational cohorts, so the resulting sample size overwhelms residual bias" },
           { id: "c", label: "It measures the target directly in tissue rather than relying on circulating biomarkers" },
           { id: "d", label: "It compares treated and untreated patients after adjusting for all known covariates" },
@@ -82,7 +82,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What did the analyses by Nelson and colleagues establish about genetically supported targets?",
         choices: [
-          { id: "a", label: "They are roughly twice as likely to reach approval, which reoriented the industry toward genetically anchored targets" },
+          { id: "a", label: "Roughly twice as likely to reach approval" },
           { id: "b", label: "They reach approval at the same rate but progress through clinical phases considerably faster" },
           { id: "c", label: "They are cheaper to prosecute chemically because genetic targets tend to have deeper binding pockets" },
           { id: "d", label: "They fail less often for safety reasons but show no difference in efficacy attrition" },
@@ -94,7 +94,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is tractability better described as modality-dependent than as a fixed property of a target?",
         choices: [
-          { id: "a", label: "Degraders and oligonucleotides need only a binding handle or the transcript, so targets with no classical pocket become accessible" },
+          { id: "a", label: "Degraders and oligonucleotides need only a handle or the transcript" },
           { id: "b", label: "Protein structures change substantially between tissues, so the same target is druggable in some organs only" },
           { id: "c", label: "Tractability is determined by expression level, which varies with the delivery route chosen" },
           { id: "d", label: "Any target becomes tractable once a sufficiently large compound library has been screened against it" },
@@ -106,7 +106,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "A trial shows complete target engagement but no clinical effect. Which explanation is most consistent with validation failure?",
         choices: [
-          { id: "a", label: "A redundant parallel pathway compensates, so the network absorbs the perturbation and the phenotype is unmoved" },
+          { id: "a", label: "A redundant parallel pathway compensates for the loss" },
           { id: "b", label: "The compound's half-life was too short to maintain plasma exposure between doses" },
           { id: "c", label: "The formulation limited oral bioavailability, so tissue concentrations never reached the target" },
           { id: "d", label: "The manufacturing process introduced an impurity that neutralised the active molecule" },
@@ -185,7 +185,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is the false-negative rate of preclinical models essentially unmeasurable?",
         choices: [
-          { id: "a", label: "Compounds a model predicts will fail are killed and never tested in humans, so the error is never observed" },
+          { id: "a", label: "Compounds predicted to fail are killed and never tested in humans" },
           { id: "b", label: "Negative preclinical results are commercially sensitive and therefore withheld from publication" },
           { id: "c", label: "Regulators do not require negative animal data to be submitted in the dossier" },
           { id: "d", label: "Statistical power in animal studies is too low to detect true negatives reliably" },
@@ -197,7 +197,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What made the TGN1412 trial such a stark illustration of species divergence?",
         choices: [
-          { id: "a", label: "The CD28 superagonist was safe at high multiples in macaques because their effector cells lacked the target human cells expressed" },
+          { id: "a", label: "The CD28 superagonist was safe in macaques lacking the human target" },
           { id: "b", label: "The compound was administered at a dose calculated from rodent rather than primate exposure data" },
           { id: "c", label: "The formulation aggregated on dilution, producing an immune response unrelated to the target" },
           { id: "d", label: "The macaque studies were underpowered and missed a cytokine signal that was in fact present" },
@@ -209,7 +209,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does subcutaneous xenograft oncology translate poorly to clinical outcome?",
         choices: [
-          { id: "a", label: "It omits the immune contexture, stroma and evolutionary history that largely determine clinical response" },
+          { id: "a", label: "It omits the immune contexture, stroma and evolutionary history" },
           { id: "b", label: "Human tumour cells lose their driver mutations once passaged in a murine host" },
           { id: "c", label: "Murine metabolism clears most cytotoxic agents too rapidly to show an effect" },
           { id: "d", label: "Tumour volume cannot be measured accurately enough in mice to support inference" },
@@ -221,7 +221,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What framing distinguishes rigorous use of a model from ritual use?",
         choices: [
-          { id: "a", label: "Asking what specific human question the system is qualified to answer, and what its measured performance on that question is" },
+          { id: "a", label: "Ask what human question it is qualified to answer, and how well" },
           { id: "b", label: "Asking whether the model has been used successfully by other companies in the same indication" },
           { id: "c", label: "Asking whether the model reproduces the largest possible number of clinical features" },
           { id: "d", label: "Asking whether the model has been approved for general use by the relevant regulator" },
@@ -288,7 +288,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Which Prentice condition is the one most candidate surrogates fail?",
         choices: [
-          { id: "a", label: "The treatment's entire effect on the clinical outcome must be captured by its effect on the surrogate" },
+          { id: "a", label: "The whole treatment effect must run through the surrogate" },
           { id: "b", label: "The surrogate must be measurable earlier in the disease course than the clinical outcome" },
           { id: "c", label: "The surrogate must correlate with the clinical outcome in observational cohorts" },
           { id: "d", label: "The treatment must produce a dose-dependent change in the surrogate marker" },
@@ -300,7 +300,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What did CAST demonstrate about arrhythmia suppression after myocardial infarction?",
         choices: [
-          { id: "a", label: "The drugs suppressed ectopy as designed yet roughly tripled mortality, because ectopy marked damage rather than causing death" },
+          { id: "a", label: "The drugs suppressed ectopy yet tripled mortality" },
           { id: "b", label: "The drugs failed to suppress ectopy, so the surrogate was never actually engaged in the trial" },
           { id: "c", label: "Mortality fell as predicted, confirming ectopy as a validated surrogate for sudden death" },
           { id: "d", label: "The trial was stopped early for benefit before the surrogate relationship could be assessed" },
@@ -312,7 +312,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is observational correlation between a marker and an outcome nearly worthless as surrogate validation?",
         choices: [
-          { id: "a", label: "It shows the marker tracks the disease, not that a drug-induced change in it delivers the benefit" },
+          { id: "a", label: "It shows the marker tracks disease, not that changing it helps" },
           { id: "b", label: "Observational cohorts are too small to establish the necessary statistical relationship" },
           { id: "c", label: "Markers measured observationally use different assays from those used in trials" },
           { id: "d", label: "Correlation in cohorts is usually an artefact of reverse causation from the outcome" },
@@ -324,7 +324,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the principal weakness of accelerated approval based on surrogates?",
         choices: [
-          { id: "a", label: "Confirmatory trials run late or return equivocal results, and withdrawing a marketed drug is far harder than never approving it" },
+          { id: "a", label: "Confirmatory trials run late, and withdrawal is harder than refusal" },
           { id: "b", label: "The surrogates chosen for accelerated approval are systematically weaker than those used elsewhere" },
           { id: "c", label: "Companies are not required to conduct any confirmatory studies once approval is granted" },
           { id: "d", label: "The pathway applies only to conditions where no clinical endpoint could ever be measured" },
@@ -336,7 +336,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why must a significant composite endpoint result always be read alongside its component breakdown?",
         choices: [
-          { id: "a", label: "The composite is usually driven by its softest, most frequent component, which may move while mortality does not" },
+          { id: "a", label: "The softest, most frequent component usually drives the composite" },
           { id: "b", label: "Composites are calculated using weightings that regulators require to be disclosed separately" },
           { id: "c", label: "Component events are adjudicated by different committees using incompatible definitions" },
           { id: "d", label: "Combining events reduces statistical power, so the headline result is systematically understated" },
@@ -403,7 +403,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the role of regulatory affairs within a pharmaceutical company?",
         choices: [
-          { id: "a", label: "Managing the relationship with regulators and steering a drug toward approval and ongoing compliance" },
+          { id: "a", label: "Steering a drug toward approval and ongoing compliance" },
           { id: "b", label: "Running the medicinal chemistry campaign that optimises a lead into a candidate molecule" },
           { id: "c", label: "Negotiating reimbursement terms with health systems once a licence has been granted" },
           { id: "d", label: "Designing and validating the commercial-scale manufacturing process for the product" },
@@ -415,7 +415,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What does the 'dossier' submitted for approval contain?",
         choices: [
-          { id: "a", label: "All discovery, preclinical, clinical and manufacturing data, often running to hundreds of thousands of pages" },
+          { id: "a", label: "All discovery, preclinical, clinical and manufacturing data" },
           { id: "b", label: "A summary of the pivotal trial results together with the proposed product labelling" },
           { id: "c", label: "The intellectual property filings and freedom-to-operate analysis supporting the product" },
           { id: "d", label: "The health-economic model and budget-impact analysis prepared for payers" },
@@ -427,7 +427,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is regulatory affairs described as strategic rather than administrative?",
         choices: [
-          { id: "a", label: "Early choices of population and endpoint determine whether the eventual evidence can satisfy a regulator at all" },
+          { id: "a", label: "Early population and endpoint choices decide if the evidence can satisfy a regulator" },
           { id: "b", label: "Regulators delegate the design of pivotal trials to the sponsor's regulatory function" },
           { id: "c", label: "The function sets the commercial launch sequence and pricing across international markets" },
           { id: "d", label: "Submission documents are legally privileged and therefore drafted by specialist counsel" },
@@ -439,7 +439,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why do sponsors consult regulators during development rather than only at submission?",
         choices: [
-          { id: "a", label: "To align on the evidence required, since finding out at the end that a trial measured the wrong thing can be catastrophic" },
+          { id: "a", label: "To align on the evidence required before it is too late to change it" },
           { id: "b", label: "Because regulators are obliged to co-author the statistical analysis plan for pivotal studies" },
           { id: "c", label: "Because early consultation shortens the statutory review clock once the dossier is filed" },
           { id: "d", label: "Because regulators provide development funding in exchange for early scientific input" },
@@ -451,7 +451,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Why does regulatory compliance continue after a drug is approved?",
         choices: [
-          { id: "a", label: "Safety reporting, manufacturing and promotion rules, and approvals for changes must be maintained for the product's life" },
+          { id: "a", label: "Safety, manufacturing and promotion obligations run for the product's life" },
           { id: "b", label: "The original approval lapses automatically unless the dossier is resubmitted periodically" },
           { id: "c", label: "Post-approval obligations transfer to the regulator, which then monitors the product directly" },
           { id: "d", label: "Compliance requirements apply only to products granted accelerated or conditional approval" },
@@ -518,7 +518,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "Why does regulatory approval not guarantee that patients will receive a drug?",
         choices: [
-          { id: "a", label: "Approval establishes safety and efficacy only; a separate payer decision determines whether it will be funded" },
+          { id: "a", label: "Approval proves safety and efficacy; a separate decision funds it" },
           { id: "b", label: "Approval covers the molecule but a further licence is required for each clinical indication" },
           { id: "c", label: "Approval lapses unless the sponsor secures a distribution agreement within a fixed period" },
           { id: "d", label: "Approval applies only to the country of origin until mutual recognition is negotiated" },
@@ -530,7 +530,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "How does the question a payer asks differ from the question a regulator asks?",
         choices: [
-          { id: "a", label: "The payer asks whether the benefit justifies the cost against alternatives; the regulator asks only whether it is safe and effective" },
+          { id: "a", label: "The payer weighs benefit against cost; the regulator only safety and efficacy" },
           { id: "b", label: "The payer asks whether the manufacturing process is reproducible; the regulator asks about clinical outcomes" },
           { id: "c", label: "The payer assesses long-term safety signals; the regulator confines itself to the pivotal trial period" },
           { id: "d", label: "The payer evaluates the strength of the patent estate; the regulator evaluates the clinical dossier" },
@@ -542,7 +542,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What does health technology assessment evaluate?",
         choices: [
-          { id: "a", label: "A drug's clinical benefit relative to its cost, often in standardised units such as quality-adjusted life years" },
+          { id: "a", label: "Clinical benefit relative to cost, often in quality-adjusted life years" },
           { id: "b", label: "The reproducibility and process capability of the commercial manufacturing route" },
           { id: "c", label: "Whether the pivotal trial's randomisation and blinding were adequately implemented" },
           { id: "d", label: "The accuracy of the sponsor's projected sales volumes in the launch market" },
@@ -554,7 +554,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why may a value proposition require real-world evidence beyond the pivotal trials?",
         choices: [
-          { id: "a", label: "Payers care about value in routine practice, not efficacy under the selected conditions of a controlled trial" },
+          { id: "a", label: "Payers care about value in routine practice, not trial efficacy" },
           { id: "b", label: "Regulators mandate real-world data collection as a condition of every marketing authorisation" },
           { id: "c", label: "Trial data cannot legally be reused in submissions to health technology assessment bodies" },
           { id: "d", label: "Real-world studies are the only design capable of demonstrating a cost-effectiveness ratio" },
@@ -566,7 +566,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What problem do outcomes-based or risk-sharing agreements attempt to solve?",
         choices: [
-          { id: "a", label: "They reconcile access with affordability under uncertainty by tying payment to whether the drug actually works" },
+          { id: "a", label: "They tie payment to whether the drug actually works" },
           { id: "b", label: "They allow a sponsor to raise the published list price without triggering reference pricing abroad" },
           { id: "c", label: "They transfer liability for adverse events from the manufacturer to the health system" },
           { id: "d", label: "They exempt a product from health technology assessment for a defined introductory period" },
@@ -633,7 +633,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is a drug's price largely unrelated to its manufacturing cost?",
         choices: [
-          { id: "a", label: "Per-dose production is often cheap, and the vast research and failure costs are already sunk at launch" },
+          { id: "a", label: "Per-dose cost is low, and research and failure costs are already sunk" },
           { id: "b", label: "Manufacturing costs are treated as confidential and so cannot inform published pricing" },
           { id: "c", label: "Regulators prohibit sponsors from referencing production costs in pricing negotiations" },
           { id: "d", label: "Production is outsourced, so the sponsor never learns the true per-unit cost of goods" },
@@ -645,7 +645,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What does 'value-based pricing' mean in practice?",
         choices: [
-          { id: "a", label: "Price is anchored to the health benefit delivered, so a marginal gain over cheap alternatives commands little" },
+          { id: "a", label: "Price anchors to health benefit, so a marginal gain commands little" },
           { id: "b", label: "Price is set at a fixed margin above the fully absorbed cost of goods and distribution" },
           { id: "c", label: "Price is matched to the average of comparable products already on the market" },
           { id: "d", label: "Price is determined by what the sponsor must recover to break even on the programme" },
@@ -669,7 +669,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why are the discounts behind a drug's net price kept confidential?",
         choices: [
-          { id: "a", label: "An openly lower price in one market would trigger pressure to match it elsewhere, ending price discrimination" },
+          { id: "a", label: "An open low price in one market forces the same everywhere" },
           { id: "b", label: "Disclosure would breach the patient confidentiality provisions attached to reimbursement data" },
           { id: "c", label: "Published net prices would allow generic manufacturers to undercut the originator precisely" },
           { id: "d", label: "Confidentiality is required by health technology assessment bodies before appraisal begins" },
@@ -681,7 +681,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the core tension underlying drug pricing policy?",
         choices: [
-          { id: "a", label: "Prices low enough for budgets and access, yet high enough to reward the risky innovation that produces new drugs" },
+          { id: "a", label: "Prices low enough for access, high enough to reward innovation" },
           { id: "b", label: "Whether the regulator or the payer should hold final authority over a product's licence" },
           { id: "c", label: "Whether cost-effectiveness should be measured before or after a product reaches the market" },
           { id: "d", label: "Whether list prices should be published annually or negotiated on a per-patient basis" },
@@ -748,7 +748,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is the defining feature of medical affairs as a function?",
         choices: [
-          { id: "a", label: "It is non-promotional, conducting balanced scientific exchange including a drug's limitations" },
+          { id: "a", label: "Non-promotional, balanced scientific exchange including limitations" },
           { id: "b", label: "It owns the promotional strategy for the product across all prescriber-facing channels" },
           { id: "c", label: "It sets the reimbursement price negotiated with national health technology bodies" },
           { id: "d", label: "It is responsible for the design and conduct of the pivotal registrational trials" },
@@ -760,7 +760,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What distinguishes a Medical Science Liaison from a sales representative?",
         choices: [
-          { id: "a", label: "The MSL conducts peer-to-peer scientific discussion and gathers insight rather than driving prescriptions" },
+          { id: "a", label: "The MSL holds peer scientific discussion and gathers insight" },
           { id: "b", label: "The MSL calls on hospital pharmacies while representatives call on individual prescribers" },
           { id: "c", label: "The MSL handles adverse event intake while representatives handle product enquiries" },
           { id: "d", label: "The MSL negotiates formulary placement while representatives deliver clinical education" },
@@ -784,7 +784,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does medical affairs generate real-world evidence after approval?",
         choices: [
-          { id: "a", label: "Controlled trials in selected patients do not capture performance across diverse populations in routine practice" },
+          { id: "a", label: "Selected-patient trials miss performance in routine practice" },
           { id: "b", label: "Regulators require the pivotal trial data to be independently replicated post-launch" },
           { id: "c", label: "Real-world data are needed to establish the product's original safety and efficacy claims" },
           { id: "d", label: "Trial datasets are destroyed after approval, so evidence must be regenerated" },
@@ -863,7 +863,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why can pre-approval trials not establish a drug's full safety profile?",
         choices: [
-          { id: "a", label: "Limited numbers over limited time cannot surface rare, delayed, or excluded-population risks" },
+          { id: "a", label: "Limited numbers and time miss rare and delayed risks" },
           { id: "b", label: "Trial safety monitoring is conducted by the sponsor rather than an independent body" },
           { id: "c", label: "Adverse events during trials are attributed to the underlying disease by convention" },
           { id: "d", label: "Safety data are only collected in the treatment arm, leaving no comparator baseline" },
@@ -875,7 +875,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What is a 'signal' in pharmacovigilance?",
         choices: [
-          { id: "a", label: "A pattern in reported data suggesting a drug may be causing a previously unrecognised harm" },
+          { id: "a", label: "A pattern in the data suggesting a possible new harm" },
           { id: "b", label: "A confirmed causal relationship between a product and a specific adverse outcome" },
           { id: "c", label: "A regulatory notice requiring a sponsor to update its product labelling" },
           { id: "d", label: "A threshold breach in the manufacturing process that triggers a batch recall" },
@@ -887,7 +887,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is establishing causation from adverse event reports so difficult?",
         choices: [
-          { id: "a", label: "Patients taking a drug also fall ill for unrelated reasons, so single events may be pure coincidence" },
+          { id: "a", label: "Patients fall ill for unrelated reasons, so events may coincide" },
           { id: "b", label: "Reports are anonymised, so the same patient may be counted multiple times in a database" },
           { id: "c", label: "Adverse events are recorded using free text that cannot be analysed statistically" },
           { id: "d", label: "Companies are prohibited from investigating reports they receive about their own products" },
@@ -899,7 +899,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What range of actions follows confirmation of a new safety risk?",
         choices: [
-          { id: "a", label: "Graduated responses from label warnings and restricted use up to full market withdrawal" },
+          { id: "a", label: "Graduated: label warnings, restricted use, or withdrawal" },
           { id: "b", label: "Automatic suspension of the licence pending a fresh registrational trial programme" },
           { id: "c", label: "Mandatory recall of all distributed stock while the signal is investigated" },
           { id: "d", label: "Transfer of the product's marketing authorisation to the regulator for direct oversight" },
@@ -911,7 +911,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the principal structural weakness of the pharmacovigilance system?",
         choices: [
-          { id: "a", label: "It depends on voluntary reporting, and substantial underreporting can hide or delay signals" },
+          { id: "a", label: "Voluntary reporting means underreporting can hide signals" },
           { id: "b", label: "It relies on databases that cannot be shared between national regulators" },
           { id: "c", label: "It can only detect harms that were already suspected during clinical development" },
           { id: "d", label: "It requires proof of causation before any protective action may be taken" },
@@ -978,7 +978,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What characterises a patent cliff for a blockbuster medicine?",
         choices: [
-          { id: "a", label: "Revenue collapses by roughly 80–90% within a year or two as multiple generic entrants compete" },
+          { id: "a", label: "Revenue collapses 80–90% within a year or two" },
           { id: "b", label: "Revenue declines gradually over a decade as prescribers migrate to newer therapies" },
           { id: "c", label: "The originator loses the right to manufacture the product once exclusivity lapses" },
           { id: "d", label: "The regulator revokes the marketing authorisation and requires a fresh application" },
@@ -990,7 +990,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the economic justification for granting patent exclusivity on medicines?",
         choices: [
-          { id: "a", label: "Without it, copiers would undercut successes and no one would fund the risk of the failures" },
+          { id: "a", label: "Without it, copiers undercut successes and failures go unfunded" },
           { id: "b", label: "It compensates sponsors for the cost of the regulatory review process itself" },
           { id: "c", label: "It guarantees regulators a period in which to gather post-marketing safety data" },
           { id: "d", label: "It prevents shortages by limiting the number of manufacturers of a given molecule" },
@@ -1002,7 +1002,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "How do biosimilars differ from small-molecule generics?",
         choices: [
-          { id: "a", label: "They are highly similar rather than identical, requiring more testing, so prices fall less steeply" },
+          { id: "a", label: "Highly similar not identical, so prices fall less steeply" },
           { id: "b", label: "They are chemically identical but manufactured under a different regulatory pathway" },
           { id: "c", label: "They may only be marketed once the originator has voluntarily withdrawn its product" },
           { id: "d", label: "They are produced by the originator under licence rather than by independent competitors" },
@@ -1014,7 +1014,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does the patent cliff shape so much of the industry's corporate strategy?",
         choices: [
-          { id: "a", label: "Every blockbuster is a wasting asset with a known expiry, forcing continual replacement of future revenue" },
+          { id: "a", label: "Every blockbuster is a wasting asset with a known expiry" },
           { id: "b", label: "Expiry dates are unpredictable, so companies must hold large contingency reserves" },
           { id: "c", label: "Regulators require a replacement product to be filed before exclusivity lapses" },
           { id: "d", label: "Patent expiry triggers repayment obligations to the original research funders" },
@@ -1093,7 +1093,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why must GxP validation evidence be documented rather than simply performed?",
         choices: [
-          { id: "a", label: "The deliverable is a defensible argument an inspector can examine years later, so untraced testing does not count" },
+          { id: "a", label: "The deliverable is a defensible argument, so untraced testing fails" },
           { id: "b", label: "Documentation is required before a system may be connected to a validated network environment" },
           { id: "c", label: "Written records allow the vendor to transfer liability for defects to the implementing sponsor" },
           { id: "d", label: "Regulators recompute the test results from the documentation to confirm the software behaves correctly" },
@@ -1105,7 +1105,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What must a Part 11 compliant audit trail capture?",
         choices: [
-          { id: "a", label: "Who changed what and when, including the previous value, without being disableable by its users" },
+          { id: "a", label: "Who changed what and when, and cannot be disabled by users" },
           { id: "b", label: "Every read access to the record together with the querying user's network location" },
           { id: "c", label: "A cryptographic hash of the database recomputed at the close of each business day" },
           { id: "d", label: "The reviewer's written justification for each change, stored separately from the record" },
@@ -1117,7 +1117,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "What is the central principle GAMP 5 introduced to validation practice?",
         choices: [
-          { id: "a", label: "Effort should scale to risk, concentrating on configured or custom functions that affect safety and data integrity" },
+          { id: "a", label: "Effort scales to risk, focusing on safety-critical functions" },
           { id: "b", label: "Every function must be scripted and tested identically regardless of its origin or criticality" },
           { id: "c", label: "Validation should be repeated in full at fixed annual intervals for all regulated systems" },
           { id: "d", label: "Only bespoke software requires validation, since commercial products are covered by the vendor" },
@@ -1129,7 +1129,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "A laboratory uses a shared login for its analytical software. Which ALCOA+ principle does this primarily breach?",
         choices: [
-          { id: "a", label: "Attributable — the record can no longer be tied to the individual who generated it" },
+          { id: "a", label: "Attributable — the record cannot be tied to its author" },
           { id: "b", label: "Legible — the entries cannot be reliably read back by a subsequent reviewer" },
           { id: "c", label: "Enduring — the record will not survive for its required retention period" },
           { id: "d", label: "Accurate — the measured values themselves become unreliable" },
@@ -1141,7 +1141,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does a minor configuration change take far longer in a validated system than an unregulated one?",
         choices: [
-          { id: "a", label: "The validated state must be maintained, so the change needs impact assessment, proportionate testing and documented release" },
+          { id: "a", label: "The validated state must be maintained through assessed, tested change" },
           { id: "b", label: "The regulator must approve each individual configuration change before it can be deployed" },
           { id: "c", label: "Validated systems are technically architected to make configuration deliberately difficult" },
           { id: "d", label: "The full validation package must be regenerated from scratch after any modification" },
@@ -1256,7 +1256,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does moving into data change a vertical vendor's competitive position?",
         choices: [
-          { id: "a", label: "Data sits beneath the applications and is harder to displace, which pits the vendor against data incumbents rather than software rivals" },
+          { id: "a", label: "Data sits beneath the apps and is harder to displace" },
           { id: "b", label: "Data products are exempt from the validation requirements that apply to regulated workflow applications" },
           { id: "c", label: "Selling data allows the vendor to bypass procurement and sell directly to individual commercial end users" },
           { id: "d", label: "Reference data carries no ongoing maintenance obligation once it has been licensed to a customer" },
@@ -1335,7 +1335,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is a TMF assembled shortly before an inspection problematic even if complete and accurate?",
         choices: [
-          { id: "a", label: "It shows the file was reconstructed rather than used to run the trial, so it cannot evidence contemporaneous oversight" },
+          { id: "a", label: "A reconstructed file cannot evidence contemporaneous oversight" },
           { id: "b", label: "Documents filed retrospectively are automatically rejected as invalid under ICH GCP requirements" },
           { id: "c", label: "Late filing corrupts the electronic audit trail and renders the underlying records unreadable to inspectors" },
           { id: "d", label: "Inspectors are only permitted to examine documents that were filed within a defined statutory window" },
@@ -1359,7 +1359,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does moving a TMF from paper to electronic change it qualitatively?",
         choices: [
-          { id: "a", label: "It becomes a validated regulated system whose records need audit trails, and whose completeness and timeliness become measurable" },
+          { id: "a", label: "It becomes a validated system with audit trails and metrics" },
           { id: "b", label: "It removes the requirement to retain original wet-ink documents once they have been scanned and indexed" },
           { id: "c", label: "It transfers responsibility for file completeness from the sponsor to the software vendor supplying the system" },
           { id: "d", label: "It allows inspectors to access the file remotely, which shortens the duration of a regulatory inspection" },
@@ -1474,7 +1474,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why does a single global product change create a synchronisation problem?",
         choices: [
-          { id: "a", label: "It fans out into market-specific actions on independent timelines, so different countries are legitimately on different versions" },
+          { id: "a", label: "It fans out into market-specific timelines and versions" },
           { id: "b", label: "All markets must implement the change simultaneously, which requires coordinating every health authority's approval date" },
           { id: "c", label: "The change invalidates the product's registration in every market until the last approval is received" },
           { id: "d", label: "Manufacturing must halt global production of the product until all regulatory notifications have been acknowledged" },
@@ -1486,7 +1486,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why has IDMP implementation proved so protracted?",
         choices: [
-          { id: "a", label: "It forces a single structured authoritative answer for data companies have long held inconsistently across functions" },
+          { id: "a", label: "It forces one authoritative answer where functions long diverged" },
           { id: "b", label: "The underlying scientific concepts it encodes are contested and have not yet been agreed internationally" },
           { id: "c", label: "The standard requires substantial computing infrastructure that most sponsors have been unwilling to fund" },
           { id: "d", label: "Health authorities have been unable to agree which of them should host the resulting product database" },
@@ -1601,7 +1601,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why must the CRM and the promotional content system be connected?",
         choices: [
-          { id: "a", label: "The record of what was shown to a physician only means anything if the item shown was an approved version" },
+          { id: "a", label: "The record only counts if the item shown was approved" },
           { id: "b", label: "Sales representatives require offline access to content, which only the CRM can provide in the field" },
           { id: "c", label: "Transparency reporting requires the monetary value of each content asset shown to be disclosed" },
           { id: "d", label: "Content approval workflows cannot execute unless they are triggered by a scheduled CRM interaction" },
@@ -1668,7 +1668,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why is HCP identity resolution an inference problem rather than a lookup?",
         choices: [
-          { id: "a", label: "One physician appears across registries and institutions under varying names and credentials, so matching must be judged" },
+          { id: "a", label: "One physician appears under varying names, so matching is judged" },
           { id: "b", label: "Health authorities deliberately withhold physician identifiers to protect professional privacy from commercial use" },
           { id: "c", label: "Physicians are legally entitled to use a different registered identity at each institution where they practise" },
           { id: "d", label: "There is no national registry of qualified physicians in any major pharmaceutical market" },
@@ -1692,7 +1692,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "Why do companies buy HCP reference data rather than maintaining it themselves?",
         choices: [
-          { id: "a", label: "The underlying reality changes continuously, making stewardship an industrial operation and entirely non-differentiating" },
+          { id: "a", label: "Reality changes continuously, making stewardship industrial" },
           { id: "b", label: "Regulations prohibit manufacturers from holding their own master records of healthcare professionals" },
           { id: "c", label: "Professional registries are only licensed to specialist data vendors and not to pharmaceutical companies" },
           { id: "d", label: "Internally maintained data cannot be used to support statutory transparency reporting submissions" },
@@ -1704,7 +1704,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "depth",
         prompt: "What does the Sunshine Act require manufacturers to report?",
         choices: [
-          { id: "a", label: "Transfers of value to physicians and teaching hospitals, published in the searchable Open Payments database" },
+          { id: "a", label: "Transfers of value published in the Open Payments database" },
           { id: "b", label: "The total promotional expenditure per product, disclosed annually in aggregate to the regulator" },
           { id: "c", label: "Every clinical interaction between a sales representative and a prescribing healthcare professional" },
           { id: "d", label: "The prescribing volumes attributable to each physician the company has engaged commercially" },
@@ -1716,7 +1716,7 @@ const pharmaceuticalBusinesses: AuthoredLesson[] = [
         dimension: "reasoning",
         prompt: "A physician objects to promotional contact. Why are their reportable transfers of value still disclosed?",
         choices: [
-          { id: "a", label: "The two rest on different lawful bases, and a statutory reporting obligation is not defeated by a marketing objection" },
+          { id: "a", label: "Different lawful bases: a statutory duty overrides a marketing objection" },
           { id: "b", label: "Transparency disclosures are anonymised, so the objection has no bearing on what is published" },
           { id: "c", label: "An objection only takes effect once the current reporting period has closed and been submitted" },
           { id: "d", label: "Physicians waive their objection rights by accepting any transfer of value from a manufacturer" },
