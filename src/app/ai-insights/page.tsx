@@ -164,9 +164,22 @@ export default async function AiInsightsPage({
                     className="rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] p-4"
                     key={relationship.label}
                   >
-                    <p className="text-sm font-semibold text-[#2c2824]">
-                      {relationship.label}
-                    </p>
+                    <div className="flex items-baseline justify-between gap-3">
+                      <p className="text-sm font-semibold text-[#2c2824]">
+                        {relationship.label}
+                      </p>
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${
+                          relationship.strength === "clear"
+                            ? "bg-[#bb5d3a]/12 text-[#8f442c]"
+                            : relationship.strength === "slight"
+                              ? "bg-[#2c2824]/[0.07] text-[#6f6254]"
+                              : "bg-[#2c2824]/[0.05] text-[#9a8d7a]"
+                        }`}
+                      >
+                        {relationship.headline}
+                      </span>
+                    </div>
                     <p className="mt-1 text-sm leading-6 text-[#71685c]">
                       {relationship.note}
                     </p>

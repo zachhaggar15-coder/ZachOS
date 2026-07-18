@@ -1031,7 +1031,10 @@ export function DashboardShell({
                   key={relationship.label}
                 >
                   <p className="text-xs text-zinc-500">{relationship.label}</p>
-                  <p className="mt-1 text-sm text-zinc-200">
+                  <p className="mt-1 text-sm font-medium text-zinc-100">
+                    {relationship.headline}
+                  </p>
+                  <p className="mt-1 text-xs leading-5 text-zinc-400">
                     {relationship.note}
                   </p>
                 </div>

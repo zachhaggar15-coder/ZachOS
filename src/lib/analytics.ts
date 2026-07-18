@@ -15,8 +15,14 @@ export type AverageMetric = {
 };
 
 export type RelationshipMetric = {
+  /** Plain-language reading of the split, e.g. "1.4 higher mood". */
+  headline: string;
   label: string;
+  /** The full sentence with both group averages and the sample size. */
   note: string;
+  sampleSize: number;
+  strength: "none" | "slight" | "clear";
+  /** Pearson r, kept for the AI prompt and charts. */
   value: number | null;
 };
 
@@ -132,25 +138,123 @@ function correlation(points: { x: number; y: number }[]) {
   return numerator / Math.sqrt(xVariance * yVariance);
 }
 
-function relationshipNote(value: number | null) {
-  if (value === null) {
-    return "Not enough paired data yet.";
+// Keep acronyms like HRV intact when they appear mid-sentence.
+function sentenceCase(label: string) {
+  return label === label.toUpperCase() ? label : label.toLowerCase();
+}
+
+function median(values: number[]) {
+  const sorted = [...values].sort((left, right) => left - right);
+  const middle = Math.floor(sorted.length / 2);
+
+  return sorted.length % 2
+    ? sorted[middle]
+    : (sorted[middle - 1] + sorted[middle]) / 2;
+}
+
+type RelationshipSpec = {
+  /** How many decimals to show on the driver (x) value. */
+  driverDigits?: number;
+  driverLabel: string;
+  driverUnit?: string;
+  label: string;
+  outcomeDigits?: number;
+  outcomeLabel: string;
+  outcomeUnit?: string;
+  points: { x: number; y: number }[];
+};
+
+/**
+ * Turn a scatter of paired points into a sentence a human can act on.
+ *
+ * A Pearson r tells you a relationship exists but not what to do about it, so
+ * this splits the days at the median driver value and reports the difference in
+ * outcome between the two halves - "mood averages 1.4 higher on days after a
+ * sleep score of 78+" - which is the form you can actually test against.
+ */
+function describeRelationship(spec: RelationshipSpec): RelationshipMetric {
+  const {
+    driverDigits = 0,
+    driverLabel,
+    driverUnit = "",
+    label,
+    outcomeDigits = 1,
+    outcomeLabel,
+    outcomeUnit = "",
+    points,
+  } = spec;
+  const value = correlation(points);
+  const sampleSize = points.length;
+
+  // Below this a median split is noise, not a signal.
+  if (sampleSize < 8) {
+    return {
+      headline: "Not enough data",
+      label,
+      note: `Needs at least 8 paired days to compare; there ${
+        sampleSize === 1 ? "is" : "are"
+      } ${sampleSize}.`,
+      sampleSize,
+      strength: "none",
+      value,
+    };
   }
 
-  const strength = Math.abs(value);
-  if (strength < 0.2) {
-    return "Weak relationship in the current data.";
+  const cutoff = median(points.map((point) => point.x));
+  const high = points.filter((point) => point.x >= cutoff).map((point) => point.y);
+  const low = points.filter((point) => point.x < cutoff).map((point) => point.y);
+
+  if (!high.length || !low.length) {
+    return {
+      headline: "No variation",
+      label,
+      note: `${driverLabel} barely varies across these ${sampleSize} days, so there is nothing to compare.`,
+      sampleSize,
+      strength: "none",
+      value,
+    };
   }
 
-  if (strength < 0.45) {
-    return value > 0
-      ? "Moderate positive relationship in the current data."
-      : "Moderate negative relationship in the current data.";
+  const highAverage = average(high) ?? 0;
+  const lowAverage = average(low) ?? 0;
+  const delta = highAverage - lowAverage;
+  const spread = Math.abs(delta);
+  // Judge the gap against the outcome's own scale rather than a fixed number,
+  // so this works for mood out of 10 and HRV in milliseconds alike.
+  const outcomeScale = Math.abs(average([...high, ...low]) ?? 1) || 1;
+  const relative = spread / outcomeScale;
+  const strength: RelationshipMetric["strength"] =
+    relative < 0.04 ? "none" : relative < 0.1 ? "slight" : "clear";
+
+  const cutoffText = `${cutoff.toFixed(driverDigits)}${driverUnit}`;
+  const deltaText = `${spread.toFixed(outcomeDigits)}${outcomeUnit}`;
+  const direction = delta > 0 ? "higher" : "lower";
+
+  if (strength === "none") {
+    return {
+      headline: "No clear difference",
+      label,
+      note: `${outcomeLabel} is about the same above and below ${cutoffText} ${sentenceCase(driverLabel)} (${highAverage.toFixed(
+        outcomeDigits,
+      )} vs ${lowAverage.toFixed(outcomeDigits)}, n=${sampleSize}).`,
+      sampleSize,
+      strength,
+      value,
+    };
   }
 
-  return value > 0
-    ? "Strong positive relationship in the current data."
-    : "Strong negative relationship in the current data.";
+  return {
+    headline: `${deltaText} ${direction} ${sentenceCase(outcomeLabel)}`,
+    label,
+    note: `${outcomeLabel} averages ${highAverage.toFixed(
+      outcomeDigits,
+    )}${outcomeUnit} when ${sentenceCase(driverLabel)} is ${cutoffText} or above, against ${lowAverage.toFixed(
+      outcomeDigits,
+    )}${outcomeUnit} below it - ${deltaText} ${direction} (n=${sampleSize}).`,
+    sampleSize,
+    strength,
+    value,
+  };
 }
 
 function weeklyRunningByWeek(activities: Activity[]) {
@@ -265,13 +369,29 @@ export function calculateAnalytics(input: {
     .filter((point) => point.x > 0 && point.y > 0);
 
   const relationships = [
-    { label: "Sleep score and mood", value: correlation(sleepMood) },
-    { label: "Deep work and mood", value: correlation(deepWorkMood) },
-    { label: "Training load and HRV", value: correlation(trainingHrv) },
-  ].map((item) => ({
-    ...item,
-    note: relationshipNote(item.value),
-  }));
+    describeRelationship({
+      driverLabel: "Sleep score",
+      label: "Sleep score and mood",
+      outcomeLabel: "Mood",
+      points: sleepMood,
+    }),
+    describeRelationship({
+      driverDigits: 1,
+      driverLabel: "Deep work",
+      driverUnit: "h",
+      label: "Deep work and mood",
+      outcomeLabel: "Mood",
+      points: deepWorkMood,
+    }),
+    describeRelationship({
+      driverLabel: "Training load",
+      label: "Training load and HRV",
+      outcomeDigits: 0,
+      outcomeLabel: "HRV",
+      outcomeUnit: "ms",
+      points: trainingHrv,
+    }),
+  ];
 
   return {
     averages: [
