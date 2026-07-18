@@ -107,8 +107,8 @@ export function LearningZoneWheel({ topics }: LearningZoneWheelProps) {
             </p>
             <p className="mt-1 text-sm leading-6 text-[#71685c]">
               {selectedTopic
-                ? "The next page will choose the best lesson inside that topic from the registered library."
-                : "Philosophy, marketing, economics and science are loaded."}
+                ? "Open a lesson inside that topic."
+                : "Spin the wheel or pick a topic from the list."}
             </p>
           </div>
           <div className="flex flex-wrap gap-2">

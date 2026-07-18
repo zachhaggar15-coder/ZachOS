@@ -2,36 +2,20 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { saveLearningLessonNote, submitLearningQuiz } from "@/app/actions";
+import { submitLearningQuiz } from "@/app/actions";
 import { PendingSubmitButton } from "@/components/pending-submit-button";
 import type { LearningLesson } from "@/lib/learning-zone";
-import type { LearningLessonNote } from "@/lib/supabase/database.types";
 
 type LearningLessonExperienceProps = {
   lesson: LearningLesson;
-  note?: LearningLessonNote | null;
 };
 
-function formatTimer(seconds: number) {
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-}
-
-export function LearningLessonExperience({
-  lesson,
-  note,
-}: LearningLessonExperienceProps) {
+export function LearningLessonExperience({ lesson }: LearningLessonExperienceProps) {
   const [quizOpen, setQuizOpen] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [startedAt] = useState(() => new Date().toISOString());
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>(
     {},
-  );
-  const estimatedSeconds = lesson.estimatedMinutes * 60;
-  const readingProgress = Math.min(
-    100,
-    Math.round((elapsedSeconds / estimatedSeconds) * 100),
   );
   const answeredCount = useMemo(
     () =>
@@ -49,42 +33,26 @@ export function LearningLessonExperience({
   }, []);
 
   return (
-    <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
+    <div className="grid gap-5">
       <article className="rounded-md border border-[#2c2824]/[0.13] bg-[#fffaf2] p-5">
-        <div className="flex flex-col gap-4 border-b border-[#2c2824]/[0.1] pb-5 md:flex-row md:items-start md:justify-between">
-          <div>
-            <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
-              {lesson.topic}
-            </p>
-            <h2 className="zach-display mt-1 max-w-3xl text-4xl font-medium leading-tight text-[#111820]">
-              {lesson.title}
-            </h2>
-            <div className="mt-3 flex flex-wrap gap-2">
-              <span className="rounded-md border border-[#bb5d3a]/30 bg-[#bb5d3a]/10 px-2.5 py-1 text-xs font-semibold text-[#8f442c]">
-                {lesson.concept.level}
-              </span>
-              <span className="rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] px-2.5 py-1 text-xs font-semibold text-[#71685c]">
-                Concept: {lesson.concept.label}
-              </span>
-            </div>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[#71685c]">
-              {lesson.subtitle}
-            </p>
+        <div className="border-b border-[#2c2824]/[0.1] pb-5">
+          <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
+            {lesson.topic}
+          </p>
+          <h2 className="zach-display mt-1 max-w-3xl text-4xl font-medium leading-tight text-[#111820]">
+            {lesson.title}
+          </h2>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <span className="rounded-md border border-[#bb5d3a]/30 bg-[#bb5d3a]/10 px-2.5 py-1 text-xs font-semibold text-[#8f442c]">
+              {lesson.concept.level}
+            </span>
+            <span className="rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] px-2.5 py-1 text-xs font-semibold text-[#71685c]">
+              {lesson.concept.label}
+            </span>
           </div>
-          <div className="min-w-[158px] rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] p-3">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#9a7d5f]">
-              Reading
-            </p>
-            <p className="zach-display mt-1 text-3xl leading-none text-[#111820]">
-              {formatTimer(elapsedSeconds)}
-            </p>
-            <div className="mt-3 h-1.5 rounded-full bg-[#2c2824]/[0.08]">
-              <div
-                className="h-1.5 rounded-full bg-[#bb5d3a]"
-                style={{ width: `${readingProgress}%` }}
-              />
-            </div>
-          </div>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-[#71685c]">
+            {lesson.subtitle}
+          </p>
         </div>
 
         <p className="zach-display mt-5 text-2xl leading-8 text-[#3a342c]">
@@ -105,26 +73,12 @@ export function LearningLessonExperience({
             </section>
           ))}
         </div>
-      </article>
 
-      <aside className="grid content-start gap-5">
-        <section className="rounded-md border border-[#2c2824]/[0.13] bg-[#fffaf2] p-5">
-          <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
-            Concept rank
-          </p>
-          <p className="zach-display mt-2 text-3xl font-medium text-[#111820]">
-            {lesson.concept.level}
-          </p>
-          <p className="mt-2 text-sm leading-6 text-[#71685c]">
-            {lesson.concept.summary}
-          </p>
-        </section>
-
-        <section className="rounded-md border border-[#2c2824]/[0.13] bg-[#fffaf2] p-5">
+        <section className="mt-7 border-t border-[#2c2824]/[0.1] pt-5">
           <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
             Key terms
           </p>
-          <div className="mt-4 grid gap-3">
+          <div className="mt-4 grid gap-3 md:grid-cols-2">
             {lesson.keyTerms.map((term) => (
               <div
                 className="rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] p-3"
@@ -140,96 +94,10 @@ export function LearningLessonExperience({
             ))}
           </div>
         </section>
+      </article>
 
-        <section className="rounded-md border border-[#2c2824]/[0.13] bg-[#fffaf2] p-5">
-          <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
-            Notebook
-          </p>
-          <h3 className="zach-display mt-1 text-2xl font-medium text-[#111820]">
-            Save context
-          </h3>
-          <form action={saveLearningLessonNote} className="mt-4 grid gap-3">
-            <input name="lesson_slug" type="hidden" value={lesson.slug} />
-            <label className="flex items-start gap-3 rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] p-3 text-sm font-semibold text-[#2c2824]">
-              <input
-                className="mt-1 h-4 w-4 accent-[#bb5d3a]"
-                defaultChecked={note?.bookmarked ?? false}
-                name="bookmarked"
-                type="checkbox"
-              />
-              <span>Bookmark this lesson</span>
-            </label>
-            <label className="flex items-start gap-3 rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] p-3 text-sm font-semibold text-[#2c2824]">
-              <input
-                className="mt-1 h-4 w-4 accent-[#bb5d3a]"
-                defaultChecked={note?.revisit ?? false}
-                name="revisit"
-                type="checkbox"
-              />
-              <span>Revisit later</span>
-            </label>
-            <label className="grid gap-1 text-sm font-semibold text-[#2c2824]">
-              Highlight
-              <input
-                className="min-h-10 rounded-md border border-[#2c2824]/[0.13] bg-[#f9f4ec] px-3 text-sm font-normal text-[#3f382f] outline-none transition focus:border-[#bb5d3a]"
-                defaultValue={note?.highlight ?? ""}
-                name="highlight"
-                placeholder="A term, sentence, or idea worth keeping"
-              />
-            </label>
-            <label className="grid gap-1 text-sm font-semibold text-[#2c2824]">
-              Note
-              <textarea
-                className="min-h-28 resize-y rounded-md border border-[#2c2824]/[0.13] bg-[#f9f4ec] p-3 text-sm font-normal leading-6 text-[#3f382f] outline-none transition focus:border-[#bb5d3a]"
-                defaultValue={note?.note ?? ""}
-                name="note"
-                placeholder="Write the context you want future-you to remember."
-              />
-            </label>
-            <PendingSubmitButton
-              className="h-10 rounded-md border border-[#241f1a] bg-[#241f1a] px-4 text-sm font-semibold text-[#f9f4ec] transition hover:bg-[#3a342c]"
-            >
-              Save notebook
-            </PendingSubmitButton>
-          </form>
-        </section>
-
-        <details className="rounded-md border border-[#2c2824]/[0.13] bg-[#fffaf2] p-5">
-          <summary className="cursor-pointer list-none">
-            <span className="zach-ui block text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
-              Sources
-            </span>
-            <span className="zach-display mt-1 block text-2xl font-medium text-[#111820]">
-              References behind this lesson
-            </span>
-          </summary>
-          <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
-            Source drawer
-          </p>
-          <div className="mt-4 grid gap-3">
-            {lesson.sources.map((source) => (
-              <a
-                className="rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] p-3 transition hover:border-[#bb5d3a]/40"
-                href={source.url}
-                key={source.url}
-                rel="noreferrer"
-                target="_blank"
-              >
-                <span className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#bb5d3a]">
-                  {source.type}
-                </span>
-                <span className="mt-1 block text-sm font-semibold text-[#2c2824]">
-                  {source.label}
-                </span>
-                <span className="mt-1 block text-sm leading-6 text-[#71685c]">
-                  {source.note}
-                </span>
-              </a>
-            ))}
-          </div>
-        </details>
-
-        {!quizOpen && (
+      {!quizOpen && (
+        <div className="flex justify-end">
           <button
             className="h-11 rounded-md border border-[#bb5d3a] bg-[#bb5d3a] px-4 text-sm font-semibold text-[#f9f4ec] transition hover:bg-[#a94f31] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#bb5d3a]"
             onClick={() => setQuizOpen(true)}
@@ -237,13 +105,13 @@ export function LearningLessonExperience({
           >
             Start quiz
           </button>
-        )}
-      </aside>
+        </div>
+      )}
 
       {quizOpen && (
         <form
           action={submitLearningQuiz}
-          className="rounded-md border border-[#2c2824]/[0.13] bg-[#fffaf2] p-5 xl:col-span-2"
+          className="rounded-md border border-[#2c2824]/[0.13] bg-[#fffaf2] p-5"
         >
           <input name="lesson_slug" type="hidden" value={lesson.slug} />
           <input name="started_at" type="hidden" value={startedAt} />
@@ -313,8 +181,7 @@ export function LearningLessonExperience({
 
           <div className="mt-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <p className="text-sm leading-6 text-[#71685c]">
-              Points feed Knowledge, Reasoning, Application, Breadth and
-              Retention.
+              Answer every question to submit the quiz.
             </p>
             <PendingSubmitButton
               className="h-11 rounded-md border border-[#241f1a] bg-[#241f1a] px-5 text-sm font-semibold text-[#f9f4ec] transition hover:bg-[#3a342c] disabled:cursor-not-allowed disabled:opacity-50"

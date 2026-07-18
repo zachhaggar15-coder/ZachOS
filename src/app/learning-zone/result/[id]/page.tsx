@@ -7,16 +7,14 @@ import {
   ZachMetric,
   ZachNotice,
   ZachPageShell,
+  ZachPanel,
   ZachSetupRequired,
 } from "@/components/zach-shell";
 import { friendlyDatabaseError } from "@/lib/database-setup";
 import {
-  LEARNING_DIMENSION_LABELS,
   getLearningLesson,
   getLearningTopic,
   isLearningTopicId,
-  summariseLearningProgress,
-  type LearningDimension,
 } from "@/lib/learning-zone";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 import type { Json } from "@/lib/supabase/database.types";
@@ -42,14 +40,6 @@ type StoredAnswer = {
   prompt: string;
   selectedAnswer: string;
 };
-
-const dimensions: LearningDimension[] = [
-  "breadth",
-  "depth",
-  "retention",
-  "reasoning",
-  "consistency",
-];
 
 function isRecord(value: Json | undefined): value is Record<string, Json | undefined> {
   return !!value && typeof value === "object" && !Array.isArray(value);
@@ -104,20 +94,12 @@ export default async function LearningResultPage({
     return <AuthPanel error={query.error} message={query.message} />;
   }
 
-  const [sessionResult, sessionsResult] = await Promise.all([
-    supabase
-      .from("learning_sessions")
-      .select("*")
-      .eq("user_id", user.id)
-      .eq("id", id)
-      .maybeSingle(),
-    supabase
-      .from("learning_sessions")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("completed_at", { ascending: false })
-      .limit(500),
-  ]);
+  const sessionResult = await supabase
+    .from("learning_sessions")
+    .select("*")
+    .eq("user_id", user.id)
+    .eq("id", id)
+    .maybeSingle();
 
   if (sessionResult.error) {
     return (
@@ -139,7 +121,6 @@ export default async function LearningResultPage({
 
   const session = sessionResult.data;
   const lesson = getLearningLesson(session.lesson_slug);
-  const progress = summariseLearningProgress(sessionsResult.data ?? []);
   const topic = isLearningTopicId(session.topic)
     ? getLearningTopic(session.topic)
     : null;
@@ -156,7 +137,7 @@ export default async function LearningResultPage({
           <ZachButtonLink href="/learning-zone">Learning Zone</ZachButtonLink>
           {topic && (
             <ZachButtonLink href={`/learning-zone/topic/${topic.id}`} primary>
-              Spin within {topic.label}
+              Pick {topic.label}
             </ZachButtonLink>
           )}
         </>
@@ -165,145 +146,88 @@ export default async function LearningResultPage({
       title={lesson?.title ?? "Learning Result"}
       userEmail={user.email}
     >
-      {(query.error || query.message || sessionsResult.error) && (
-        <ZachNotice tone={query.error || sessionsResult.error ? "error" : "success"}>
-          {query.error ||
-            (sessionsResult.error
-              ? friendlyDatabaseError(sessionsResult.error)
-              : undefined) ||
-            query.message}
+      {(query.error || query.message) && (
+        <ZachNotice tone={query.error ? "error" : "success"}>
+          {query.error || query.message}
         </ZachNotice>
       )}
 
-      <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-6">
+      <section className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         <ZachMetric
           label="Attempt"
           meta={`${session.correct_count}/${session.total_questions} correct`}
           value={`${accuracy}%`}
         />
-        <ZachMetric label="Points" meta="This session" value={session.score_points} />
-        <ZachMetric
-          label="Intellect"
-          meta="Cumulative"
-          value={progress.intellectScore}
-        />
+        <ZachMetric label="Score" meta="This quiz" value={session.score_points} />
         <ZachMetric
           label="Reading"
-          meta="Tracked in this session"
+          meta="This lesson"
           value={`${Math.round(session.reading_seconds / 60)} min`}
         />
         <ZachMetric
-          label="Concept"
+          label="Topic"
           meta={lesson?.concept.label ?? "Stored lesson"}
-          value={lesson?.concept.level ?? "--"}
-        />
-        <ZachMetric
-          label="Streak"
-          meta="Learning days"
-          value={progress.streakDays}
+          value={topic?.shortLabel ?? session.topic}
         />
       </section>
 
-      <section className="grid gap-4 xl:grid-cols-[420px_minmax(0,1fr)]">
-        <section className="rounded-md border border-[#2c2824]/[0.13] bg-[#fffaf2] p-5">
-          <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
-            Points earned
-          </p>
-          <h2 className="zach-display mt-1 text-3xl font-medium text-[#111820]">
-            Dimension split
-          </h2>
-          <div className="mt-5 grid gap-3">
-            {dimensions.map((dimension) => {
-              const sessionValue =
-                dimension === "breadth"
-                  ? session.breadth_points
-                  : dimension === "consistency"
-                    ? session.consistency_points
-                    : dimension === "depth"
-                      ? session.depth_points || session.knowledge_points + session.application_points
-                      : dimension === "reasoning"
-                        ? session.reasoning_points
-                        : session.retention_points;
-              const totalValue = progress.dimensions[dimension];
-
-              return (
-                <div
-                  className="rounded-md border border-[#2c2824]/[0.1] bg-[#f9f4ec] p-3"
-                  key={dimension}
-                >
-                  <div className="flex items-center justify-between gap-4">
-                    <span className="text-sm font-semibold text-[#2c2824]">
-                      {LEARNING_DIMENSION_LABELS[dimension]}
-                    </span>
-                    <span className="font-mono text-xs text-[#8c8273]">
-                      +{sessionValue}
-                    </span>
-                  </div>
-                  <p className="mt-1 text-xs text-[#8c8273]">
-                    cumulative {totalValue}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-
-        <section className="rounded-md border border-[#2c2824]/[0.13] bg-[#fffaf2] p-5">
+      <ZachPanel>
+        <div className="mb-4">
           <p className="zach-ui text-[10px] font-semibold uppercase tracking-[0.24em] text-[#9a7d5f]">
             Review
           </p>
           <h2 className="zach-display mt-1 text-3xl font-medium text-[#111820]">
             Answer explanations
           </h2>
-          <div className="mt-5 grid gap-3">
-            {answers.map((answer, index) => (
-              <article
-                className={`rounded-md border p-4 ${
-                  answer.correct
-                    ? "border-[#7a8c5a]/35 bg-[#7a8c5a]/10"
-                    : "border-[#bb5d3a]/35 bg-[#bb5d3a]/10"
-                }`}
-                key={`${answer.prompt}-${index}`}
-              >
-                <div className="flex flex-wrap items-center gap-2">
-                  <span
-                    className={`rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${
-                      answer.correct
-                        ? "bg-[#7a8c5a] text-[#f9f4ec]"
-                        : "bg-[#bb5d3a] text-[#f9f4ec]"
-                    }`}
-                  >
-                    {answer.correct ? "Correct" : "Review"}
-                  </span>
-                  <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8c8273]">
-                    {answer.dimension}
-                  </span>
-                </div>
-                <p className="mt-3 text-sm font-semibold text-[#2c2824]">
-                  {answer.prompt}
+        </div>
+        <div className="grid gap-3">
+          {answers.map((answer, index) => (
+            <article
+              className={`rounded-md border p-4 ${
+                answer.correct
+                  ? "border-[#7a8c5a]/35 bg-[#7a8c5a]/10"
+                  : "border-[#bb5d3a]/35 bg-[#bb5d3a]/10"
+              }`}
+              key={`${answer.prompt}-${index}`}
+            >
+              <div className="flex flex-wrap items-center gap-2">
+                <span
+                  className={`rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${
+                    answer.correct
+                      ? "bg-[#7a8c5a] text-[#f9f4ec]"
+                      : "bg-[#bb5d3a] text-[#f9f4ec]"
+                  }`}
+                >
+                  {answer.correct ? "Correct" : "Review"}
+                </span>
+                <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#8c8273]">
+                  {answer.dimension}
+                </span>
+              </div>
+              <p className="mt-3 text-sm font-semibold text-[#2c2824]">
+                {answer.prompt}
+              </p>
+              <div className="mt-3 grid gap-2 text-sm leading-6 text-[#5f574d] md:grid-cols-2">
+                <p>
+                  <span className="font-semibold text-[#2c2824]">
+                    Your answer:
+                  </span>{" "}
+                  {answer.selectedAnswer || "No answer"}
                 </p>
-                <div className="mt-3 grid gap-2 text-sm leading-6 text-[#5f574d] md:grid-cols-2">
-                  <p>
-                    <span className="font-semibold text-[#2c2824]">
-                      Your answer:
-                    </span>{" "}
-                    {answer.selectedAnswer || "No answer"}
-                  </p>
-                  <p>
-                    <span className="font-semibold text-[#2c2824]">
-                      Correct:
-                    </span>{" "}
-                    {answer.correctAnswer}
-                  </p>
-                </div>
-                <p className="mt-3 text-sm leading-6 text-[#5f574d]">
-                  {answer.explanation}
+                <p>
+                  <span className="font-semibold text-[#2c2824]">
+                    Correct:
+                  </span>{" "}
+                  {answer.correctAnswer}
                 </p>
-              </article>
-            ))}
-          </div>
-        </section>
-      </section>
+              </div>
+              <p className="mt-3 text-sm leading-6 text-[#5f574d]">
+                {answer.explanation}
+              </p>
+            </article>
+          ))}
+        </div>
+      </ZachPanel>
 
       <div className="flex flex-wrap justify-end gap-2">
         {lesson && (
