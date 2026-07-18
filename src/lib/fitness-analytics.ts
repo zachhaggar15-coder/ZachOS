@@ -595,15 +595,6 @@ export function activityDetailHref(activity: Activity) {
   return activityGroup(activity) === "running" ? `/activities/${activity.id}` : undefined;
 }
 
-export function latestDateFromRows(rows: Array<{ date: string }[]>, fallback: string) {
-  const latest = rows
-    .flat()
-    .map((row) => row.date)
-    .filter(Boolean)
-    .sort((left, right) => right.localeCompare(left))[0];
-
-  return latest ?? fallback;
-}
 
 export function daysBetween(left: string, right: string) {
   return Math.round((toDate(right).getTime() - toDate(left).getTime()) / DAY_MS);

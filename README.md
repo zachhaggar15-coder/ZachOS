@@ -11,7 +11,7 @@ It tracks fitness, finance and intellectual habits with a dark analytics dashboa
 - One-screen control-room dashboard at `/`, with detailed forms moved to `/manage`.
 - Quick daily check-in on `/manage` for habits, sleep score, recovery metrics and writing practice in one form.
 - Manual add/update forms for daily logs, fitness metrics and finance snapshots.
-- Auto-derived quest progress from Garmin/Strava activities, daily logs, consultant logs and finance snapshots, with manual quest values only as fallback.
+- Auto-derived quest progress from Garmin/Strava activities, daily logs and finance snapshots, with manual quest values only as fallback.
 - One-click import for the historical net worth snapshot from February 2024 to June 2026.
 - Strava OAuth automatic activity import at `/integrations`.
 - One-upload Garmin account-export ZIP import at `/garmin-import`.
@@ -30,11 +30,19 @@ It tracks fitness, finance and intellectual habits with a dark analytics dashboa
 - Learning Zone at `/learning-zone` with a topic spin wheel, source-backed
   3-5 minute lessons, multiple-choice recall checks and a cumulative intellect
   score split into Knowledge, Reasoning, Application, Breadth and Retention.
-- Dashboard card: **Today's move** with a practical next action, bottleneck and consultant rep.
+- Spaced repetition in the Learning Zone: lessons are served unseen-first, then
+  weakest, then whatever is overdue on a 3/7/16/35/70-day ladder that stretches
+  on strong answers and resets on weak ones. Answer choices reshuffle on each
+  attempt so a retake tests the idea rather than the position.
+- Dashboard card: **Today's move** with a practical next action and current bottleneck.
 - Running detail pages with weekly distance, monthly distance, average HR trend,
   pace-band HR comparison, recent run rows and clickable run dossiers.
 - Simple analytics: 7-day averages, 30-day averages, trend direction, best mood day and relationship checks.
-- Consultant Mode for Veeva readiness practice.
+- Weekly review at `/review`: the last seven days against the seven before, the
+  biggest move, the biggest slip and one decision for next week.
+- Relationships are reported as plain sentences with a median split and sample
+  size ("Mood averages 7.8 when sleep score is 79 or above, against 6.8 below
+  it"), not just a correlation coefficient.
 
 ## AI Insights
 
@@ -62,7 +70,6 @@ Daily summaries include:
 - Training recommendation
 - Recovery recommendation
 - Intellectual habit recommendation
-- Consultant readiness recommendation
 - One sentence strategic summary
 
 Weekly reports include:
@@ -534,15 +541,6 @@ The schema creates these tables:
   - `status text`
   - `created_at timestamptz`
 
-- `consultant_readiness_logs`
-  - `id uuid primary key`
-  - `user_id uuid references auth.users(id)`
-  - `date date`
-  - `writing_minutes integer`
-  - `structured_thinking_reps integer` retained for legacy compatibility
-  - `industry_learning_minutes integer` retained for legacy compatibility
-  - `communication_practice_minutes integer` retained for legacy compatibility
-  - `notes text` retained for legacy compatibility
   - `created_at timestamptz`
 
 - `portfolio_accounts`
@@ -579,7 +577,7 @@ The schema creates these tables:
   - `cash_value numeric`
   - `created_at timestamptz`
 
-`daily_logs`, `fitness_metrics`, `finance_snapshots` and `consultant_readiness_logs` use unique `(user_id, date)` constraints so forms can upsert one daily value per user. `daily_routine_logs` uses unique `(user_id, date, routine_key)` rows so each dashboard ritual can be toggled once per day and feed the ritual consistency graph.
+`daily_logs`, `fitness_metrics` and `finance_snapshots` use unique `(user_id, date)` constraints so forms can upsert one daily value per user. `daily_routine_logs` uses unique `(user_id, date, routine_key)` rows so each dashboard ritual can be toggled once per day and feed the ritual consistency graph.
 
 ## Row Level Security
 
@@ -595,7 +593,6 @@ RLS is enabled for all user-owned tables:
 - `ai_weekly_insights`
 - `learning_sessions`
 - `quests`
-- `consultant_readiness_logs`
 - `portfolio_accounts`
 - `portfolio_holdings`
 - `net_worth_snapshots`
@@ -694,7 +691,6 @@ Auto-derived target examples:
 - `French`
 - `reading`
 - `writing`
-- `consultant readiness`
 - `invested`
 - `net worth`
 - `sleep score`
@@ -703,11 +699,10 @@ Auto-derived target examples:
 Example quests:
 
 - Run Wales
-- Become Consultant Ready
 - Reach GBP 100k Invested
 - Become Conversational in French
 
-The dashboard shows active quests, progress bars and a next suggested action based on the active quest with the lowest progress. Quest progress is auto-derived when the title, category or target metric mentions running/distance, deep work, French, reading, writing, consultant readiness, invested value, net worth, cash, sleep, recovery, HRV, mood, streaks or logs.
+The dashboard shows active quests, progress bars and a next suggested action based on the active quest with the lowest progress. Quest progress is auto-derived when the title, category or target metric mentions running/distance, deep work, French, reading, writing, invested value, net worth, cash, sleep, recovery, HRV, mood, streaks or logs.
 
 ## Historical Net Worth Import
 
@@ -723,23 +718,6 @@ Use:
 
 The import is safe to rerun because rows are upserted by `(user_id, date)`.
 
-## Consultant Mode
-
-Consultant Mode helps prepare for starting at Veeva.
-
-It tracks:
-
-- Deep work hours from daily logs.
-- Reading pages from daily logs.
-- Writing practice minutes.
-
-Consultant readiness score is calculated from the last 30 days of:
-
-- Deep work hours.
-- Reading pages.
-- Writing minutes.
-
-The dashboard also shows one practical daily consultant-readiness recommendation, such as writing an executive-style clinical trial summary or turning reading into client-facing implications.
 
 ## Deploy On Vercel
 
