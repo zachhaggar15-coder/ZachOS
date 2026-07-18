@@ -18,6 +18,7 @@ import {
 import {
   getLearningLesson,
   getLearningTopic,
+  lessonAttemptSeed,
   shuffleLessonChoices,
 } from "@/lib/learning-zone";
 import { getSupabaseConfig } from "@/lib/supabase/config";
@@ -102,8 +103,12 @@ export default async function LearningLessonPage({
   const databaseSetupIssue = getDatabaseSetupIssue(queryErrors);
   const dataError = databaseSetupIssue === null ? queryErrors.find(Boolean) : null;
   const latestAttempt = lessonAttempts.data?.[0] ?? null;
-  // A fresh seed per page load, so the answer never sits in the same slot twice.
-  const attemptSeed = Math.floor(Math.random() * 2_147_483_647);
+  // Stable within an attempt, different once this attempt is recorded.
+  const attemptSeed = lessonAttemptSeed(
+    lesson.slug,
+    lessonAttempts.data?.length ?? 0,
+    latestAttempt?.completed_at,
+  );
   const topic = getLearningTopic(lesson.topic);
   const topicAccuracy = topicAttempts.data?.length
     ? Math.round(

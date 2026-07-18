@@ -1336,6 +1336,7 @@ export function ControlRoomDashboard({
                 value={formatNumber(todayLog?.mood_score, { dash: "--" })}
               />
               <VitalRow
+                href="/reflections"
                 label="Deep work"
                 sub={todayLog ? "hours" : "no log today"}
                 value={formatNumber(todayLog?.deep_work_hours, { dash: "--" })}
@@ -1537,14 +1538,14 @@ export function ControlRoomDashboard({
                     {operatingRecommendation.bottleneck}
                   </div>
                 </div>
-                <div className="min-w-0">
+                <Link className="min-w-0 group" href="/review">
                   <div className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[#9a8d7a]">
                     Weekly focus
                   </div>
-                  <div className="mt-1.5 text-[13px] font-semibold text-[#3a342c]">
+                  <div className="mt-1.5 text-[13px] font-semibold text-[#3a342c] group-hover:text-[#bb5d3a]">
                     {operatingRecommendation.weeklyFocus}
                   </div>
-                </div>
+                </Link>
               </div>
             </section>
 

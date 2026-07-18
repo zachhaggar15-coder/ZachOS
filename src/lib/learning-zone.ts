@@ -2927,6 +2927,29 @@ function uniqueLearningDates(sessions: LearningSession[]) {
   ).sort((left, right) => right.localeCompare(left));
 }
 
+/**
+ * Seed for a lesson's choice order.
+ *
+ * Deliberately derived rather than random: it stays stable if you refresh
+ * mid-attempt, and changes once an attempt is recorded - so the shuffle lands
+ * exactly when you next sit the lesson.
+ */
+export function lessonAttemptSeed(
+  slug: string,
+  attemptCount: number,
+  lastCompletedAt?: string | null,
+) {
+  const input = `${slug}:${attemptCount}:${lastCompletedAt ?? "first"}`;
+  let hash = 2166136261;
+
+  for (let index = 0; index < input.length; index += 1) {
+    hash ^= input.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+
+  return hash >>> 0;
+}
+
 function mulberry32(seed: number) {
   let state = seed >>> 0;
 
@@ -2952,11 +2975,18 @@ export function shuffleLessonChoices(
   lesson: LearningLesson,
   seed: number,
 ): LearningLesson {
-  const random = mulberry32(seed);
-
   return {
     ...lesson,
-    questions: lesson.questions.map((question) => {
+    questions: lesson.questions.map((question, questionIndex) => {
+      // A generator per question, mixed with the question's own index so the
+      // five questions do not all permute identically. Warmed up first because
+      // mulberry32's opening value tracks its seed too closely, which was
+      // collapsing the correct answer onto only a couple of positions.
+      const random = mulberry32(seed + questionIndex * 0x9e3779b9);
+      random();
+      random();
+      random();
+
       const choices = [...question.choices];
 
       for (let index = choices.length - 1; index > 0; index -= 1) {
@@ -2985,13 +3015,18 @@ export type LearningQueueReason = "new" | "overdue" | "shaky" | "resting";
 const REVIEW_LADDER_DAYS = [3, 7, 16, 35, 70];
 
 function reviewIntervalDays(attempts: number, accuracy: number) {
+  // A weak answer always comes back at the shortest interval.
   if (accuracy < 0.6) {
     return REVIEW_LADDER_DAYS[0];
   }
 
-  const step = accuracy >= 0.8 ? attempts : Math.max(1, attempts - 1);
+  // A strong answer climbs one rung per attempt, starting at the first rung;
+  // a middling one holds a rung back so it repeats sooner.
+  const step = accuracy >= 0.8 ? attempts - 1 : attempts - 2;
 
-  return REVIEW_LADDER_DAYS[Math.min(step, REVIEW_LADDER_DAYS.length - 1)];
+  return REVIEW_LADDER_DAYS[
+    Math.min(Math.max(step, 0), REVIEW_LADDER_DAYS.length - 1)
+  ];
 }
 
 /**
