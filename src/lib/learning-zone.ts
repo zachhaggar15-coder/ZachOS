@@ -2927,21 +2927,189 @@ function uniqueLearningDates(sessions: LearningSession[]) {
   ).sort((left, right) => right.localeCompare(left));
 }
 
+function mulberry32(seed: number) {
+  let state = seed >>> 0;
+
+  return () => {
+    state = (state + 0x6d2b79f5) >>> 0;
+    let t = state;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/**
+ * Reorder each question's choices for a single attempt.
+ *
+ * `buildAuthoredLessons` places the correct answer at a position derived from a
+ * hash of the question id, which is stable for all time - so retaking a lesson
+ * would test memory of where the answer sat rather than the concept. Shuffling
+ * the display order per attempt fixes that. Choice ids stay welded to their
+ * labels, so scoring is unaffected.
+ */
+export function shuffleLessonChoices(
+  lesson: LearningLesson,
+  seed: number,
+): LearningLesson {
+  const random = mulberry32(seed);
+
+  return {
+    ...lesson,
+    questions: lesson.questions.map((question) => {
+      const choices = [...question.choices];
+
+      for (let index = choices.length - 1; index > 0; index -= 1) {
+        const swapWith = Math.floor(random() * (index + 1));
+        [choices[index], choices[swapWith]] = [choices[swapWith], choices[index]];
+      }
+
+      return { ...question, choices };
+    }),
+  };
+}
+
+export type LearningLessonState = {
+  accuracy: number | null;
+  attempts: number;
+  daysSinceLastAttempt: number | null;
+  dueInDays: number | null;
+  lesson: LearningLesson;
+  reason: LearningQueueReason;
+};
+
+export type LearningQueueReason = "new" | "overdue" | "shaky" | "resting";
+
+// Spaced-repetition interval per consecutive attempt, in days. A lesson answered
+// well moves further down the ladder; a weak answer keeps it near the front.
+const REVIEW_LADDER_DAYS = [3, 7, 16, 35, 70];
+
+function reviewIntervalDays(attempts: number, accuracy: number) {
+  if (accuracy < 0.6) {
+    return REVIEW_LADDER_DAYS[0];
+  }
+
+  const step = accuracy >= 0.8 ? attempts : Math.max(1, attempts - 1);
+
+  return REVIEW_LADDER_DAYS[Math.min(step, REVIEW_LADDER_DAYS.length - 1)];
+}
+
+/**
+ * Describe every lesson in a topic: how often it has been attempted, how well,
+ * and whether spaced repetition says it is due. Ordered most-urgent first so the
+ * caller can either take the head of the queue or render the whole board.
+ */
+export function buildLearningQueue(
+  topic: LearningTopicId,
+  sessions: LearningSession[],
+  now = new Date(),
+): LearningLessonState[] {
+  const lessons = getLearningLessonsByTopic(topic);
+  const byLesson = new Map<string, LearningSession[]>();
+
+  sessions.forEach((session) => {
+    const bucket = byLesson.get(session.lesson_slug) ?? [];
+    bucket.push(session);
+    byLesson.set(session.lesson_slug, bucket);
+  });
+
+  const states = lessons.map((lesson) => {
+    const attemptsForLesson = (byLesson.get(lesson.slug) ?? []).sort(
+      (left, right) => completedTime(right) - completedTime(left),
+    );
+    const latest = attemptsForLesson[0];
+
+    if (!latest) {
+      return {
+        accuracy: null,
+        attempts: 0,
+        daysSinceLastAttempt: null,
+        dueInDays: null,
+        lesson,
+        reason: "new" as const,
+      };
+    }
+
+    const accuracy =
+      latest.total_questions > 0
+        ? latest.correct_count / latest.total_questions
+        : 0;
+    const daysSince = daysBetween(now, new Date(latest.completed_at ?? latest.created_at));
+    const interval = reviewIntervalDays(attemptsForLesson.length, accuracy);
+    const dueInDays = interval - daysSince;
+    const reason: LearningQueueReason =
+      dueInDays > 0 ? "resting" : accuracy < 0.8 ? "shaky" : "overdue";
+
+    return {
+      accuracy,
+      attempts: attemptsForLesson.length,
+      daysSinceLastAttempt: daysSince,
+      dueInDays,
+      lesson,
+      reason,
+    };
+  });
+
+  const rank: Record<LearningQueueReason, number> = {
+    new: 0,
+    shaky: 1,
+    overdue: 2,
+    resting: 3,
+  };
+
+  return states.sort((left, right) => {
+    if (rank[left.reason] !== rank[right.reason]) {
+      return rank[left.reason] - rank[right.reason];
+    }
+
+    // Within a band, the most overdue (or weakest) lesson comes first.
+    if (left.reason === "new") {
+      return left.lesson.slug.localeCompare(right.lesson.slug);
+    }
+
+    if (left.reason === "shaky") {
+      return (left.accuracy ?? 1) - (right.accuracy ?? 1);
+    }
+
+    return (left.dueInDays ?? 0) - (right.dueInDays ?? 0);
+  });
+}
+
+/**
+ * The review queue across every topic: lessons already attempted that spaced
+ * repetition says are due back. Unseen lessons are excluded - those are breadth,
+ * not review - so this answers "what am I about to forget?".
+ */
+export function buildReviewQueue(
+  sessions: LearningSession[],
+  now = new Date(),
+): LearningLessonState[] {
+  return LEARNING_TOPICS.flatMap((topic) =>
+    buildLearningQueue(topic.id, sessions, now),
+  )
+    .filter((state) => state.attempts > 0 && (state.dueInDays ?? 1) <= 0)
+    .sort((left, right) => {
+      if (left.reason !== right.reason) {
+        return left.reason === "shaky" ? -1 : 1;
+      }
+
+      return (left.dueInDays ?? 0) - (right.dueInDays ?? 0);
+    });
+}
+
+/**
+ * Pick the lesson the learner most needs: unseen lessons first, then weak ones,
+ * then whatever spaced repetition says is overdue. Only falls back to the
+ * longest-rested lesson when everything is still inside its interval.
+ */
 export function chooseNextLearningLesson(
   topic: LearningTopicId,
   sessions: LearningSession[],
+  now = new Date(),
 ) {
-  const lessons = getLearningLessonsByTopic(topic);
-  const latestSession = [...sessions].sort(
-    (left, right) => completedTime(right) - completedTime(left),
-  )[0];
-  const freshCandidates = lessons.filter(
-    (lesson) => lesson.slug !== latestSession?.lesson_slug,
-  );
-  const pool = freshCandidates.length ? freshCandidates : lessons;
-  const index = Math.floor(Math.random() * pool.length);
+  const queue = buildLearningQueue(topic, sessions, now);
 
-  return pool[index] ?? lessons[0] ?? LEARNING_LESSONS[0];
+  return queue[0]?.lesson ?? getLearningLessonsByTopic(topic)[0] ?? LEARNING_LESSONS[0];
 }
 
 export function scoreLearningAttempt(

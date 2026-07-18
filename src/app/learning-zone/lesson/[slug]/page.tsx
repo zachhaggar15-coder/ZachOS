@@ -15,7 +15,11 @@ import {
   friendlyDatabaseError,
   getDatabaseSetupIssue,
 } from "@/lib/database-setup";
-import { getLearningLesson, getLearningTopic } from "@/lib/learning-zone";
+import {
+  getLearningLesson,
+  getLearningTopic,
+  shuffleLessonChoices,
+} from "@/lib/learning-zone";
 import { getSupabaseConfig } from "@/lib/supabase/config";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -98,6 +102,8 @@ export default async function LearningLessonPage({
   const databaseSetupIssue = getDatabaseSetupIssue(queryErrors);
   const dataError = databaseSetupIssue === null ? queryErrors.find(Boolean) : null;
   const latestAttempt = lessonAttempts.data?.[0] ?? null;
+  // A fresh seed per page load, so the answer never sits in the same slot twice.
+  const attemptSeed = Math.floor(Math.random() * 2_147_483_647);
   const topic = getLearningTopic(lesson.topic);
   const topicAccuracy = topicAttempts.data?.length
     ? Math.round(
@@ -176,7 +182,10 @@ export default async function LearningLessonPage({
             />
           </section>
 
-          <LearningLessonExperience lesson={lesson} note={lessonNote.data} />
+          <LearningLessonExperience
+            lesson={shuffleLessonChoices(lesson, attemptSeed)}
+            note={lessonNote.data}
+          />
 
           <div className="flex justify-end">
             <Link

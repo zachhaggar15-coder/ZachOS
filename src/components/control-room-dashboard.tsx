@@ -11,7 +11,6 @@ import { ZachMobileBottomNav, ZachTopNav } from "@/components/zach-shell";
 import { buildOperatingRecommendation } from "@/lib/ai-insights";
 import {
   calculateAnalytics,
-  calculateConsultantReadiness,
 } from "@/lib/analytics";
 import {
   formatDistance as formatActivityDistance,
@@ -33,7 +32,6 @@ import {
 } from "@/lib/scoring";
 import type {
   Activity,
-  ConsultantReadinessLog,
   DailyLog,
   DailyRoutineLog,
   FinanceSnapshot,
@@ -46,7 +44,6 @@ import type {
 
 type ControlRoomDashboardProps = {
   activities: Activity[];
-  consultantLogs: ConsultantReadinessLog[];
   dailyLogs: DailyLog[];
   dailyRoutineLogs: DailyRoutineLog[];
   databaseSetupIssue?: DatabaseSetupIssue | null;
@@ -697,7 +694,6 @@ function MobileField({
 
 export function ControlRoomDashboard({
   activities,
-  consultantLogs,
   dailyLogs,
   databaseSetupIssue,
   error,
@@ -733,8 +729,7 @@ export function ControlRoomDashboard({
   });
   const questProgress = calculateQuestProgress(quests, {
     activities,
-    consultantLogs,
-    dailyLogs,
+      dailyLogs,
     financeSnapshots,
     fitnessMetrics,
     netWorthSnapshots,
@@ -744,16 +739,11 @@ export function ControlRoomDashboard({
     .slice(0, 3);
   const operatingRecommendation = buildOperatingRecommendation({
     activities,
-    consultantLogs,
-    dailyLogs,
+      dailyLogs,
     financeSnapshots,
     fitnessMetrics,
   });
   const analytics = calculateAnalytics({ activities, dailyLogs, fitnessMetrics });
-  const consultantReadiness = calculateConsultantReadiness({
-    consultantLogs,
-    dailyLogs,
-  });
   const portfolioSummary = calculatePortfolioSummary(
     portfolioAccounts,
     marketPrices,
@@ -1361,11 +1351,6 @@ export function ControlRoomDashboard({
                 label="Running"
                 sub="weekly km"
                 value={formatNumber(weekKm, { dash: "--", digits: 0 })}
-              />
-              <VitalRow
-                label="Readiness"
-                sub="/ 100"
-                value={consultantReadiness.score.toString()}
               />
               <details className="mt-3 rounded-md border border-[#2c2824]/[0.12] bg-[#fffaf2] px-3 py-2">
                 <summary className="zach-ui cursor-pointer list-none text-xs font-semibold uppercase tracking-[0.16em] text-[#9a7d5f] [&::-webkit-details-marker]:hidden">

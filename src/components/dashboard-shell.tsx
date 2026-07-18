@@ -3,7 +3,6 @@ import Link from "next/link";
 import {
   importNetWorthHistory,
   saveQuickDailyEntry,
-  upsertConsultantReadinessLog,
   saveQuest,
   signOut,
   updatePassword,
@@ -15,7 +14,6 @@ import { formatShortDate } from "@/lib/dates";
 import type { DatabaseSetupIssue } from "@/lib/database-setup";
 import {
   calculateAnalytics,
-  calculateConsultantReadiness,
 } from "@/lib/analytics";
 import { buildLocalDailyBriefing } from "@/lib/ai-insights";
 import {
@@ -28,7 +26,6 @@ import {
 } from "@/lib/scoring";
 import type {
   Activity,
-  ConsultantReadinessLog,
   DailyLog,
   FinanceSnapshot,
   FitnessMetric,
@@ -41,7 +38,6 @@ import { PendingSubmitButton } from "@/components/pending-submit-button";
 
 type DashboardShellProps = {
   activities: Activity[];
-  consultantLogs: ConsultantReadinessLog[];
   dailyLogs: DailyLog[];
   databaseSetupIssue?: DatabaseSetupIssue | null;
   error?: string;
@@ -402,12 +398,10 @@ function hrvTrainingLoadPoints(
 }
 
 function QuickEntryForm({
-  consultantLog,
   fitness,
   today,
   todayLog,
 }: {
-  consultantLog: ConsultantReadinessLog | null;
   fitness: FitnessMetric | null;
   today: string;
   todayLog: DailyLog | null;
@@ -481,7 +475,7 @@ function QuickEntryForm({
           name="resting_hr"
         />
         <Field
-          defaultValue={consultantLog?.writing_minutes}
+          defaultValue={todayLog?.writing_minutes}
           label="Writing minutes"
           min={0}
           name="writing_minutes"
@@ -728,108 +722,10 @@ function QuestForm() {
       </div>
       <p className="mt-3 text-xs text-zinc-500">
         Current value is auto-derived when the target mentions running, deep
-        work, French, reading, consultant readiness, invested value, net worth,
+        work, French, reading, writing, invested value, net worth,
         sleep or HRV. Use the manual value only as a fallback.
       </p>
     </form>
-  );
-}
-
-function ConsultantMode({
-  consultantLogs,
-  dailyLogs,
-  today,
-}: {
-  consultantLogs: ConsultantReadinessLog[];
-  dailyLogs: DailyLog[];
-  today: string;
-}) {
-  const todayConsultant =
-    consultantLogs.find((log) => log.date === today) ?? consultantLogs.at(-1);
-  const todayDaily = dailyLogs.find((log) => log.date === today) ?? dailyLogs.at(-1);
-  const readiness = calculateConsultantReadiness({ consultantLogs, dailyLogs });
-  const recommendation =
-    readiness.writingMinutes < 60
-      ? "Write a one-page summary of a clinical trial in executive style."
-      : readiness.deepWorkHours < 10
-        ? "Do one focused 60-minute problem-solving block and capture the recommendation."
-        : readiness.readingPages < 80
-          ? "Turn today’s reading into 3 client-facing implications."
-          : "Synthesize one insight into a crisp client-ready recommendation.";
-
-  return (
-    <section className="grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
-      <div className={cardClass}>
-        <div className="flex items-start justify-between gap-4">
-          <SectionHeader kicker="Consultant Mode" title="Veeva readiness" />
-          <div className="text-right">
-            <p className="font-mono text-3xl font-semibold text-cyan-100">
-              {readiness.score}
-            </p>
-            <p className="text-xs text-zinc-500">readiness score</p>
-          </div>
-        </div>
-        <div className="mt-4 h-2 rounded bg-white/10">
-          <div
-            className="h-2 rounded bg-gradient-to-r from-cyan-200 to-emerald-200"
-            style={{ width: `${readiness.score}%` }}
-          />
-        </div>
-        <div className="mt-5 grid gap-4 sm:grid-cols-2">
-          {[
-            ["Deep work", formatNumber(readiness.deepWorkHours, "h")],
-            ["Reading", formatNumber(readiness.readingPages, " pages")],
-            ["Writing", formatNumber(readiness.writingMinutes, "m")],
-          ].map(([label, value]) => (
-            <div className="border-l border-cyan-200/25 pl-3" key={label}>
-              <p className="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-zinc-500">
-                {label}
-              </p>
-              <p className="mt-1 text-lg font-semibold text-white">{value}</p>
-            </div>
-          ))}
-        </div>
-        <div className="mt-4 rounded border border-cyan-200/20 bg-cyan-200/[0.045] p-4">
-          <p className="font-mono text-[0.68rem] uppercase tracking-[0.2em] text-cyan-200/70">
-            Today’s consultant rep
-          </p>
-          <p className="mt-2 text-sm leading-6 text-zinc-200">
-            {recommendation}
-          </p>
-        </div>
-      </div>
-
-      <form action={upsertConsultantReadinessLog} className={cardClass}>
-        <SectionHeader kicker="Consultant Mode" title="Log readiness practice" />
-        <div className="mt-4 grid gap-3 md:grid-cols-2">
-          <Field
-            defaultValue={todayConsultant?.date ?? today}
-            label="Date"
-            name="date"
-            type="date"
-          />
-          <Field
-            defaultValue={todayConsultant?.writing_minutes}
-            label="Writing practice minutes"
-            min={0}
-            name="writing_minutes"
-          />
-          <div className="rounded border border-white/10 bg-black/15 p-3 text-sm text-zinc-400 md:col-span-2">
-            <p className="text-zinc-300">Tracked from daily logs</p>
-            <p className="mt-1">
-              Deep work {formatNumber(todayDaily?.deep_work_hours, "h")} -
-              Reading {formatNumber(todayDaily?.reading_pages, " pages")}
-            </p>
-          </div>
-          <button
-            className="h-10 rounded bg-cyan-200 px-4 text-sm font-semibold text-slate-950 transition hover:bg-cyan-100 md:col-span-2"
-            type="submit"
-          >
-            Save consultant log
-          </button>
-        </div>
-      </form>
-    </section>
   );
 }
 
@@ -926,7 +822,6 @@ function ActiveQuests({ quests }: { quests: ReturnType<typeof calculateQuestProg
 
 export function DashboardShell({
   activities,
-  consultantLogs,
   dailyLogs,
   databaseSetupIssue,
   error,
@@ -940,8 +835,6 @@ export function DashboardShell({
   const todayLog = dailyLogs.find((log) => log.date === today) ?? null;
   const currentFitness = latest(fitnessMetrics);
   const currentFinance = latest(financeSnapshots);
-  const todayConsultant =
-    consultantLogs.find((log) => log.date === today) ?? consultantLogs.at(-1) ?? null;
   const attributes = calculateCharacterAttributes({
     activities,
     dailyLogs,
@@ -956,24 +849,18 @@ export function DashboardShell({
   });
   const questProgress = calculateQuestProgress(quests, {
     activities,
-    consultantLogs,
-    dailyLogs,
+      dailyLogs,
     financeSnapshots,
     fitnessMetrics,
   });
   const runTotal = runningDistanceTotal(activities);
   const localBriefing = buildLocalDailyBriefing({
     activities,
-    consultantLogs,
-    dailyLogs,
+      dailyLogs,
     financeSnapshots,
     fitnessMetrics,
   });
   const analytics = calculateAnalytics({ activities, dailyLogs, fitnessMetrics });
-  const consultantReadiness = calculateConsultantReadiness({
-    consultantLogs,
-    dailyLogs,
-  });
 
   return (
     <main className="min-h-screen bg-[#f9f4ec] text-[#2c2824]">
@@ -1039,7 +926,6 @@ export function DashboardShell({
         <AccountSecurity userEmail={userEmail} />
 
         <QuickEntryForm
-          consultantLog={todayConsultant}
           fitness={currentFitness}
           today={today}
           todayLog={todayLog}
@@ -1137,12 +1023,6 @@ export function DashboardShell({
                 <p className="text-xs text-zinc-500">Best mood day</p>
                 <p className="mt-1 font-medium text-zinc-100">
                   {analytics.bestMoodDay}
-                </p>
-              </div>
-              <div className="rounded border border-white/10 bg-black/15 p-3">
-                <p className="text-xs text-zinc-500">Consultant readiness</p>
-                <p className="mt-1 font-medium text-zinc-100">
-                  {consultantReadiness.score}/100
                 </p>
               </div>
               {analytics.relationships.map((relationship) => (
@@ -1280,17 +1160,6 @@ export function DashboardShell({
               <ActiveQuests quests={questProgress} />
               <QuestForm />
             </div>
-          </DashboardDisclosure>
-
-          <DashboardDisclosure
-            summary={`Readiness score ${consultantReadiness.score}/100 - Veeva preparation logs and recommendations`}
-            title="Consultant Mode"
-          >
-            <ConsultantMode
-              consultantLogs={consultantLogs}
-              dailyLogs={dailyLogs}
-              today={today}
-            />
           </DashboardDisclosure>
 
           <DashboardDisclosure

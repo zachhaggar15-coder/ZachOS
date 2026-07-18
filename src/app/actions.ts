@@ -455,7 +455,7 @@ export async function saveQuickDailyEntry(formData: FormData) {
     redirectToManageWithError("Mood score must be between 1 and 10.");
   }
 
-  const [existingDaily, existingFitness, existingConsultant] = await Promise.all([
+  const [existingDaily, existingFitness] = await Promise.all([
     supabase
       .from("daily_logs")
       .select("*")
@@ -468,16 +468,9 @@ export async function saveQuickDailyEntry(formData: FormData) {
       .eq("user_id", user.id)
       .eq("date", date)
       .maybeSingle(),
-    supabase
-      .from("consultant_readiness_logs")
-      .select("*")
-      .eq("user_id", user.id)
-      .eq("date", date)
-      .maybeSingle(),
   ]);
 
-  const readError =
-    existingDaily.error || existingFitness.error || existingConsultant.error;
+  const readError = existingDaily.error || existingFitness.error;
 
   if (readError) {
     redirectToManageWithError(friendlyDatabaseError(readError));
@@ -502,6 +495,10 @@ export async function saveQuickDailyEntry(formData: FormData) {
         existingDaily.data?.reading_pages ??
         null,
       user_id: user.id,
+      writing_minutes:
+        nullableInteger(formData, "writing_minutes") ??
+        existingDaily.data?.writing_minutes ??
+        null,
     },
     { onConflict: "user_id,date" },
   );
@@ -521,25 +518,11 @@ export async function saveQuickDailyEntry(formData: FormData) {
     },
     { onConflict: "user_id,date" },
   );
-  const consultantUpsert = supabase.from("consultant_readiness_logs").upsert(
-    {
-      date,
-      user_id: user.id,
-      writing_minutes:
-        nullableInteger(formData, "writing_minutes") ??
-        existingConsultant.data?.writing_minutes ??
-        null,
-    },
-    { onConflict: "user_id,date" },
-  );
-
-  const [dailyResult, fitnessResult, consultantResult] = await Promise.all([
+  const [dailyResult, fitnessResult] = await Promise.all([
     dailyUpsert,
     fitnessUpsert,
-    consultantUpsert,
   ]);
-  const writeError =
-    dailyResult.error || fitnessResult.error || consultantResult.error;
+  const writeError = dailyResult.error || fitnessResult.error;
 
   if (writeError) {
     redirectToManageWithError(friendlyDatabaseError(writeError));
@@ -624,27 +607,6 @@ export async function updateDailyRitualMetric(formData: FormData) {
 
   revalidatePath("/");
   revalidatePath("/manage");
-}
-
-export async function upsertConsultantReadinessLog(formData: FormData) {
-  const { supabase, user } = await requireAuthenticatedUser();
-  const date = formString(formData, "date") || todayInLondon();
-
-  const { error } = await supabase.from("consultant_readiness_logs").upsert(
-    {
-      date,
-      user_id: user.id,
-      writing_minutes: nullableInteger(formData, "writing_minutes"),
-    },
-    { onConflict: "user_id,date" },
-  );
-
-  if (error) {
-    redirectWithError(friendlyDatabaseError(error));
-  }
-
-  revalidatePath("/");
-  redirect("/");
 }
 
 function parseNumber(value: unknown) {
@@ -1335,7 +1297,6 @@ async function loadInsightData() {
   const { supabase, user } = await requireAuthenticatedUser();
   const [
     activities,
-    consultantLogs,
     dailyLogs,
     financeSnapshots,
     fitnessMetrics,
@@ -1346,12 +1307,6 @@ async function loadInsightData() {
       .eq("user_id", user.id)
       .order("date", { ascending: false })
       .limit(3000),
-    supabase
-      .from("consultant_readiness_logs")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("date", { ascending: false })
-      .limit(365),
     supabase
       .from("daily_logs")
       .select("*")
@@ -1374,7 +1329,6 @@ async function loadInsightData() {
 
   const error =
     activities.error ||
-    consultantLogs.error ||
     dailyLogs.error ||
     financeSnapshots.error ||
     fitnessMetrics.error;
@@ -1385,7 +1339,6 @@ async function loadInsightData() {
 
   return {
     activities: sortByDateAscending(activities.data ?? []),
-    consultantLogs: sortByDateAscending(consultantLogs.data ?? []),
     dailyLogs: sortByDateAscending(dailyLogs.data ?? []),
     financeSnapshots: sortByDateAscending(financeSnapshots.data ?? []),
     fitnessMetrics: sortByDateAscending(fitnessMetrics.data ?? []),

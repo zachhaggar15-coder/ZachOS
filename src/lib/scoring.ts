@@ -1,13 +1,11 @@
 import type {
   Activity,
-  ConsultantReadinessLog,
   DailyLog,
   FinanceSnapshot,
   FitnessMetric,
   NetWorthSnapshot,
   Quest,
 } from "@/lib/supabase/database.types";
-import { calculateConsultantReadiness } from "@/lib/analytics";
 import { DAY_MS, isRunningActivity, numeric, toDate } from "@/lib/utils";
 
 export type CharacterAttribute = {
@@ -38,7 +36,6 @@ export type QuestProgress = Quest & {
 
 export type QuestProgressInput = {
   activities?: Activity[];
-  consultantLogs?: ConsultantReadinessLog[];
   dailyLogs?: DailyLog[];
   financeSnapshots?: FinanceSnapshot[];
   fitnessMetrics?: FitnessMetric[];
@@ -66,13 +63,6 @@ function latestByDate<T extends { date: string }>(rows: T[] | undefined) {
   }
 
   return [...rows].sort((a, b) => a.date.localeCompare(b.date)).at(-1) ?? null;
-}
-
-function sumConsultantWriting(consultantLogs: ConsultantReadinessLog[] | undefined) {
-  return (consultantLogs ?? []).reduce(
-    (total, log) => total + numeric(log.writing_minutes),
-    0,
-  );
 }
 
 function runningDistanceThisMonth(activities: Activity[] | undefined) {
@@ -129,17 +119,6 @@ function deriveQuestCurrentValue(quest: Quest, input: QuestProgressInput) {
     return null;
   }
 
-  if (
-    key.includes("consultant") ||
-    key.includes("readiness") ||
-    key.includes("veeva")
-  ) {
-    return calculateConsultantReadiness({
-      consultantLogs: input.consultantLogs ?? [],
-      dailyLogs: input.dailyLogs ?? [],
-    }).score;
-  }
-
   if (key.includes("running") || key.includes("run ") || key.includes(" km")) {
     return key.includes("month")
       ? runningDistanceThisMonth(input.activities)
@@ -163,7 +142,7 @@ function deriveQuestCurrentValue(quest: Quest, input: QuestProgressInput) {
   }
 
   if (key.includes("writing")) {
-    return sumConsultantWriting(input.consultantLogs);
+    return dailyTotals.writing;
   }
 
   if (key.includes("streak")) {
@@ -233,8 +212,9 @@ function sumDailyLogs(dailyLogs: DailyLog[]) {
       deepWork: totals.deepWork + numeric(log.deep_work_hours),
       french: totals.french + numeric(log.french_minutes),
       reading: totals.reading + numeric(log.reading_pages),
+      writing: totals.writing + numeric(log.writing_minutes),
     }),
-    { deepWork: 0, french: 0, reading: 0 },
+    { deepWork: 0, french: 0, reading: 0, writing: 0 },
   );
 }
 
@@ -483,14 +463,6 @@ export function nextQuestAction(quests: QuestProgress[]) {
 
   if (key.includes("reading") || key.includes("read ") || key.includes("book")) {
     return `Push "${quest.title}" next: read 10 pages and capture one useful idea.`;
-  }
-
-  if (
-    key.includes("consultant") ||
-    key.includes("readiness") ||
-    key.includes("veeva")
-  ) {
-    return `Push "${quest.title}" next: write one client-style recommendation from today's reading.`;
   }
 
   if (

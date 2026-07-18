@@ -288,42 +288,6 @@ export type Database = {
         };
         Relationships: [];
       };
-      consultant_readiness_logs: {
-        Row: {
-          communication_practice_minutes: number | null;
-          created_at: string;
-          date: string;
-          id: string;
-          industry_learning_minutes: number | null;
-          notes: string | null;
-          structured_thinking_reps: number | null;
-          user_id: string;
-          writing_minutes: number | null;
-        };
-        Insert: {
-          communication_practice_minutes?: number | null;
-          created_at?: string;
-          date: string;
-          id?: string;
-          industry_learning_minutes?: number | null;
-          notes?: string | null;
-          structured_thinking_reps?: number | null;
-          user_id: string;
-          writing_minutes?: number | null;
-        };
-        Update: {
-          communication_practice_minutes?: number | null;
-          created_at?: string;
-          date?: string;
-          id?: string;
-          industry_learning_minutes?: number | null;
-          notes?: string | null;
-          structured_thinking_reps?: number | null;
-          user_id?: string;
-          writing_minutes?: number | null;
-        };
-        Relationships: [];
-      };
       daily_logs: {
         Row: {
           created_at: string;
@@ -335,6 +299,7 @@ export type Database = {
           notes: string | null;
           reading_pages: number | null;
           user_id: string;
+          writing_minutes: number | null;
         };
         Insert: {
           created_at?: string;
@@ -346,6 +311,7 @@ export type Database = {
           notes?: string | null;
           reading_pages?: number | null;
           user_id: string;
+          writing_minutes?: number | null;
         };
         Update: {
           created_at?: string;
@@ -357,6 +323,7 @@ export type Database = {
           notes?: string | null;
           reading_pages?: number | null;
           user_id?: string;
+          writing_minutes?: number | null;
         };
         Relationships: [];
       };
@@ -654,8 +621,6 @@ export type GarminSyncRun =
   Database["public"]["Tables"]["garmin_sync_runs"]["Row"];
 export type AiWeeklyInsight =
   Database["public"]["Tables"]["ai_weekly_insights"]["Row"];
-export type ConsultantReadinessLog =
-  Database["public"]["Tables"]["consultant_readiness_logs"]["Row"];
 export type FinanceSnapshot =
   Database["public"]["Tables"]["finance_snapshots"]["Row"];
 export type FitnessMetric =

@@ -97,19 +97,6 @@ create table if not exists public.learning_lesson_notes (
   unique (user_id, lesson_slug)
 );
 
-create table if not exists public.consultant_readiness_logs (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references auth.users(id) on delete cascade,
-  date date not null,
-  structured_thinking_reps integer check (structured_thinking_reps is null or structured_thinking_reps >= 0),
-  writing_minutes integer check (writing_minutes is null or writing_minutes >= 0),
-  industry_learning_minutes integer check (industry_learning_minutes is null or industry_learning_minutes >= 0),
-  communication_practice_minutes integer check (communication_practice_minutes is null or communication_practice_minutes >= 0),
-  notes text,
-  created_at timestamptz not null default now(),
-  unique (user_id, date)
-);
-
 create table if not exists public.daily_logs (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
@@ -118,6 +105,7 @@ create table if not exists public.daily_logs (
   deep_work_hours numeric check (deep_work_hours is null or deep_work_hours >= 0),
   french_minutes integer check (french_minutes is null or french_minutes >= 0),
   reading_pages integer check (reading_pages is null or reading_pages >= 0),
+  writing_minutes integer check (writing_minutes is null or writing_minutes >= 0),
   notes text,
   created_at timestamptz not null default now(),
   unique (user_id, date)
@@ -230,7 +218,6 @@ alter table public.garmin_sync_runs enable row level security;
 alter table public.ai_weekly_insights enable row level security;
 alter table public.learning_sessions enable row level security;
 alter table public.learning_lesson_notes enable row level security;
-alter table public.consultant_readiness_logs enable row level security;
 alter table public.daily_logs enable row level security;
 alter table public.daily_routine_logs enable row level security;
 alter table public.fitness_metrics enable row level security;
@@ -261,10 +248,6 @@ drop policy if exists "Users can read their own learning sessions" on public.lea
 drop policy if exists "Users can insert their own learning sessions" on public.learning_sessions;
 drop policy if exists "Users can update their own learning sessions" on public.learning_sessions;
 drop policy if exists "Users can delete their own learning sessions" on public.learning_sessions;
-drop policy if exists "Users can read their own consultant readiness logs" on public.consultant_readiness_logs;
-drop policy if exists "Users can insert their own consultant readiness logs" on public.consultant_readiness_logs;
-drop policy if exists "Users can update their own consultant readiness logs" on public.consultant_readiness_logs;
-drop policy if exists "Users can delete their own consultant readiness logs" on public.consultant_readiness_logs;
 drop policy if exists "Users can read their own daily logs" on public.daily_logs;
 drop policy if exists "Users can insert their own daily logs" on public.daily_logs;
 drop policy if exists "Users can update their own daily logs" on public.daily_logs;
@@ -424,27 +407,6 @@ create policy "Users can update their own learning lesson notes"
 
 create policy "Users can delete their own learning lesson notes"
   on public.learning_lesson_notes
-  for delete
-  using (auth.uid() = user_id);
-
-create policy "Users can read their own consultant readiness logs"
-  on public.consultant_readiness_logs
-  for select
-  using (auth.uid() = user_id);
-
-create policy "Users can insert their own consultant readiness logs"
-  on public.consultant_readiness_logs
-  for insert
-  with check (auth.uid() = user_id);
-
-create policy "Users can update their own consultant readiness logs"
-  on public.consultant_readiness_logs
-  for update
-  using (auth.uid() = user_id)
-  with check (auth.uid() = user_id);
-
-create policy "Users can delete their own consultant readiness logs"
-  on public.consultant_readiness_logs
   for delete
   using (auth.uid() = user_id);
 
@@ -682,9 +644,6 @@ create index if not exists learning_lesson_notes_user_updated_idx
 
 create index if not exists learning_lesson_notes_user_topic_idx
   on public.learning_lesson_notes (user_id, topic, updated_at desc);
-
-create index if not exists consultant_readiness_logs_user_date_idx
-  on public.consultant_readiness_logs (user_id, date desc);
 
 create index if not exists daily_logs_user_date_idx
   on public.daily_logs (user_id, date desc);

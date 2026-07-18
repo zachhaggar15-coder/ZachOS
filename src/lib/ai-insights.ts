@@ -2,13 +2,11 @@ import "server-only";
 
 import {
   calculateAnalytics,
-  calculateConsultantReadiness,
   compactAnalyticsForPrompt,
 } from "@/lib/analytics";
 import { DAY_MS, numeric } from "@/lib/utils";
 import type {
   Activity,
-  ConsultantReadinessLog,
   DailyLog,
   FinanceSnapshot,
   FitnessMetric,
@@ -26,7 +24,6 @@ export type AiInsightResult = {
 
 type InsightInput = {
   activities: Activity[];
-  consultantLogs: ConsultantReadinessLog[];
   dailyLogs: DailyLog[];
   financeSnapshots: FinanceSnapshot[];
   fitnessMetrics: FitnessMetric[];
@@ -42,7 +39,6 @@ type MetricComparison = {
 
 export type OperatingRecommendation = {
   bottleneck: string;
-  consultantAction: string;
   intellectualAction: string;
   recoveryAction: string;
   strategicSummary: string;
@@ -67,7 +63,6 @@ function dateMs(date: string) {
 function latestDate(input: InsightInput) {
   const dates = [
     ...input.activities,
-    ...input.consultantLogs,
     ...input.dailyLogs,
     ...input.financeSnapshots,
     ...input.fitnessMetrics,
@@ -183,24 +178,6 @@ function weekComparisons(input: InsightInput) {
   ];
 }
 
-function consultantRecommendation(input: InsightInput) {
-  const consultant = calculateConsultantReadiness(input);
-
-  if (consultant.writingMinutes < 90) {
-    return "Write a one-page executive summary of a life-sciences topic.";
-  }
-
-  if (consultant.deepWorkHours < 10) {
-    return "Do one focused problem-solving block and write the recommendation first.";
-  }
-
-  if (consultant.readingPages < 80) {
-    return "Turn today's industry reading into 3 client-facing implications.";
-  }
-
-  return "Synthesize one insight into a crisp client-ready recommendation.";
-}
-
 export function buildOperatingRecommendation(input: InsightInput): OperatingRecommendation {
   const analytics = calculateAnalytics(input);
   const latestDaily = input.dailyLogs.at(-1);
@@ -255,7 +232,6 @@ export function buildOperatingRecommendation(input: InsightInput): OperatingReco
         : numeric(reading) < 10
           ? "Read 10 pages and capture one useful idea."
           : "Convert today's learning into one short written note.";
-  const consultantAction = consultantRecommendation(input);
   const todayMove =
     bottleneck === "recovery"
       ? "Make today recovery-led: train light, then spend the best energy on deep work or French."
@@ -263,14 +239,13 @@ export function buildOperatingRecommendation(input: InsightInput): OperatingReco
         ? "Win one focused intellectual block before touching lower-value tasks."
         : bottleneck === "finance visibility"
           ? "Add or verify today's finance snapshot so wealth progress stays visible."
-          : "Repeat the system: one training stimulus, one deep work block, one consultant rep.";
+          : "Repeat the system: one training stimulus, one deep work block, one written note.";
   const weakestComparison = comparisons
     .filter((metric) => metric.delta !== null)
     .sort((a, b) => (a.delta ?? 0) - (b.delta ?? 0))[0];
 
   return {
     bottleneck,
-    consultantAction,
     intellectualAction,
     recoveryAction,
     strategicSummary:
@@ -310,7 +285,6 @@ export function buildLocalDailyBriefing(
     `Training recommendation: ${operating.trainingAction}`,
     `Recovery recommendation: ${operating.recoveryAction}`,
     `Intellectual habit recommendation: ${operating.intellectualAction}`,
-    `Consultant readiness recommendation: ${operating.consultantAction}`,
     `Strategic summary: ${operating.strategicSummary}`,
   ].join("\n");
 }
@@ -320,7 +294,6 @@ export function buildLocalWeeklyReport(
   operating = buildOperatingRecommendation(input),
 ) {
   const analytics = calculateAnalytics(input);
-  const consultant = calculateConsultantReadiness(input);
   const fitnessTrend =
     analytics.averages.find((metric) => metric.label === "HRV")?.trend ?? "unknown";
   const recoveryTrend =
@@ -346,7 +319,7 @@ export function buildLocalWeeklyReport(
     ).toLocaleString("en-GB")}.`,
     `Strongest week-over-week improvement: ${strongest ? `${strongest.label} changed by ${(strongest.delta ?? 0).toFixed(1)}${strongest.unit ?? ""}` : "not enough paired weekly data yet"}.`,
     `Weakest area: ${weakest ? `${weakest.label} changed by ${(weakest.delta ?? 0).toFixed(1)}${weakest.unit ?? ""}` : "not enough paired weekly data yet"}.`,
-    `Suggested focus for next week: ${operating.weeklyFocus} Consultant readiness score is ${consultant.score}/100; next rep: ${operating.consultantAction}`,
+    `Suggested focus for next week: ${operating.weeklyFocus}`,
   ].join("\n");
 }
 
@@ -355,7 +328,7 @@ function systemPrompt(kind: InsightKind) {
     "You are Zach OS, a private personal operating coach and dashboard analyst. Use only the JSON dashboard data supplied by the app. Do not make medical claims, diagnose, or imply clinical certainty. Be cautious, practical, specific, evidence-led, and UK-English. Sound like a serious coach: direct, analytical, calm, and useful rather than fluffy. If data is missing, say so plainly. Avoid saying you know anything outside the stored dashboard data.";
 
   if (kind === "daily") {
-    return `${shared} Return the daily summary with these exact headings: Current state, Today's move, Main bottleneck, Training recommendation, Recovery recommendation, Intellectual habit recommendation, Consultant readiness recommendation, Strategic summary. Under each heading, include 1-3 practical sentences and cite the stored metric signals that justify the recommendation.`;
+    return `${shared} Return the daily summary with these exact headings: Current state, Today's move, Main bottleneck, Training recommendation, Recovery recommendation, Intellectual habit recommendation, Strategic summary. Under each heading, include 1-3 practical sentences and cite the stored metric signals that justify the recommendation.`;
   }
 
   return `${shared} Return the weekly report with these exact headings: Fitness trend, Recovery trend, Intellectual habits trend, Finance trend, Strongest week-over-week improvement, Weakest area, Suggested focus for next week. Compare the latest 7-day period against the previous 7-day period when data allows, explain what changed, and finish with one focused weekly operating plan.`;

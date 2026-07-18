@@ -61,7 +61,6 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
     financeSnapshots,
     activities,
     quests,
-    consultantLogs,
   ] = await Promise.all([
     supabase
       .from("daily_logs")
@@ -94,12 +93,6 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
       .order("deadline", { ascending: true, nullsFirst: false })
       .order("created_at", { ascending: true })
       .limit(100),
-    supabase
-      .from("consultant_readiness_logs")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("date", { ascending: false })
-      .limit(365),
   ]);
 
   const queryErrors = [
@@ -108,7 +101,6 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
     financeSnapshots.error,
     activities.error,
     quests.error,
-    consultantLogs.error,
   ];
   const databaseSetupIssue = getDatabaseSetupIssue(queryErrors);
   const dataError =
@@ -126,7 +118,6 @@ export default async function ManagePage({ searchParams }: ManagePageProps) {
       </div>
       <DashboardShell
         activities={sortByDateAscending(activities.data ?? [])}
-        consultantLogs={sortByDateAscending(consultantLogs.data ?? [])}
         dailyLogs={sortByDateAscending(dailyLogs.data ?? [])}
         databaseSetupIssue={databaseSetupIssue}
         error={

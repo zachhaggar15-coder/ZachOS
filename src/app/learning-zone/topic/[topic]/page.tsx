@@ -54,6 +54,7 @@ export default async function LearningTopicPage({
     .from("learning_sessions")
     .select("*")
     .eq("user_id", user.id)
+    .eq("topic", topic)
     .order("completed_at", { ascending: false })
     .limit(500);
 

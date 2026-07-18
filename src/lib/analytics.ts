@@ -1,6 +1,5 @@
 import type {
   Activity,
-  ConsultantReadinessLog,
   DailyLog,
   FinanceSnapshot,
   FitnessMetric,
@@ -19,13 +18,6 @@ export type RelationshipMetric = {
   label: string;
   note: string;
   value: number | null;
-};
-
-export type ConsultantReadinessScore = {
-  deepWorkHours: number;
-  readingPages: number;
-  score: number;
-  writingMinutes: number;
 };
 
 export type AnalyticsSummary = {
@@ -310,50 +302,13 @@ export function calculateAnalytics(input: {
   };
 }
 
-export function calculateConsultantReadiness(input: {
-  consultantLogs: ConsultantReadinessLog[];
-  dailyLogs: DailyLog[];
-}): ConsultantReadinessScore {
-  const latest = latestDate(input.consultantLogs, input.dailyLogs);
-  const since = latest - 30 * DAY_MS;
-  const recentConsultant = input.consultantLogs.filter(
-    (log) => dateMs(log.date) >= since,
-  );
-  const recentDaily = input.dailyLogs.filter((log) => dateMs(log.date) >= since);
-  const totals = {
-    deepWorkHours: recentDaily.reduce(
-      (total, log) => total + numeric(log.deep_work_hours),
-      0,
-    ),
-    readingPages: recentDaily.reduce(
-      (total, log) => total + numeric(log.reading_pages),
-      0,
-    ),
-    writingMinutes: recentConsultant.reduce(
-      (total, log) => total + numeric(log.writing_minutes),
-      0,
-    ),
-  };
-
-  return {
-    ...totals,
-    score: clamp(
-      (totals.deepWorkHours / 30) * 45 +
-        (totals.readingPages / 300) * 25 +
-        (totals.writingMinutes / 300) * 30,
-    ),
-  };
-}
-
 export function compactAnalyticsForPrompt(input: {
   activities: Activity[];
-  consultantLogs: ConsultantReadinessLog[];
   dailyLogs: DailyLog[];
   financeSnapshots: FinanceSnapshot[];
   fitnessMetrics: FitnessMetric[];
 }) {
   const analytics = calculateAnalytics(input);
-  const consultant = calculateConsultantReadiness(input);
   const recentDaily = input.dailyLogs.slice(-14);
   const recentFitness = input.fitnessMetrics.slice(-14);
   const recentFinance = input.financeSnapshots.slice(-8);
@@ -361,7 +316,6 @@ export function compactAnalyticsForPrompt(input: {
 
   return {
     analytics,
-    consultant,
     recentActivities,
     recentDaily,
     recentFinance,

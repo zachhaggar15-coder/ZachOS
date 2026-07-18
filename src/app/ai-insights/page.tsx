@@ -10,7 +10,7 @@ import {
   ZachSetupRequired,
   ZachTable,
 } from "@/components/zach-shell";
-import { calculateAnalytics, calculateConsultantReadiness } from "@/lib/analytics";
+import { calculateAnalytics } from "@/lib/analytics";
 import { sortByDateAscending } from "@/lib/data-shaping";
 import {
   friendlyDatabaseError,
@@ -54,7 +54,7 @@ export default async function AiInsightsPage({
     return <AuthPanel error={params.error} message={params.message} />;
   }
 
-  const [activities, consultantLogs, dailyLogs, financeSnapshots, fitnessMetrics] =
+  const [activities, dailyLogs, financeSnapshots, fitnessMetrics] =
     await Promise.all([
       supabase
         .from("activities")
@@ -62,12 +62,6 @@ export default async function AiInsightsPage({
         .eq("user_id", user.id)
         .order("date", { ascending: false })
         .limit(3000),
-      supabase
-        .from("consultant_readiness_logs")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("date", { ascending: false })
-        .limit(365),
       supabase
         .from("daily_logs")
         .select("*")
@@ -90,7 +84,6 @@ export default async function AiInsightsPage({
 
   const queryErrors = [
     activities.error,
-    consultantLogs.error,
     dailyLogs.error,
     financeSnapshots.error,
     fitnessMetrics.error,
@@ -104,10 +97,6 @@ export default async function AiInsightsPage({
     activities: sortByDateAscending(activities.data ?? []),
     dailyLogs: sortByDateAscending(dailyLogs.data ?? []),
     fitnessMetrics: sortByDateAscending(fitnessMetrics.data ?? []),
-  });
-  const consultantReadiness = calculateConsultantReadiness({
-    consultantLogs: sortByDateAscending(consultantLogs.data ?? []),
-    dailyLogs: sortByDateAscending(dailyLogs.data ?? []),
   });
 
   return (
@@ -168,7 +157,6 @@ export default async function AiInsightsPage({
               </div>
               <section className="grid gap-3 md:grid-cols-2">
                 <ZachMetric label="Best mood day" value={analytics.bestMoodDay} />
-                <ZachMetric label="Readiness" value={`${consultantReadiness.score}/100`} />
               </section>
               <div className="mt-4 grid gap-3">
                 {analytics.relationships.map((relationship) => (

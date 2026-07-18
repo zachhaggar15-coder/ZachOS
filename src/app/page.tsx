@@ -46,7 +46,6 @@ export default async function Home({ searchParams }: HomeProps) {
     financeSnapshots,
     activities,
     quests,
-    consultantLogs,
     dailyRoutineLogs,
     learningSessions,
     portfolioAccounts,
@@ -85,12 +84,6 @@ export default async function Home({ searchParams }: HomeProps) {
         .order("created_at", { ascending: true })
         .limit(100),
       supabase
-        .from("consultant_readiness_logs")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("date", { ascending: false })
-        .limit(365),
-      supabase
         .from("daily_routine_logs")
         .select("*")
         .eq("user_id", user.id)
@@ -122,7 +115,6 @@ export default async function Home({ searchParams }: HomeProps) {
     financeSnapshots.error,
     activities.error,
     quests.error,
-    consultantLogs.error,
     dailyRoutineLogs.error,
     learningSessions.error,
     portfolioAccounts.error,
@@ -138,7 +130,6 @@ export default async function Home({ searchParams }: HomeProps) {
   return (
     <ControlRoomDashboard
       activities={sortByDateAscending(activities.data ?? [])}
-      consultantLogs={sortByDateAscending(consultantLogs.data ?? [])}
       dailyLogs={sortByDateAscending(dailyLogs.data ?? [])}
       dailyRoutineLogs={sortByDateAscending(dailyRoutineLogs.data ?? [])}
       databaseSetupIssue={databaseSetupIssue}

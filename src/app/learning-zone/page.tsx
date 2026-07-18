@@ -23,6 +23,7 @@ import {
   LEARNING_LESSONS,
   LEARNING_PATHS,
   LEARNING_TOPICS,
+  buildReviewQueue,
   getLearningLesson,
   getLearningTopic,
   summariseLearningProgress,
@@ -130,7 +131,10 @@ export default async function LearningZonePage({
     (lesson) =>
       lesson.concept.level === "University" && !completedSlugs.has(lesson.slug),
   ).slice(0, 4);
+  // Spaced repetition first: lessons genuinely due back outrank anything else.
+  const reviewQueue = buildReviewQueue(sessions.data ?? []);
   const continueLessons = [
+    ...reviewQueue.map((state) => state.lesson),
     ...revisitLessons,
     ...unfinishedUniversityLessons,
   ].filter(
@@ -210,7 +214,9 @@ export default async function LearningZonePage({
                   </h2>
                 </div>
                 <span className="font-mono text-xs text-[#8c8273]">
-                  {completedLessons.length} unique lessons completed
+                  {reviewQueue.length
+                    ? `${reviewQueue.length} due for review`
+                    : `${completedLessons.length} unique lessons completed`}
                 </span>
               </div>
               <div className="grid gap-3 md:grid-cols-2">
