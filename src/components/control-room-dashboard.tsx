@@ -1009,7 +1009,7 @@ export function ControlRoomDashboard({
                   Leave reflection
                 </span>
                 <span className="block text-xs leading-5 text-[#71685c]">
-                  {todayLog?.notes ? "Saved for today" : "Mood, context and notes"}
+                  {todayLog?.notes ? "Saved for today" : "Mood and reflection"}
                 </span>
               </span>
               <span className="text-xs font-semibold text-[#bb5d3a]">
@@ -1079,27 +1079,7 @@ export function ControlRoomDashboard({
           <form action={saveQuickDailyEntry} className="mt-4 grid gap-3">
             <input name="date" type="hidden" value={today} />
             <input name="return_to" type="hidden" value="/" />
-            <div className="grid grid-cols-2 gap-3">
-              <MobileField label="Mood" name="mood_score" placeholder="1-10" type="number" />
-              <MobileField
-                label="Deep work"
-                name="deep_work_hours"
-                placeholder="hours"
-                type="number"
-              />
-              <MobileField
-                label="Reading"
-                name="reading_pages"
-                placeholder="pages"
-                type="number"
-              />
-              <MobileField
-                label="French"
-                name="french_minutes"
-                placeholder="minutes"
-                type="number"
-              />
-            </div>
+            <MobileField label="Mood" name="mood_score" placeholder="1-10" type="number" />
             <label className="grid gap-1.5 text-sm font-medium text-[#3a342c]">
               Reflection
               <textarea
@@ -1111,7 +1091,7 @@ export function ControlRoomDashboard({
             <PendingSubmitButton
               className="h-11 rounded-md border border-[#241f1a] bg-[#241f1a] px-4 text-sm font-semibold text-[#f9f4ec]"
             >
-              Save note
+              Save reflection
             </PendingSubmitButton>
           </form>
         </MobileNotebookCard>
