@@ -4,6 +4,13 @@ import {
   calculateAnalytics,
   compactAnalyticsForPrompt,
 } from "@/lib/analytics";
+import {
+  activityGroup,
+  buildRunningAnalytics,
+  formatDistance,
+  formatDuration,
+  formatNumber,
+} from "@/lib/fitness-analytics";
 import { DAY_MS, numeric } from "@/lib/utils";
 import type {
   Activity,
@@ -320,6 +327,64 @@ export function buildLocalWeeklyReport(
     `Strongest week-over-week improvement: ${strongest ? `${strongest.label} changed by ${(strongest.delta ?? 0).toFixed(1)}${strongest.unit ?? ""}` : "not enough paired weekly data yet"}.`,
     `Weakest area: ${weakest ? `${weakest.label} changed by ${(weakest.delta ?? 0).toFixed(1)}${weakest.unit ?? ""}` : "not enough paired weekly data yet"}.`,
     `Suggested focus for next week: ${operating.weeklyFocus}`,
+  ].join("\n");
+}
+
+export function buildLocalActivityOverview(
+  input: Pick<InsightInput, "activities" | "fitnessMetrics"> & { today: string },
+) {
+  const analytics = buildRunningAnalytics({
+    activities: input.activities,
+    fitnessMetrics: input.fitnessMetrics,
+    today: input.today,
+    weeks: 8,
+  });
+  const latestActivity = [...input.activities].at(-1) ?? null;
+  const latestFitness = [...input.fitnessMetrics].at(-1) ?? null;
+  const recentActivities = input.activities.filter((activity) => {
+    const delta = latestActivity ? dateMs(latestActivity.date) - dateMs(activity.date) : 0;
+    return delta >= 0 && delta <= 13 * DAY_MS;
+  });
+  const runningCount = recentActivities.filter(
+    (activity) => activityGroup(activity) === "running",
+  ).length;
+  const gymCount = recentActivities.filter(
+    (activity) => activityGroup(activity) === "gym",
+  ).length;
+  const otherCount = recentActivities.length - runningCount - gymCount;
+  const bestPaceBand = analytics.paceBandComparisons
+    .filter((row) => row.deltaHr !== null)
+    .sort((left, right) => Math.abs(left.deltaHr ?? 0) - Math.abs(right.deltaHr ?? 0))[0];
+  const activitySummary = latestActivity
+    ? `${latestActivity.date}: ${latestActivity.activity_type || "Activity"} for ${formatDistance(
+        latestActivity.distance_km,
+      )} in ${formatDuration(latestActivity.duration_minutes)}${
+        latestActivity.avg_hr ? `, avg HR ${formatNumber(latestActivity.avg_hr, 0)}` : ""
+      }.`
+    : "No imported activity yet.";
+  const recoverySummary = latestFitness
+    ? `Latest recovery markers: sleep score ${formatNumber(latestFitness.sleep_score, 0)}, HRV ${formatNumber(
+        latestFitness.hrv,
+        0,
+      )}, resting HR ${formatNumber(latestFitness.resting_hr, 0)}.`
+    : "No recovery metrics imported yet.";
+  const samePaceSignal = bestPaceBand
+    ? `At ${bestPaceBand.band}, average HR moved from ${formatNumber(
+        bestPaceBand.previousAvgHr,
+        0,
+      )} to ${formatNumber(bestPaceBand.currentAvgHr, 0)} bpm.`
+    : "Not enough repeated same-pace running yet to compare HR at like-for-like speeds.";
+
+  return [
+    `Training picture: ${formatDistance(analytics.current7DistanceKm)} across ${
+      analytics.current7RunCount
+    } runs in the last 7 days versus ${formatDistance(analytics.previous7DistanceKm)} in the previous 7 days.`,
+    `Latest activity: ${activitySummary}`,
+    `Recovery context: ${recoverySummary}`,
+    `Efficiency signal: ${analytics.coachCards.efficiencyTrend.replace("Efficiency trend: ", "")}`,
+    `Same-pace signal: ${samePaceSignal}`,
+    `Activity mix: ${runningCount} running, ${gymCount} gym, and ${otherCount} other sessions in the last 14 days.`,
+    `Next move: ${analytics.coachCards.suggestedNextRun.replace("Suggested next run: ", "")}`,
   ].join("\n");
 }
 

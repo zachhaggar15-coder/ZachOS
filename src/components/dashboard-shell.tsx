@@ -15,7 +15,7 @@ import type { DatabaseSetupIssue } from "@/lib/database-setup";
 import {
   calculateAnalytics,
 } from "@/lib/analytics";
-import { buildLocalDailyBriefing } from "@/lib/ai-insights";
+import { buildLocalActivityOverview } from "@/lib/ai-insights";
 import {
   calculateAchievements,
   calculateCharacterAttributes,
@@ -854,11 +854,10 @@ export function DashboardShell({
     fitnessMetrics,
   });
   const runTotal = runningDistanceTotal(activities);
-  const localBriefing = buildLocalDailyBriefing({
+  const activityOverview = buildLocalActivityOverview({
     activities,
-      dailyLogs,
-    financeSnapshots,
     fitnessMetrics,
+    today,
   });
   const analytics = calculateAnalytics({ activities, dailyLogs, fitnessMetrics });
 
@@ -994,16 +993,16 @@ export function DashboardShell({
         <section className="grid gap-4 xl:grid-cols-[1fr_0.85fr]">
           <article className="rounded border border-cyan-200/20 bg-gradient-to-br from-cyan-200/[0.09] to-white/[0.025] p-5">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-              <SectionHeader kicker="AI Insights" title="Today’s Briefing" />
+              <SectionHeader kicker="AI Insights" title="Activity Overview" />
               <Link
                 className="inline-flex h-9 items-center rounded border border-cyan-200/25 bg-cyan-200/10 px-3 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-200/15"
                 href="/ai-insights"
               >
-                Generate AI summary
+                Open detailed insights
               </Link>
             </div>
             <div className="mt-4 space-y-2 text-sm leading-6 text-zinc-300">
-              {localBriefing
+              {activityOverview
                 .split("\n")
                 .slice(0, 6)
                 .map((line) => (
@@ -1011,8 +1010,8 @@ export function DashboardShell({
                 ))}
             </div>
             <p className="mt-4 text-xs text-zinc-500">
-              Local briefing shown here. Open AI Insights to generate OpenAI
-              daily and weekly summaries when `OPENAI_API_KEY` is configured.
+              The full activity overview, recent sessions, and coach cards are
+              on the AI Insights page.
             </p>
           </article>
 

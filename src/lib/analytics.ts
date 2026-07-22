@@ -32,10 +32,6 @@ export type AnalyticsSummary = {
   relationships: RelationshipMetric[];
 };
 
-function clamp(value: number) {
-  return Math.max(0, Math.min(100, Math.round(value)));
-}
-
 function dateMs(date: string) {
   return toDate(date).getTime();
 }
